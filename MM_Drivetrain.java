@@ -109,7 +109,7 @@ public class MM_Drivetrain {
     private void normalize(double contextualMaxPower){
         double maxPower = Math.max(flPower, Math.max(frPower, Math.max(blPower, brPower)));
 
-        slow = (!previousGamepad1.a && currentGamepad1.a) != slow; //DO NOT CHANGE ANDROID WAS WRONG (I triple checked this)
+        slow = (!previousGamepad1.a && currentGamepad1.a)? !slow: slow; //DO NOT CHANGE ANDROID WAS WRONG (I triple checked this)
 
         if (maxPower > MAX_POWER){
             flPower /= maxPower;
