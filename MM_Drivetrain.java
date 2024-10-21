@@ -106,24 +106,35 @@ public class MM_Drivetrain {
         }
     }
 
-    private void normalize(double contextualMaxPower){
-        double maxPower = Math.max(flPower, Math.max(frPower, Math.max(blPower, brPower)));
+    public void strafeInches(double targetInches, int targetHeading){
+        odometryController.update();
+        odometryPos = odometryController.getPosition();
 
-        slow = (!previousGamepad1.a && currentGamepad1.a)? !slow: slow; //DO NOT CHANGE ANDROID WAS WRONG (I triple checked this)
+        double targetPos = targetInches + odometryPos.getY(DistanceUnit.INCH);
 
-        if (maxPower > MAX_POWER){
-            flPower /= maxPower;
-            frPower /= maxPower;
-            blPower /= maxPower;
-            brPower /= maxPower;
+        double headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
+        double inchesError = targetPos - odometryPos.getY(DistanceUnit.INCH);
+
+        while (opMode.opModeIsActive() && (inchesError >  DRIVE_ERROR_THRESHOLD || headingError > HEADING_ERROR_THRESHOLD)){
+            odometryController.update();
+            odometryPos = odometryController.getPosition();
+
+            headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
+            inchesError = targetInches - odometryPos.getY(DistanceUnit.INCH);
+
+            rotatePower = MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
+            strafePower = MAX_POWER * inchesError * DRIVE_P_COEFF;
+
+            flPower = strafePower + rotatePower;
+            frPower = -strafePower - rotatePower;
+            blPower = -strafePower + rotatePower;
+            brPower = strafePower - rotatePower;
+
+            normalize(MAX_TURN_POWER);
+
+            setDrivePowers();
         }
 
-        if (slow){
-            flPower *= SLOW_POWER;
-            frPower *= SLOW_POWER;
-            blPower *= SLOW_POWER;
-            brPower *= SLOW_POWER;
-        }
     }
 
     public void rotateToAngle(int targetAngle) {
@@ -182,6 +193,26 @@ public class MM_Drivetrain {
         frMotor.setPower(frPower);
         blMotor.setPower(blPower);
         brMotor.setPower(brPower);
+    }
+
+    private void normalize(double contextualMaxPower){
+        double maxPower = Math.max(flPower, Math.max(frPower, Math.max(blPower, brPower)));
+
+        slow = (!previousGamepad1.a && currentGamepad1.a)? !slow: slow; //DO NOT CHANGE ANDROID WAS WRONG (I triple checked this)
+
+        if (maxPower > MAX_POWER){
+            flPower /= maxPower;
+            frPower /= maxPower;
+            blPower /= maxPower;
+            brPower /= maxPower;
+        }
+
+        if (slow){
+            flPower *= SLOW_POWER;
+            frPower *= SLOW_POWER;
+            blPower *= SLOW_POWER;
+            brPower *= SLOW_POWER;
+        }
     }
 
     private void normalizeForMin(double minPower) {

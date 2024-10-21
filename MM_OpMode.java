@@ -6,13 +6,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public abstract class MM_OpMode extends LinearOpMode {
     MM_Robot robot = null;
-    private final String BLUE = "Blue";
-    private final String RED = "Red";
-    private String alliance = BLUE;
+    public static String BLUE = "Blue";
+    public static String RED = "Red";
+    public static String alliance;
 
-    private final String CHAMBER = "Chamber";
-    private final String BASKET = "Basket";
-    private String goal = BASKET;
+    public static String CHAMBER = "Chamber";
+    public static String BASKET = "Basket";
+    public static String goal;
 
     public static Gamepad currentGamepad1 = new Gamepad();
     public static Gamepad previousGamepad1 = new Gamepad();
@@ -21,6 +21,8 @@ public abstract class MM_OpMode extends LinearOpMode {
 
     @Override
     public void runOpMode(){
+        alliance = BLUE;
+        goal = CHAMBER;
         telemetry.addData("Status", "Initializing... please wait.");
         telemetry.update();
 
