@@ -29,6 +29,8 @@ public abstract class MM_OpMode extends LinearOpMode {
         initMM();
 
         while(opModeInInit()){  //TODO init options
+            previousGamepad1.copy(currentGamepad1);
+            currentGamepad1.copy(gamepad1);
             telemetry.addData("Status", "Initialized.");
             if(getClass() == MM_Autos.class){
                 telemetry.addLine("Press right bumper to switch alliance.");
@@ -36,10 +38,10 @@ public abstract class MM_OpMode extends LinearOpMode {
                 telemetry.addData("Alliance", alliance);
                 telemetry.addData("Goal", goal);
 
-                if(gamepad1.right_bumper){
+                if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
                     alliance = alliance.equals(BLUE)? RED: BLUE;
                 }
-                if(gamepad1.left_bumper){
+                if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
                     goal = goal.equals(CHAMBER)? BASKET: CHAMBER;
                 }
             }
@@ -54,5 +56,7 @@ public abstract class MM_OpMode extends LinearOpMode {
     public void initMM(){
         robot = new MM_Robot(this);
         robot.init();
+
+        currentGamepad1.copy(gamepad1);
     }
 }

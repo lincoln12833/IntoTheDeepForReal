@@ -79,12 +79,12 @@ public class MM_Drivetrain {
         odometryController.update();
         odometryPos = odometryController.getPosition();
 
-        targetInches += odometryPos.getX(DistanceUnit.INCH);
+        double targetPos = targetInches + odometryPos.getX(DistanceUnit.INCH);
 
         double headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
-        double inchesError = targetInches - odometryPos.getX(DistanceUnit.INCH);
+        double inchesError = targetPos - odometryPos.getX(DistanceUnit.INCH);
 
-        while (opMode.opModeIsActive() && (headingError > HEADING_ERROR_THRESHOLD || inchesError > DRIVE_ERROR_THRESHOLD)) {
+        while (opMode.opModeIsActive() && ( Math.abs(inchesError) > DRIVE_ERROR_THRESHOLD)) { //Math.abs(headingError) > HEADING_ERROR_THRESHOLD ||
             odometryController.update();
             odometryPos = odometryController.getPosition();
 
