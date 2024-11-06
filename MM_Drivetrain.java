@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.IntoTheDeepForReal;
+package org.firstinspires.ftc.teamcode.MM;
 
-import static org.firstinspires.ftc.teamcode.IntoTheDeepForReal.MM_OpMode.currentGamepad1;
-import static org.firstinspires.ftc.teamcode.IntoTheDeepForReal.MM_OpMode.previousGamepad1;
+import static org.firstinspires.ftc.teamcode.MM.MM_OpMode.currentGamepad1;
+import static org.firstinspires.ftc.teamcode.MM.MM_OpMode.previousGamepad1;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
