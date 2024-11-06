@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MM;
+package org.firstinspires.ftc.teamcode.IntoTheDeepForReal;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,7 +11,8 @@ public class MM_TeleOp extends MM_OpMode {
             currentGamepad1.copy(gamepad1);
 
             //robot.drivetrain.driveWithSticks();
-            robot.pivot.controlPivot();
+            robot.slide.runSlide();
+            robot.pivot.runPivot();
         }
 
     }
