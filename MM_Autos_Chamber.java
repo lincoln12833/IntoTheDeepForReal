@@ -15,7 +15,7 @@ public class MM_Autos_Chamber extends MM_OpMode {
 
         waitForStart();
 
-        robot.drivetrain.driveInches(30, 0);
+        //robot.drivetrain.driveInches(30, 0);
         
     }
     

@@ -15,12 +15,12 @@ public class MM_Autos extends MM_OpMode{
     }
 
     public void chamber(){
-        robot.drivetrain.driveInches(-30, 0);
+        //robot.drivetrain.driveInches(-30, 0);
         //TODO add robot dependant chamber code
     }
 
     public void basket() {
-        robot.drivetrain.strafeInches(-30, 45);
+        //robot.drivetrain.strafeInches(-30, 45);
         //TODO add robot dependant basket code
     }
 }

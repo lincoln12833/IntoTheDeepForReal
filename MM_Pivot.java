@@ -19,7 +19,7 @@ public class MM_Pivot {
 
     private boolean homing = false;
 
-    public final int TICK_INCREMENT = 10;
+    public final int TICK_INCREMENT = 28;
 
     private final int MAX_HEIGHT = 2000;;
 
@@ -50,6 +50,11 @@ public class MM_Pivot {
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             pivot.setPower(-.7);
             homing = true;
+        }
+
+        if (opMode.gamepad1.y){
+            homing = false;
+            targetPos = MAX_HEIGHT;
         }
 
         if(bottomLimit.isPressed() || Math.abs(opMode.gamepad1.left_stick_y) > 0.1){
