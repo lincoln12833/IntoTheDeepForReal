@@ -27,7 +27,7 @@ public abstract class MM_OpMode extends LinearOpMode {
 
         initMM();
 
-        while(opModeInInit()){  //TODO init options
+        while(opModeInInit()){
             previousGamepad1.copy(currentGamepad1);
             currentGamepad1.copy(gamepad1);
             telemetry.addData("Status", "Initialized.");
