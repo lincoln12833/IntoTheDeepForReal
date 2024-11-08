@@ -31,7 +31,7 @@ public class MM_Drivetrain {
     public static double MAX_TURN_POWER = .5;
     public static double MIN_TURN_POWER = .15;
     public static double GYRO_TURN_P_COEFF = .016;
-    public static double HEADING_ERROR_THRESHOLD = 2;
+    public static double HEADING_ERROR_THRESHOLD = 10;
 
     private final double DRIVE_ERROR_THRESHOLD = .5;
     private final double DRIVE_P_COEFF = 0.03125;
@@ -81,28 +81,32 @@ public class MM_Drivetrain {
         double targetPos = targetInches + odometryPos.getX(DistanceUnit.INCH);
 
         double headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
-        double inchesError = targetPos - odometryPos.getX(DistanceUnit.INCH);
+        double inchesError = targetPos - Math.abs(odometryPos.getX(DistanceUnit.INCH));
 
-        while (opMode.opModeIsActive() && ( Math.abs(inchesError) > DRIVE_ERROR_THRESHOLD)) { //Math.abs(headingError) > HEADING_ERROR_THRESHOLD ||
+        while (opMode.opModeIsActive() && ( Math.abs(inchesError) > DRIVE_ERROR_THRESHOLD || Math.abs(headingError) > HEADING_ERROR_THRESHOLD)){
             odometryController.update();
             odometryPos = odometryController.getPosition();
 
             headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
             inchesError = targetInches - odometryPos.getX(DistanceUnit.INCH);
+            opMode.telemetry.addData("heading error", headingError);
+            opMode.telemetry.addData("inches error", inchesError);
+            opMode.telemetry.update();
 
             rotatePower = MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
             drivePower = MAX_POWER * inchesError * DRIVE_P_COEFF;
 
-            flPower = drivePower + rotatePower;
-            frPower = drivePower - rotatePower;
-            blPower = drivePower + rotatePower;
-            brPower = drivePower - rotatePower;
+            flPower = drivePower - rotatePower;
+            frPower = drivePower + rotatePower;
+            blPower = drivePower - rotatePower;
+            brPower = drivePower + rotatePower;
 
             normalize(MAX_TURN_POWER);
             
             setDrivePowers();
 
         }
+
     }
 
     public void strafeInches(double targetInches, int targetHeading){
@@ -195,11 +199,11 @@ public class MM_Drivetrain {
     }
 
     private void normalize(double contextualMaxPower){
-        double maxPower = Math.max(flPower, Math.max(frPower, Math.max(blPower, brPower)));
+        double maxPower = Math.max(Math.abs(flPower), Math.max(Math.abs(frPower), Math.max(Math.abs(blPower), Math.abs(brPower))));
 
         slow = (!previousGamepad1.a && currentGamepad1.a)? !slow: slow; //DO NOT CHANGE ANDROID WAS WRONG (I triple checked this)
 
-        if (maxPower > MAX_POWER){
+        if (maxPower > contextualMaxPower){
             flPower /= maxPower;
             frPower /= maxPower;
             blPower /= maxPower;
@@ -248,7 +252,7 @@ public class MM_Drivetrain {
 
         odometryController = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
 
-        odometryController.setOffsets(-84.0, -168.0); //TODO Calibrate to Kowalski
+        odometryController.setOffsets(1.905, 2.54);
         odometryController.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         odometryController.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD); //TODO Check to be sure of directions
 
