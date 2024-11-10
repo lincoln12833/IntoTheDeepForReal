@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.MM;
 import static org.firstinspires.ftc.teamcode.MM.MM_OpMode.currentGamepad1;
 import static org.firstinspires.ftc.teamcode.MM.MM_OpMode.previousGamepad1;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -25,6 +26,8 @@ public class MM_Drivetrain {
 
     private GoBildaPinpointDriver odometryController;
 
+    private Rev2mDistanceSensor backDistance;
+
     public static double MAX_POWER = 1;
     public static double SLOW_POWER = .5;
 
@@ -35,6 +38,8 @@ public class MM_Drivetrain {
 
     private final double DRIVE_ERROR_THRESHOLD = .5;
     private final double DRIVE_P_COEFF = 0.03125;
+
+    private final double DISTANCE_THRESHOLD = .5;
 
     private double flPower;
     private double frPower;
@@ -65,6 +70,10 @@ public class MM_Drivetrain {
         frPower = drivePower - strafePower - rotatePower;
         blPower = drivePower - strafePower + rotatePower;
         brPower = drivePower + strafePower - rotatePower;
+
+        if (currentGamepad1.a && !previousGamepad1.a){
+            slow = !slow;
+        }
 
         normalize(MAX_POWER);
 
@@ -109,6 +118,29 @@ public class MM_Drivetrain {
 
     }
 
+    public void driveToDistance(double targetDistance){
+        double distance = backDistance.getDistance(DistanceUnit.INCH);
+        double distanceError = targetDistance - distance;
+
+        while(opMode.opModeIsActive() && Math.abs(distanceError) > DISTANCE_THRESHOLD){
+            distance = backDistance.getDistance(DistanceUnit.INCH);
+            distanceError = targetDistance - distance;
+
+            drivePower = distanceError * MAX_POWER * DRIVE_P_COEFF;
+
+            flPower = drivePower;
+            frPower = drivePower;
+            blPower = drivePower;
+            brPower = drivePower;
+
+            normalizeForMin(.14);
+
+
+            setDrivePowers();
+        }
+        setDrivePowers(0);
+    }
+
     public void strafeInches(double targetInches, int targetHeading){
         odometryController.update();
         odometryPos = odometryController.getPosition();
@@ -118,7 +150,7 @@ public class MM_Drivetrain {
         double headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
         double inchesError = targetPos - odometryPos.getY(DistanceUnit.INCH);
 
-        while (opMode.opModeIsActive() && (inchesError >  DRIVE_ERROR_THRESHOLD || headingError > HEADING_ERROR_THRESHOLD)){
+        while (opMode.opModeIsActive() && (Math.abs(inchesError) >  DRIVE_ERROR_THRESHOLD || Math.abs(headingError) > HEADING_ERROR_THRESHOLD)){
             odometryController.update();
             odometryPos = odometryController.getPosition();
 
@@ -128,12 +160,14 @@ public class MM_Drivetrain {
             rotatePower = MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
             strafePower = MAX_POWER * inchesError * DRIVE_P_COEFF;
 
-            flPower = strafePower + rotatePower;
-            frPower = -strafePower - rotatePower;
-            blPower = -strafePower + rotatePower;
-            brPower = strafePower - rotatePower;
+            flPower = strafePower - rotatePower;
+            frPower = -strafePower + rotatePower;
+            blPower = -strafePower - rotatePower;
+            brPower = strafePower + rotatePower;
 
             normalize(MAX_TURN_POWER);
+
+            normalizeForMin(.14);
 
             setDrivePowers();
         }
@@ -258,6 +292,10 @@ public class MM_Drivetrain {
 
         odometryController.resetPosAndIMU();
 
+
+        odometryController.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odometryPos = odometryController.getPosition();
+
+        backDistance = opMode.hardwareMap.get(Rev2mDistanceSensor.class, "backDistance");
     }
 }

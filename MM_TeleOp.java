@@ -10,9 +10,10 @@ public class MM_TeleOp extends MM_OpMode {
             previousGamepad1.copy(currentGamepad1);
             currentGamepad1.copy(gamepad1);
 
-            //robot.drivetrain.driveWithSticks();
-            robot.transport.slide.runSlide();
-            robot.transport.pivot.controlPivot();
+            robot.drivetrain.driveWithSticks();
+            robot.transport.runTransport();
+
+            telemetry.update();
         }
 
     }

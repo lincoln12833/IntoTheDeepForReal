@@ -44,8 +44,6 @@ public class MM_Pivot {
         opMode.telemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
         opMode.telemetry.addData("is over current =",  pivot.isOverCurrent());
 
-        opMode.telemetry.update();
-
         if (opMode.gamepad1.x && !bottomLimit.isPressed()){
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             pivot.setPower(-.7);
@@ -72,6 +70,12 @@ public class MM_Pivot {
         if (!homing) {
             pivot.setTargetPosition(targetPos);
         }
+
+
+    }
+
+    public void calculateAngle(){
+        MM_Transport.angle = (pivot.getCurrentPosition() / 6.0) * 360 * 537.7;
     }
 
     public void init(){
