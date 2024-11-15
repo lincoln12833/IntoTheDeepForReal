@@ -77,6 +77,16 @@ public class MM_Slide {
         opMode.telemetry.addData("angle", angle);
     }
 
+    public void updateSlide(boolean wantMax, double inches){
+        maxTicks = Math.min((int)((42 / Math.cos(Math.toRadians(angle))) * TICKS_PER_INCH), UPPER_LIMIT);
+        if(wantMax) {
+            slide.setTargetPosition(maxTicks);
+        } else {
+            slide.setTargetPosition((int)(Math.min((inches * TICKS_PER_INCH), Math.min(UPPER_LIMIT, maxTicks))));
+        }
+       
+    }
+
     private void init() {
         slide = opMode.hardwareMap.get(DcMotor.class, "slide");
         bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "bottomLimit");

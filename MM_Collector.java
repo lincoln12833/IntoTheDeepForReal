@@ -19,13 +19,15 @@ public class MM_Collector {
     }
 
 
-    public void collect() {
-        if (sampleTest.getDistance(DistanceUnit.MM) > 30) {
-            wheels.setPower(-1);
-            haveSample = false;
-        } else {
-            wheels.setPower(0);
-            haveSample = true;
+    public void handleCollect(boolean collect) {
+        if(collect) {
+            if (sampleTest.getDistance(DistanceUnit.MM) > 30) {
+                wheels.setPower(-1);
+                haveSample = false;
+            } else {
+                wheels.setPower(0);
+                haveSample = true;
+            }
         }
     }
 

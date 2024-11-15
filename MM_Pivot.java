@@ -74,6 +74,11 @@ public class MM_Pivot {
 
     }
 
+    public void updatePivot(double targetPivotAngle){
+        pivot.setTargetPosition((int)((targetPivotAngle * 6) / 360 / 537.7));
+        calculateAngle();
+    }
+
     public void calculateAngle(){
         MM_Transport.angle = (pivot.getCurrentPosition() / 6.0) * 360 * 537.7;
     }
