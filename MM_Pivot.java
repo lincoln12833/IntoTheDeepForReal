@@ -44,14 +44,14 @@ public class MM_Pivot {
         opMode.telemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
         opMode.telemetry.addData("is over current =",  pivot.isOverCurrent());
 
-        if (opMode.gamepad2.x && !bottomLimit.isPressed()){
+        if (opMode.gamepad2.x && !bottomLimitIsTriggered()){
 
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             pivot.setPower(-.7);
             homing = true;
         }
 
-        if (bottomLimit.isPressed()){
+        if (bottomLimitIsTriggered()){
             pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             pivot.setPower(0);
@@ -81,6 +81,10 @@ public class MM_Pivot {
         }
 
 
+    }
+
+    public boolean bottomLimitIsTriggered(){
+        return !bottomLimit.isPressed();
     }
 
     public void updatePivot(double targetPivotAngle){

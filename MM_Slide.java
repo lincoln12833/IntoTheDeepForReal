@@ -41,7 +41,7 @@ public class MM_Slide {
         opMode.telemetry.addData("bottom limit is pressed?", bottomLimit.isPressed());
         opMode.telemetry.addData("bottom limit is handled?", isBottomLimitHandled);
 
-        if (bottomLimit.isPressed() && !isBottomLimitHandled) { // chunk 1
+        if (bottomLimitIsTriggered() && !isBottomLimitHandled) { // chunk 1
             slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             slide.setPower(0);
             slide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -67,7 +67,7 @@ public class MM_Slide {
             slide.setTargetPosition(slideTargetTicks);
             slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             slide.setPower(1);
-            if (!bottomLimit.isPressed()) { // chunk 5
+            if (!bottomLimitIsTriggered()) { // chunk 5
                 isBottomLimitHandled = false;
             }
         }
@@ -84,7 +84,11 @@ public class MM_Slide {
         } else {
             slide.setTargetPosition((int)(Math.min((inches * TICKS_PER_INCH), Math.min(UPPER_LIMIT, maxTicks))));
         }
-       
+
+    }
+
+    public boolean bottomLimitIsTriggered(){
+        return !bottomLimit.isPressed();
     }
 
     private void init() {
