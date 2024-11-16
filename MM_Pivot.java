@@ -26,6 +26,8 @@ public class MM_Pivot {
 
     public int targetPos = 0;
 
+    private boolean homingHandled = false;
+
 
 
     MM_Pivot(MM_OpMode opMode){
@@ -43,7 +45,6 @@ public class MM_Pivot {
         opMode.telemetry.addData("target position tolerance", pivot.getTargetPositionTolerance());
         opMode.telemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
         opMode.telemetry.addData("is over current =",  pivot.isOverCurrent());
-
         if (opMode.gamepad2.x && !bottomLimitIsTriggered()){
 
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -52,10 +53,15 @@ public class MM_Pivot {
         }
 
         if (bottomLimitIsTriggered()){
+            targetPos = 0;
             pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             pivot.setPower(0);
             homing = false;
+
+        } else if (!homing) {
+            pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            pivot.setPower(1);
         }
 
         if (opMode.gamepad2.y){
@@ -63,28 +69,29 @@ public class MM_Pivot {
             targetPos = MAX_HEIGHT;
         }
 
-        if(Math.abs(opMode.gamepad2.left_stick_y) > 0.1){
+        if(Math.abs(opMode.gamepad2.left_stick_y) > 0.1 && homing){
             homing = false;
             pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             pivot.setPower(1);
+            targetPos = pivot.getCurrentPosition();
         }
 
         if (-opMode.gamepad2.left_stick_y > .1){
+            if (pivot.getPower() < 1){
+                pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                pivot.setPower(1);
+            }
             targetPos = Math.min(targetPos + TICK_INCREMENT, MAX_HEIGHT);
-        } else if (-opMode.gamepad1.left_stick_y < -.1){
+        } else if (-opMode.gamepad2.left_stick_y < -.1){
             targetPos = Math.max(targetPos - TICK_INCREMENT, 0);
         }
 
-        if (!homing) {
-            targetPos = pivot.getCurrentPosition();
-            pivot.setTargetPosition(targetPos);
-        }
-
+        pivot.setTargetPosition(targetPos);
 
     }
 
     public boolean bottomLimitIsTriggered(){
-        return !bottomLimit.isPressed();
+        return bottomLimit.isPressed();
     }
 
     public void updatePivot(double targetPivotAngle){
@@ -107,7 +114,7 @@ public class MM_Pivot {
 
 
 
-        bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "bottomLimit");
+        bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "pivotBottomLimit");
     }
 
 }

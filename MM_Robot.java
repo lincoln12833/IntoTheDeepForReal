@@ -14,9 +14,9 @@ public class MM_Robot{
 
 
     public void init() {
-        drivetrain = new MM_Drivetrain(opMode);
+//        drivetrain = new MM_Drivetrain(opMode);
         transport = new MM_Transport(opMode);
-        collector = new MM_Collector(opMode);
+//        collector = new MM_Collector(opMode);
     }
 
 
