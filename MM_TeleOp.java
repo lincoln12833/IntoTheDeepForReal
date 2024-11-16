@@ -7,15 +7,16 @@ public class MM_TeleOp extends MM_OpMode {
     @Override
     public void runProcedures(){
         while(opModeIsActive()){
-            previousGamepad1.copy(currentGamepad1);
+            previousGamepad1.copy(currentGamepad1); //gamepad management
             currentGamepad1.copy(gamepad1);
-
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
 
-            robot.drivetrain.driveWithSticks();
+            robot.drivetrain.driveWithSticks(); //control mechanisms
             robot.transport.runTransport();
-            robot.collector.handleCollect(true);
+            robot.collector.controlCollector();
+
+            MM_Transport.pivot.calculateAngle();
 
             telemetry.update();
         }

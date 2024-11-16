@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.MM.MM_Collector.haveSample;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -21,7 +22,9 @@ public class MM_Pivot {
 
     public final int TICK_INCREMENT = 28;
 
-    private final int MAX_HEIGHT = 2000;;
+    private final int MAX_HEIGHT = 1400;;
+
+    private final double DEGREE_OFFSET = 37;
 
 
     public int targetPos = 0;
@@ -100,11 +103,21 @@ public class MM_Pivot {
     }
 
     public void calculateAngle(){
-        MM_Transport.angle = (pivot.getCurrentPosition() / 6.0) * 360 * 537.7;
+        MM_Transport.angle = ((pivot.getCurrentPosition() / 6.0) * 360 * 537.7) + DEGREE_OFFSET;
+    }
+
+    public void home(){
+        pivot.setTargetPosition(0);
+    }
+
+    public void setAngle(double angle){
+        pivot.setTargetPosition((int)((angle * 6) / 360 / 537.7));
     }
 
     public void init(){
         pivot = opMode.hardwareMap.get(DcMotorEx.class, "pivot");
+
+        pivot.setDirection(DcMotorEx.Direction.REVERSE);
 
         pivot.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         pivot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);

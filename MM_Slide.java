@@ -77,6 +77,10 @@ public class MM_Slide {
         opMode.telemetry.addData("angle", angle);
     }
 
+    public void home(){
+        slide.setTargetPosition(0);
+    }
+
     public void updateSlide(boolean wantMax, double inches){
         maxTicks = Math.min((int)((42 / Math.cos(Math.toRadians(angle))) * TICKS_PER_INCH), UPPER_LIMIT);
         if(wantMax) {

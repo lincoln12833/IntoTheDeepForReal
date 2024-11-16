@@ -19,6 +19,21 @@ public class MM_Collector {
     }
 
 
+    public void controlCollector(){
+        if(opMode.gamepad2.right_bumper){
+            if (sampleTest.getDistance(DistanceUnit.MM) > 30) {
+                wheels.setPower(-1);
+                haveSample = false;
+            } else {
+                wheels.setPower(0);
+                haveSample = true;
+            }
+        } else if(opMode.gamepad2.left_bumper){
+            wheels.setPower(1);
+        }
+    }
+
+
     public void handleCollect(boolean collect) {
         if(collect) {
             if (sampleTest.getDistance(DistanceUnit.MM) > 30) {
