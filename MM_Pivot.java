@@ -44,30 +44,39 @@ public class MM_Pivot {
         opMode.telemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
         opMode.telemetry.addData("is over current =",  pivot.isOverCurrent());
 
-        if (opMode.gamepad1.x && !bottomLimit.isPressed()){
+        if (opMode.gamepad2.x && !bottomLimit.isPressed()){
+
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             pivot.setPower(-.7);
             homing = true;
         }
 
-        if (opMode.gamepad1.y){
+        if (bottomLimit.isPressed()){
+            pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            pivot.setPower(0);
+            homing = false;
+        }
+
+        if (opMode.gamepad2.y){
             homing = false;
             targetPos = MAX_HEIGHT;
         }
 
-        if(bottomLimit.isPressed() || Math.abs(opMode.gamepad1.left_stick_y) > 0.1){
+        if(Math.abs(opMode.gamepad2.left_stick_y) > 0.1){
             homing = false;
             pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             pivot.setPower(1);
         }
 
-        if (-opMode.gamepad1.left_stick_y > .1){
+        if (-opMode.gamepad2.left_stick_y > .1){
             targetPos = Math.min(targetPos + TICK_INCREMENT, MAX_HEIGHT);
         } else if (-opMode.gamepad1.left_stick_y < -.1){
             targetPos = Math.max(targetPos - TICK_INCREMENT, 0);
         }
 
         if (!homing) {
+            targetPos = pivot.getCurrentPosition();
             pivot.setTargetPosition(targetPos);
         }
 

@@ -15,7 +15,8 @@ public class MM_Autos extends MM_OpMode{
     }
 
     public void chamber(){
-        robot.drivetrain.driveToDistance(1);
+        robot.drivetrain.driveInches(5, 0, 34, 44, false, false);
+
         //robot.drivetrain.driveInches(-60, 0);
 
         robot.transport.chamberPos();

@@ -110,7 +110,7 @@ public class MM_Drivetrain {
         while (opMode.opModeIsActive() && (Math.abs(inchesError) < DRIVE_ERROR_THRESHOLD && Math.abs(headingError) < HEADING_ERROR_THRESHOLD)) {
             updateDrivePowers(targetInches, targetHeading);
             MM_Transport.updateTransport(pivotAngle, slideTargetInches, slideWantMax);
-            MM_Robot.collector.handleCollect(collect);
+            opMode.robot.collector.handleCollect(collect);
         }
 
     }
@@ -144,7 +144,7 @@ public class MM_Drivetrain {
         while (Math.abs(distanceError) < DISTANCE_THRESHOLD) {
             updateDistancePowers(targetDistance);
             MM_Transport.updateTransport(pivotAngle, slideTargetInches, slideWantMax);
-            MM_Robot.collector.handleCollect(collect);
+            opMode.robot.collector.handleCollect(collect);
         }
     }
 
@@ -153,7 +153,7 @@ public class MM_Drivetrain {
             updateDistancePowers(targetDistance);
         }
     }
-    
+
 
     public void updateDistancePowers(double targetDistance) {
         distance = backDistance.getDistance(DistanceUnit.INCH);
@@ -176,7 +176,7 @@ public class MM_Drivetrain {
         while ((Math.abs(inchesError) < DRIVE_ERROR_THRESHOLD || Math.abs(headingError) < HEADING_ERROR_THRESHOLD)){
             updateStrafePowers(targetInches, targetHeading);
             MM_Transport.updateTransport(pivotAngle, slideTargetInches, slideWantMax);
-            MM_Robot.collector.handleCollect(collect);
+            opMode.robot.collector.handleCollect(collect);
         }
 
 
@@ -190,7 +190,7 @@ public class MM_Drivetrain {
     }
 
     private void updateStrafePowers(double targetInches, int targetHeading) {
-        
+
         odometryController.update();
         odometryPos = odometryController.getPosition();
 
