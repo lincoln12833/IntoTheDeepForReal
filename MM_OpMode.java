@@ -16,6 +16,9 @@ public abstract class MM_OpMode extends LinearOpMode {
     public static Gamepad currentGamepad1 = new Gamepad();
     public static Gamepad previousGamepad1 = new Gamepad();
 
+    public static Gamepad currentGamepad2 = new Gamepad();
+    public static Gamepad previousGamepad2 = new Gamepad();
+
 
 
     @Override
@@ -30,6 +33,10 @@ public abstract class MM_OpMode extends LinearOpMode {
         while(opModeInInit()){
             previousGamepad1.copy(currentGamepad1);
             currentGamepad1.copy(gamepad1);
+
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad2.copy(gamepad2);
+
             telemetry.addData("Status", "Initialized.");
             if(getClass() == MM_Autos.class){
                 telemetry.addLine("Press right bumper to switch alliance.");
