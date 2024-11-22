@@ -16,11 +16,7 @@ public class MM_TeleOp extends MM_OpMode {
             robot.transport.runTransport();
             robot.collector.controlCollector();
 
-            MM_Transport.pivot.calculateAngle();
-
             telemetry.update();
         }
-
     }
-
 }

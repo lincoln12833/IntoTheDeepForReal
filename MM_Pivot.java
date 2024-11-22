@@ -1,20 +1,15 @@
 package org.firstinspires.ftc.teamcode.MM;
 
-import static org.firstinspires.ftc.teamcode.MM.MM_Collector.haveSample;
-
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class MM_Pivot {
     private final MM_OpMode opMode;
 
-    private DcMotorEx pivot = null;
+    public DcMotorEx pivot = null;
 
     private TouchSensor bottomLimit;
 
@@ -22,7 +17,7 @@ public class MM_Pivot {
 
     public final int TICK_INCREMENT = 28;
 
-    private final int MAX_HEIGHT = 1400;;
+    private final int MAX_HEIGHT = 1450;
 
     private final double DEGREE_OFFSET = 37;
 
@@ -40,14 +35,6 @@ public class MM_Pivot {
     }
 
     public void controlPivot(){
-        opMode.telemetry.addData("Current pos", pivot.getCurrentPosition());
-        opMode.telemetry.addData("target pos", pivot.getTargetPosition());
-        opMode.telemetry.addData("Current current", pivot.getCurrent(CurrentUnit.AMPS));
-        opMode.telemetry.addData("Current velocity", pivot.getVelocity());
-        opMode.telemetry.addData("PID Coefficients", pivot.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-        opMode.telemetry.addData("target position tolerance", pivot.getTargetPositionTolerance());
-        opMode.telemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
-        opMode.telemetry.addData("is over current =",  pivot.isOverCurrent());
         if (opMode.gamepad2.x && !bottomLimitIsTriggered()){
 
             pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -91,6 +78,17 @@ public class MM_Pivot {
 
         pivot.setTargetPosition(targetPos);
 
+        MM_Transport.pivotAngle = getCurrentAngle();
+
+        opMode.telemetry.addData("angle", MM_Transport.pivotAngle);
+        opMode.telemetry.addData("Current pos", pivot.getCurrentPosition()); //telemetry
+        opMode.telemetry.addData("target pos", pivot.getTargetPosition());
+        opMode.telemetry.addData("Current current", pivot.getCurrent(CurrentUnit.AMPS));
+        opMode.telemetry.addData("Current velocity", pivot.getVelocity());
+        opMode.telemetry.addData("PID Coefficients", pivot.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+        opMode.telemetry.addData("target position tolerance", pivot.getTargetPositionTolerance());
+        opMode.telemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
+        opMode.telemetry.addData("is over current =",  pivot.isOverCurrent());
     }
 
     public boolean bottomLimitIsTriggered(){
@@ -99,11 +97,11 @@ public class MM_Pivot {
 
     public void updatePivot(double targetPivotAngle){
         pivot.setTargetPosition((int)((targetPivotAngle * 6) / 360 / 537.7));
-        calculateAngle();
+        getCurrentAngle();
     }
 
-    public void calculateAngle(){
-        MM_Transport.angle = ((pivot.getCurrentPosition() / 6.0) * 360 * 537.7) + DEGREE_OFFSET;
+    public double getCurrentAngle(){
+        return ((pivot.getCurrentPosition() / 6.0) * 360 * 537.7) + DEGREE_OFFSET;
     }
 
     public void home(){

@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.MM;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-
 public class MM_Transport {
     private final MM_OpMode opMode;
 
     public static MM_Slide slide;
     public static MM_Pivot pivot;
 
-    public static double angle = 0;
+    public static double pivotAngle = 0;
 
     MM_Transport(MM_OpMode opMode){
         this.opMode = opMode;
@@ -27,9 +23,9 @@ public class MM_Transport {
     }
 
     public void runTransport(){
-        pivot.calculateAngle();
         pivot.controlPivot();
         slide.runSlide();
+
     }
 
     public void home(){

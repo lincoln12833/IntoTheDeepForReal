@@ -88,6 +88,13 @@ public class MM_Drivetrain {
 
         normalize(MAX_POWER);
 
+        if (slow){
+            flPower *= SLOW_POWER;
+            frPower *= SLOW_POWER;
+            blPower *= SLOW_POWER;
+            brPower *= SLOW_POWER;
+        }
+
         flMotor.setPower(flPower);
         frMotor.setPower(frPower);
         blMotor.setPower(blPower);
@@ -103,13 +110,13 @@ public class MM_Drivetrain {
         }
     }
 
-    public void driveInches(double targetInches, int targetHeading, double pivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
+    public void driveInches(double targetInches, int targetHeading, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
         odometryController.update();
         odometryPos = odometryController.getPosition();
 
         while (opMode.opModeIsActive() && (Math.abs(inchesError) < DRIVE_ERROR_THRESHOLD && Math.abs(headingError) < HEADING_ERROR_THRESHOLD)) {
             updateDrivePowers(targetInches, targetHeading);
-            MM_Transport.updateTransport(pivotAngle, slideTargetInches, slideWantMax);
+            MM_Transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
             opMode.robot.collector.handleCollect(collect);
         }
 
@@ -140,10 +147,10 @@ public class MM_Drivetrain {
         setDrivePowers();
     }
 
-    public void driveToDistance(double targetDistance, double pivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
+    public void driveToDistance(double targetDistance, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
         while (Math.abs(distanceError) < DISTANCE_THRESHOLD) {
             updateDistancePowers(targetDistance);
-            MM_Transport.updateTransport(pivotAngle, slideTargetInches, slideWantMax);
+            MM_Transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
             opMode.robot.collector.handleCollect(collect);
         }
     }
@@ -171,11 +178,11 @@ public class MM_Drivetrain {
         setDrivePowers();
     }
 
-    public void strafeInches(double targetInches, int targetHeading, double pivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect){
+    public void strafeInches(double targetInches, int targetHeading, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect){
 
         while ((Math.abs(inchesError) < DRIVE_ERROR_THRESHOLD || Math.abs(headingError) < HEADING_ERROR_THRESHOLD)){
             updateStrafePowers(targetInches, targetHeading);
-            MM_Transport.updateTransport(pivotAngle, slideTargetInches, slideWantMax);
+            MM_Transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
             opMode.robot.collector.handleCollect(collect);
         }
 
@@ -273,20 +280,11 @@ public class MM_Drivetrain {
     private void normalize(double contextualMaxPower){
         double maxPower = Math.max(Math.abs(flPower), Math.max(Math.abs(frPower), Math.max(Math.abs(blPower), Math.abs(brPower))));
 
-        slow = (!previousGamepad1.a && currentGamepad1.a)? !slow: slow; //DO NOT CHANGE ANDROID WAS WRONG (I triple checked this)
-
         if (maxPower > contextualMaxPower){
             flPower /= maxPower;
             frPower /= maxPower;
             blPower /= maxPower;
             brPower /= maxPower;
-        }
-
-        if (slow){
-            flPower *= SLOW_POWER;
-            frPower *= SLOW_POWER;
-            blPower *= SLOW_POWER;
-            brPower *= SLOW_POWER;
         }
     }
 
