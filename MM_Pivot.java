@@ -10,21 +10,21 @@ public class MM_Pivot {
     private final MM_OpMode opMode;
 
     public DcMotorEx pivot = null;
-
     private TouchSensor bottomLimit;
 
+    public final double TICKS_PER_REV = 1992.6;
+    public final double TICKS_PER_SHAFT_DEGREE = TICKS_PER_REV / 360;
+    public final double GEAR_RATIO = 6.0;
+    public final double TICKS_PER_PIVOT_DEGREE = TICKS_PER_SHAFT_DEGREE * GEAR_RATIO;
+    public final int TICK_INCREMENT = 100;
+
+    private final double OFFSET_PIVOT_ANGLE = -25; //Compensation for negative start angle: 25.7223
+    private final double MAX_PIVOT_ANGLE = 90;
+    private final int MAX_TICKS = (int)(TICKS_PER_PIVOT_DEGREE * (MAX_PIVOT_ANGLE - OFFSET_PIVOT_ANGLE)); //1450
+
     private boolean homing = false;
-
-    public final int TICK_INCREMENT = 28;
-
-    private final int MAX_HEIGHT = 1450;
-
-    private final double DEGREE_OFFSET = 37;
-
-
     public int targetPos = 0;
-
-    private boolean homingHandled = false;
+    private boolean modeInPosition = false;
 
 
 
@@ -35,48 +35,33 @@ public class MM_Pivot {
     }
 
     public void controlPivot(){
-        if (opMode.gamepad2.x && !bottomLimitIsTriggered()){
+        if(bottomLimit.isPressed() && !(opMode.gamepad2.left_stick_y < -.1)){
+            if(pivot.getCurrentPosition() != 0){
+                pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                pivot.setPower(0);
+                targetPos = 0;
+                homing = false;
+            }
+        } else {
+            if (Math.abs(opMode.gamepad2.left_stick_y) > .1) {
+                homing = false;
+                targetPos = Math.min((int) (pivot.getCurrentPosition() + (-opMode.gamepad2.left_stick_y * TICK_INCREMENT)), MAX_TICKS);
+            } else if (opMode.gamepad2.y){
+                homing = false;
+                targetPos = MAX_TICKS;
+            } else if (opMode.gamepad2.x){ // home
+                pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                pivot.setPower(-.7);
+                homing = true;
+            }
+            pivot.setTargetPosition(targetPos);
 
-            pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            pivot.setPower(-.7);
-            homing = true;
-        }
-
-        if (bottomLimitIsTriggered()){
-            targetPos = 0;
-            pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            pivot.setPower(0);
-            homing = false;
-
-        } else if (!homing) {
-            pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            pivot.setPower(1);
-        }
-
-        if (opMode.gamepad2.y){
-            homing = false;
-            targetPos = MAX_HEIGHT;
-        }
-
-        if(Math.abs(opMode.gamepad2.left_stick_y) > 0.1 && homing){
-            homing = false;
-            pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            pivot.setPower(1);
-            targetPos = pivot.getCurrentPosition();
-        }
-
-        if (-opMode.gamepad2.left_stick_y > .1){
-            if (pivot.getPower() < 1){
+            if ( (pivot.getMode() != DcMotor.RunMode.RUN_TO_POSITION && !homing)) { //Only when coming off touch sensor or stopping homing
                 pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 pivot.setPower(1);
             }
-            targetPos = Math.min(targetPos + TICK_INCREMENT, MAX_HEIGHT);
-        } else if (-opMode.gamepad2.left_stick_y < -.1){
-            targetPos = Math.max(targetPos - TICK_INCREMENT, 0);
         }
-
-        pivot.setTargetPosition(targetPos);
 
         MM_Transport.pivotAngle = getCurrentAngle();
 
@@ -96,12 +81,12 @@ public class MM_Pivot {
     }
 
     public void updatePivot(double targetPivotAngle){
-        pivot.setTargetPosition((int)((targetPivotAngle * 6) / 360 / 537.7));
+        setAngle(targetPivotAngle);
         getCurrentAngle();
     }
 
     public double getCurrentAngle(){
-        return ((pivot.getCurrentPosition() / 6.0) * 360 * 537.7) + DEGREE_OFFSET;
+        return (pivot.getCurrentPosition() / TICKS_PER_PIVOT_DEGREE) + OFFSET_PIVOT_ANGLE;
     }
 
     public void home(){
@@ -109,7 +94,7 @@ public class MM_Pivot {
     }
 
     public void setAngle(double angle){
-        pivot.setTargetPosition((int)((angle * 6) / 360 / 537.7));
+        pivot.setTargetPosition((int)((angle - OFFSET_PIVOT_ANGLE) * TICKS_PER_PIVOT_DEGREE));
     }
 
     public void init(){
@@ -122,8 +107,6 @@ public class MM_Pivot {
         pivot.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         pivot.setTargetPosition(0);
         pivot.setPower(1);
-
-
 
         bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "pivotBottomLimit");
     }

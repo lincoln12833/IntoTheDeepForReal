@@ -11,7 +11,7 @@ public class MM_Slide {
     private DcMotor slide;
     private TouchSensor bottomLimit;
 
-    private final int UPPER_LIMIT = 4000; //TODO FIND THE ACTUAL VAL
+    private final int MAX_TICKS = 3000;
     private final int SLIDE_TICK_INCREMENT = 45; //TODO FIND THE ACTUAL VAL
 
     private final double PULLEY_DIAMETER = 1.503937;
@@ -20,6 +20,7 @@ public class MM_Slide {
     private final double TICKS_PER_INCH = (TICKS_PER_REV / PULLEY_CIRCUMFERENCE);
 
     private int maxSlideTicks = 0;
+    private double distanceFromFloor = 0.5;
 
     private boolean isBottomLimitHandled = false;
     private int slideTargetTicks = 0;
@@ -31,8 +32,14 @@ public class MM_Slide {
     }
 
     public void runSlide() {
-        maxSlideTicks = (int) Math.min(UPPER_LIMIT, ((42 / Math.cos(Math.toRadians(MM_Transport.pivotAngle))) * TICKS_PER_INCH));
 
+        maxSlideTicks = (int) Math.min(MAX_TICKS, ((18 / Math.abs(Math.cos(Math.toRadians(MM_Transport.pivotAngle)))) * TICKS_PER_INCH));
+
+        if(MM_Transport.pivotAngle < 0) {
+            distanceFromFloor = 6.4166 - (14 * Math.abs(Math.sin(Math.toRadians(MM_Transport.pivotAngle))));
+
+            maxSlideTicks = (int)((((5.9/ (6.4166 - distanceFromFloor) ) * 14) - 14) * TICKS_PER_INCH);
+        }
         if (bottomLimitIsTriggered() && !isBottomLimitHandled) { // chunk 1
             slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             slide.setPower(0);
@@ -50,6 +57,8 @@ public class MM_Slide {
                 slideTargetTicks = Math.min(slideTargetTicks + SLIDE_TICK_INCREMENT, maxSlideTicks);
             }
 
+            slideTargetTicks = Math.min(slideTargetTicks, maxSlideTicks);
+
             slide.setTargetPosition(slideTargetTicks);
             slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             slide.setPower(1);
@@ -63,6 +72,7 @@ public class MM_Slide {
         opMode.telemetry.addData("current slide ticks", slide.getCurrentPosition());
         opMode.telemetry.addData("bottom limit is pressed?", bottomLimit.isPressed());
         opMode.telemetry.addData("bottom limit is handled?", isBottomLimitHandled);
+        opMode.telemetry.addData("distance from floor", distanceFromFloor);
     }
 
     public void home(){
@@ -70,11 +80,11 @@ public class MM_Slide {
     }
 
     public void updateSlide(boolean wantMax, double inches){
-        maxSlideTicks = Math.min((int)((42 / Math.cos(Math.toRadians(MM_Transport.pivotAngle))) * TICKS_PER_INCH), UPPER_LIMIT);
+        maxSlideTicks = Math.min((int)((42 / Math.cos(Math.toRadians(MM_Transport.pivotAngle))) * TICKS_PER_INCH), MAX_TICKS);
         if(wantMax) {
             slide.setTargetPosition(maxSlideTicks);
         } else {
-            slide.setTargetPosition((int)(Math.min((inches * TICKS_PER_INCH), Math.min(UPPER_LIMIT, maxSlideTicks))));
+            slide.setTargetPosition((int)(Math.min((inches * TICKS_PER_INCH), Math.min(MAX_TICKS, maxSlideTicks))));
         }
 
     }
