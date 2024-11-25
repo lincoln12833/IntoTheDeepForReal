@@ -26,12 +26,9 @@ public class MM_Pivot {
     public int targetPos = 0;
     private boolean modeInPosition = false;
 
-
-
     MM_Pivot(MM_OpMode opMode){
         this.opMode = opMode;
         init();
-
     }
 
     public void controlPivot(){
@@ -53,7 +50,10 @@ public class MM_Pivot {
             } else if (opMode.gamepad2.x){ // home
                 pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 pivot.setPower(-.7);
+                targetPos = 0;
                 homing = true;
+            } else if (homing){
+                home();
             }
             pivot.setTargetPosition(targetPos);
 
@@ -90,7 +90,11 @@ public class MM_Pivot {
     }
 
     public void home(){
-        pivot.setTargetPosition(0);
+        if (MM_Transport.slide.getCurrentSlideTicks() < MM_Transport.maxSlideTicksForAngle) {
+            pivot.setTargetPosition(0); // have to wait for slide - autos only
+        } else{
+            pivot.setTargetPosition(pivot.getCurrentPosition());
+        }
     }
 
     public void setAngle(double angle){
@@ -110,5 +114,4 @@ public class MM_Pivot {
 
         bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "pivotBottomLimit");
     }
-
 }

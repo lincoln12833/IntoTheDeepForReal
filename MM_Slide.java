@@ -5,26 +5,24 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class MM_Slide {
-
     private final MM_OpMode opMode;
 
     private DcMotor slide;
     private TouchSensor bottomLimit;
 
     private final int MAX_TICKS = 3000;
-    private final int SLIDE_TICK_INCREMENT = 45; //TODO FIND THE ACTUAL VAL
-
+    private final int SLIDE_TICK_INCREMENT = 100; //TODO FIND THE ACTUAL VAL
     private final double PULLEY_DIAMETER = 1.503937;
     private final double PULLEY_CIRCUMFERENCE = Math.PI * PULLEY_DIAMETER;
     private final double TICKS_PER_REV = 537.7;
     private final double TICKS_PER_INCH = (TICKS_PER_REV / PULLEY_CIRCUMFERENCE);
+    private final double MAX_EXTENSION_AT_HORIZONTAL = 18;
+    private final double MAX_INCHES_BELOW_HORIZONTAL = 4;
 
     private int maxSlideTicks = 0;
-    private double distanceFromFloor = 0.5;
-
-    private boolean isBottomLimitHandled = false;
+    private boolean BottomLimitIsHandled = false;
     private int slideTargetTicks = 0;
-
+    private boolean homing = false;
 
     MM_Slide(MM_OpMode opMode){
         this.opMode = opMode;
@@ -32,47 +30,47 @@ public class MM_Slide {
     }
 
     public void runSlide() {
+        setMaxSlideTicks(MM_Transport.pivotAngle);
 
-        maxSlideTicks = (int) Math.min(MAX_TICKS, ((18 / Math.abs(Math.cos(Math.toRadians(MM_Transport.pivotAngle)))) * TICKS_PER_INCH));
-
-        if(MM_Transport.pivotAngle < 0) {
-            distanceFromFloor = 6.4166 - (14 * Math.abs(Math.sin(Math.toRadians(MM_Transport.pivotAngle))));
-
-            maxSlideTicks = (int)((((5.9/ (6.4166 - distanceFromFloor) ) * 14) - 14) * TICKS_PER_INCH);
-        }
-        if (bottomLimitIsTriggered() && !isBottomLimitHandled) { // chunk 1
-            slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            slide.setPower(0);
-            slide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            slideTargetTicks = 0;
-            isBottomLimitHandled = true;
-        }
-
-        if (opMode.gamepad2.right_trigger > 0.1 || opMode.gamepad2.left_trigger > 0.1) { // chunk 2
-
-            if (opMode.gamepad2.left_trigger > 0.1) { // chunk 3
-                slideTargetTicks = Math.max(slideTargetTicks - SLIDE_TICK_INCREMENT, 0);
-
-            } else if (opMode.gamepad2.right_trigger > 0.1) { // chunk 4
-                slideTargetTicks = Math.min(slideTargetTicks + SLIDE_TICK_INCREMENT, maxSlideTicks);
+        if (bottomLimit.isPressed() && opMode.gamepad2.right_trigger < 0.05){  // dead weight - is this ok, or does it need to be powered?
+            if (slide.getCurrentPosition() != 0) { // chunk 1
+                slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+                //slide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);  // comment out for powered home
+                //slide.setPower(0);  // comment out for powered home
+                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);  // added for powered home
+                slideTargetTicks = 0;
+                homing = false;
+            }
+        } else {
+            if (opMode.gamepad2.left_trigger > 0.05) { // coming in
+                homing = false;
+                //slideTargetTicks = Math.max(slide.getCurrentPosition() - (int)(opMode.gamepad2.left_trigger * SLIDE_TICK_INCREMENT),0);
+                slideTargetTicks = slide.getCurrentPosition() - (int)(opMode.gamepad2.left_trigger * SLIDE_TICK_INCREMENT);
+            } else if (opMode.gamepad2.right_trigger > 0.05) { // going out
+                homing = false;
+                //slideTargetTicks = Math.min(slide.getCurrentPosition() + (int)(opMode.gamepad2.right_trigger * SLIDE_TICK_INCREMENT), maxSlideTicks);
+                slideTargetTicks = slide.getCurrentPosition() + (int)(opMode.gamepad2.right_trigger * SLIDE_TICK_INCREMENT);
+            } else if (opMode.gamepad2.x){ // home
+                slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                slide.setPower(-1);
+                slideTargetTicks = 0;
+                homing = true;
             }
 
-            slideTargetTicks = Math.min(slideTargetTicks, maxSlideTicks);
-
+            slideTargetTicks = Math.min(slideTargetTicks, MM_Transport.maxSlideTicksForAngle);
             slide.setTargetPosition(slideTargetTicks);
-            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            slide.setPower(1);
-            if (!bottomLimitIsTriggered()) { // chunk 5
-                isBottomLimitHandled = false;
+
+            if (slide.getMode() != DcMotor.RunMode.RUN_TO_POSITION && !homing) {
+                slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                slide.setPower(1);
             }
         }
 
         opMode.telemetry.addData("Max slide Ticks", maxSlideTicks);
-        opMode.telemetry.addData("target slide ticks", slideTargetTicks);
+        opMode.telemetry.addData("target slide ticks - variable", slideTargetTicks);
         opMode.telemetry.addData("current slide ticks", slide.getCurrentPosition());
         opMode.telemetry.addData("bottom limit is pressed?", bottomLimit.isPressed());
-        opMode.telemetry.addData("bottom limit is handled?", isBottomLimitHandled);
-        opMode.telemetry.addData("distance from floor", distanceFromFloor);
+        opMode.telemetry.addData("bottom limit is handled?", BottomLimitIsHandled);
     }
 
     public void home(){
@@ -86,11 +84,18 @@ public class MM_Slide {
         } else {
             slide.setTargetPosition((int)(Math.min((inches * TICKS_PER_INCH), Math.min(MAX_TICKS, maxSlideTicks))));
         }
-
     }
 
-    public boolean bottomLimitIsTriggered(){
-        return !bottomLimit.isPressed();
+    private void setMaxSlideTicks(double pivotAngle){
+        maxSlideTicks = (int) Math.min(MAX_TICKS, ((MAX_EXTENSION_AT_HORIZONTAL / Math.abs(Math.cos(Math.toRadians(pivotAngle)))) * TICKS_PER_INCH));
+        if (pivotAngle < 0) {
+            maxSlideTicks = (int) Math.min((MAX_INCHES_BELOW_HORIZONTAL/ Math.abs(Math.sin(Math.toRadians(pivotAngle))) - 14) * TICKS_PER_INCH,maxSlideTicks);
+        }
+        MM_Transport.maxSlideTicksForAngle = maxSlideTicks;
+    }
+
+    public int getCurrentSlideTicks(){
+        return slide.getCurrentPosition();
     }
 
     private void init() {

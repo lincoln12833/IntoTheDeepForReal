@@ -7,6 +7,7 @@ public class MM_Transport {
     public static MM_Pivot pivot;
 
     public static double pivotAngle = 0;
+    public static int maxSlideTicksForAngle = 0;
 
     MM_Transport(MM_OpMode opMode){
         this.opMode = opMode;
