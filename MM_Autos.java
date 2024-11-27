@@ -15,14 +15,15 @@ public class MM_Autos extends MM_OpMode{
     }
 
     public void chamber(){
-        robot.drivetrain.driveInches(5, 0, 34, 44, false, false);
+        robot.drivetrain.driveInches(-40, 179, 90, 0, false, false);
+
 
         //robot.drivetrain.driveInches(-60, 0);
         //robot.transport.chamberPos();
         //score specimen
 
-        robot.transport.home();
-        robot.drivetrain.strafeInches(39, 0, 5.47736, 36.667424, false, false);
+
+        //robot.drivetrain.strafeInches(39, 0, 5.47736, 36.667424, false, false);
 
 
         //TODO add robot dependant chamber code

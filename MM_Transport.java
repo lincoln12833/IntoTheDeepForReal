@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.MM;
 public class MM_Transport {
     private final MM_OpMode opMode;
 
-    public static MM_Slide slide;
-    public static MM_Pivot pivot;
+    public MM_Slide slide;
+    public MM_Pivot pivot;
 
     public static double pivotAngle = 0;
     public static int maxSlideTicksForAngle = 0;
@@ -18,7 +18,7 @@ public class MM_Transport {
         
     }
 
-    public static void updateTransport(double pivotAngle, double slideInches, boolean wantMax){
+    public void updateTransport(double pivotAngle, double slideInches, boolean wantMax){
         pivot.updatePivot(pivotAngle);
         slide.updateSlide(wantMax, slideInches);
     }

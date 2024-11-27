@@ -90,7 +90,7 @@ public class MM_Pivot {
     }
 
     public void home(){
-        if (MM_Transport.slide.getCurrentSlideTicks() < MM_Transport.maxSlideTicksForAngle) {
+        if (opMode.robot.transport.slide.getCurrentSlideTicks() < MM_Transport.maxSlideTicksForAngle) {
             pivot.setTargetPosition(0); // have to wait for slide - autos only
         } else{
             pivot.setTargetPosition(pivot.getCurrentPosition());

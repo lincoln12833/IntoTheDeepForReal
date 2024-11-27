@@ -23,7 +23,7 @@ public class MM_Collector {
 
     public void controlCollector(){
         if(opMode.gamepad2.right_bumper){
-            if (sampleTest.getDistance(DistanceUnit.MM) > 60 || MM_Transport.pivot.pivot.getCurrentPosition() >= (MM_Transport.pivot.MAX_TICKS *.75)) {
+            if (sampleTest.getDistance(DistanceUnit.MM) > 60 || opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75)) {
                 wheels.setPower(-.75);
                 haveSample = false;
             } else {

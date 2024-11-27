@@ -116,7 +116,7 @@ public class MM_Drivetrain {
 
         while (opMode.opModeIsActive() && (Math.abs(inchesError) < DRIVE_ERROR_THRESHOLD && Math.abs(headingError) < HEADING_ERROR_THRESHOLD)) {
             updateDrivePowers(targetInches, targetHeading);
-            MM_Transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
+            opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
             opMode.robot.collector.handleCollect(collect);
         }
 
@@ -150,7 +150,7 @@ public class MM_Drivetrain {
     public void driveToDistance(double targetDistance, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
         while (Math.abs(distanceError) < DISTANCE_THRESHOLD) {
             updateDistancePowers(targetDistance);
-            MM_Transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
+            opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
             opMode.robot.collector.handleCollect(collect);
         }
     }
@@ -182,7 +182,7 @@ public class MM_Drivetrain {
 
         while ((Math.abs(inchesError) < DRIVE_ERROR_THRESHOLD || Math.abs(headingError) < HEADING_ERROR_THRESHOLD)){
             updateStrafePowers(targetInches, targetHeading);
-            MM_Transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
+            opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
             opMode.robot.collector.handleCollect(collect);
         }
 
