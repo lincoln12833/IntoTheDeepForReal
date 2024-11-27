@@ -37,6 +37,11 @@ public class MM_Collector {
         }
     }
 
+    public void score(){
+        while(sampleTest.getDistance(DistanceUnit.MM) < 60) {
+            wheels.setPower(-1);
+        }
+    }
 
     public void handleCollect(boolean collect) {
         if(collect) {

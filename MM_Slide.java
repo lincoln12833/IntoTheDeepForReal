@@ -10,7 +10,7 @@ public class MM_Slide {
     private DcMotor slide;
     private TouchSensor bottomLimit;
 
-    private final int MAX_TICKS = 3000;
+    public final int MAX_TICKS = 3000;
     private final int SLIDE_TICK_INCREMENT = 100; //TODO FIND THE ACTUAL VAL
     private final double PULLEY_DIAMETER = 1.503937;
     private final double PULLEY_CIRCUMFERENCE = Math.PI * PULLEY_DIAMETER;
@@ -78,6 +78,16 @@ public class MM_Slide {
         opMode.telemetry.addData("bottom limit is pressed?", bottomLimit.isPressed());
         opMode.telemetry.addData("bottom limit is handled?", BottomLimitIsHandled);
         opMode.telemetry.addData("slide power", slide.getPower());
+    }
+
+    public void setTargetInches(double targetInches){
+        maxSlideTicks = Math.min((int)((42 / Math.cos(Math.toRadians(MM_Transport.pivotAngle))) * TICKS_PER_INCH), MAX_TICKS);
+        slide.setTargetPosition((int)(Math.min((targetInches * TICKS_PER_INCH), maxSlideTicks)));
+    }
+    public void setTargetTicks(int targetTicks){
+        maxSlideTicks = Math.min((int)((42 / Math.cos(Math.toRadians(MM_Transport.pivotAngle))) * TICKS_PER_INCH), MAX_TICKS);
+
+        slide.setTargetPosition(Math.min(targetTicks, maxSlideTicks));
     }
 
     public void home(){
