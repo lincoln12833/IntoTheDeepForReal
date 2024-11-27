@@ -16,11 +16,11 @@ public class MM_Pivot {
     public final double TICKS_PER_SHAFT_DEGREE = TICKS_PER_REV / 360;
     public final double GEAR_RATIO = 6.0;
     public final double TICKS_PER_PIVOT_DEGREE = TICKS_PER_SHAFT_DEGREE * GEAR_RATIO;
-    public final int TICK_INCREMENT = 100;
+    public final int TICK_INCREMENT = 150;
 
     private final double OFFSET_PIVOT_ANGLE = -25; //Compensation for negative start angle: 25.7223
     private final double MAX_PIVOT_ANGLE = 90;
-    private final int MAX_TICKS = (int)(TICKS_PER_PIVOT_DEGREE * (MAX_PIVOT_ANGLE - OFFSET_PIVOT_ANGLE)); //1450
+    public final int MAX_TICKS = (int)(TICKS_PER_PIVOT_DEGREE * (MAX_PIVOT_ANGLE - OFFSET_PIVOT_ANGLE)); //1450
 
     private boolean homing = false;
     public int targetPos = 0;
@@ -108,8 +108,9 @@ public class MM_Pivot {
 
         pivot.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         pivot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        pivot.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         pivot.setTargetPosition(0);
+        pivot.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
         pivot.setPower(1);
 
         bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "pivotBottomLimit");
