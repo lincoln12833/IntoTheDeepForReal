@@ -27,9 +27,11 @@ public class MM_Autos extends MM_OpMode{
     }
 
     public void basket() {
-        robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-        robot.drivetrain.driveInches(-5, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-//        sleep(30000);
+
+        robot.drivetrain.doEverything(-1, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
+        //        robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false); TODO test to see if doEverything() works then delete these lines
+//        robot.drivetrain.driveInches(-5, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
+//        sleep(30000); hihihihihi
         robot.collector.score();
         robot.drivetrain.driveInches(5, -45, 90, 14, false, false);
         robot.drivetrain.driveInches(8, 0, -12, 8, false, true);
