@@ -33,7 +33,7 @@ public class MM_Autos extends MM_OpMode{
         //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
         robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false); //TODO test to see if doEverything() works then delete these lines
         robot.drivetrain.driveInches(-5, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-//        sleep(30000); hihihihihi
+//        sleep(30000); hihihihihihi
         robot.collector.score();
         robot.drivetrain.driveInches(6, -45, 90, 14, false, false);
         robot.drivetrain.driveInches(8, 0, -13, 7.5, false, true);
