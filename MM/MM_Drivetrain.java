@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode.MM;
+package org.firstinspires.ftc.teamcode.MM.MM;
 
-import static org.firstinspires.ftc.teamcode.MM.MM_OpMode.currentGamepad1;
-import static org.firstinspires.ftc.teamcode.MM.MM_OpMode.previousGamepad1;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.currentGamepad1;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.previousGamepad1;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -36,6 +37,8 @@ public class MM_Drivetrain {
     public static double MIN_TURN_POWER = .15;
     public static double GYRO_TURN_P_COEFF = .016;
     public static double HEADING_ERROR_THRESHOLD = 3;
+
+    public static ElapsedTime collectTime = new ElapsedTime();
 
     private final double DRIVE_ERROR_THRESHOLD = 1;
     private final double DRIVE_P_COEFF = 0.03125;
@@ -118,14 +121,19 @@ public class MM_Drivetrain {
         odometryController.update();
         odometryPos = odometryController.getPosition();
 
-        targetDrivePos = targetInches + odometryPos.getX(DistanceUnit.INCH);
+        targetPos = targetInches + odometryPos.getX(DistanceUnit.INCH);
 
+        if (slideTargetInches > 0) {
+            opMode.robot.transport.slide.setPower(.5);
+        }
+        if (targetPivotAngle > -25) {
+            opMode.robot.transport.pivot.pivot.setPower(1);
+        }
 
         headingError = 100;
         while (opMode.opModeIsActive() && (!allMovementDone(collect))) {
             updateDrivePowers(targetInches, targetHeading);
             opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
-            opMode.robot.collector.handleCollect(collect);
         }
         setDrivePowers(0);
 
@@ -148,7 +156,7 @@ public class MM_Drivetrain {
         blPower = drivePower - rotatePower;
         brPower = drivePower + rotatePower;
 
-        normalize(MAX_TURN_POWER);
+        normalize(1);
         normalizeForMin(.28);
         opMode.telemetry.addLine("normalized");
 
@@ -208,7 +216,6 @@ public class MM_Drivetrain {
         while ( opMode.opModeIsActive() && !allMovementDone(collect)){
             updateStrafePowers(targetInches, targetHeading);
             opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
-            opMode.robot.collector.handleCollect(collect);
         }
         setDrivePowers(0);
     }
@@ -216,6 +223,10 @@ public class MM_Drivetrain {
     public void strafeInches(double targetInches, int targetHeading){
         odometryController.update();
         odometryPos = odometryController.getPosition();
+
+        targetPos = targetInches + odometryPos.getY(DistanceUnit.INCH);
+        headingError = 100;
+
         while (opMode.opModeIsActive() && !allMovementDone(false)){
             updateStrafePowers(targetInches, targetHeading);
         }
@@ -286,9 +297,18 @@ public class MM_Drivetrain {
     }
 
     public void doEverything(double targetDriveInches, double targetStrafeInches, int targetHeading, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect){
+        odometryController.update();
+        odometryPos = odometryController.getPosition();
 
         targetDrivePos = targetDriveInches + odometryPos.getX(DistanceUnit.INCH);
         targetStrafePos = targetStrafeInches + odometryPos.getY(DistanceUnit.INCH);
+
+        if (slideTargetInches > 0) {
+            opMode.robot.transport.slide.setPower(.5);
+        }
+        if (targetPivotAngle > -25) {
+            opMode.robot.transport.pivot.pivot.setPower(1);
+        }
 
         headingError = 100;
         while (opMode.opModeIsActive() && !allMovementDone(collect)) {
@@ -389,6 +409,11 @@ public class MM_Drivetrain {
         strafeDone = Math.abs(strafeInchesError) < DRIVE_ERROR_THRESHOLD;
         driveDone = Math.abs(driveInchesError) < DRIVE_ERROR_THRESHOLD;
         boolean transportDone = opMode.robot.transport.transportMovementDone();
+        if (transportDone && opMode.robot.collector.getPower() == 0 && collect) {
+            opMode.robot.collector.setPower(-.6);
+            collectTime.reset();
+        }
+        boolean collectDone = opMode.robot.collector.collectDone(collect);
 
         opMode.telemetry.addData("rotate Done", rotateDone);
         opMode.telemetry.addData("strafe done", strafeDone);
@@ -396,7 +421,7 @@ public class MM_Drivetrain {
         opMode.telemetry.addData("transport done", transportDone);
         opMode.telemetry.update();
 
-        return (driveDone && strafeDone && rotateDone && transportDone && opMode.robot.collector.collectDone(collect));
+        return (driveDone && strafeDone && rotateDone && transportDone && collectDone);
     }
 
     private void init(){

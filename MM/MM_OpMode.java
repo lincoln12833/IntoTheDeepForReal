@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.MM;
+package org.firstinspires.ftc.teamcode.MM.MM;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class MM_OpMode extends LinearOpMode {
     MM_Robot robot = null;
@@ -20,11 +21,10 @@ public abstract class MM_OpMode extends LinearOpMode {
     public static Gamepad previousGamepad2 = new Gamepad();
 
 
-
     @Override
     public void runOpMode(){
         alliance = BLUE;
-        goal = CHAMBER;
+        goal = BASKET;
         telemetry.addData("Status", "Initializing... please wait.");
         telemetry.update();
 

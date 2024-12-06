@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MM;
+package org.firstinspires.ftc.teamcode.MM.MM;
 
 public class MM_Robot{
     private final MM_OpMode opMode;

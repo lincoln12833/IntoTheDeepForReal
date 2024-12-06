@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MM;
+package org.firstinspires.ftc.teamcode.MM.MM;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

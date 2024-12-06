@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MM;
+package org.firstinspires.ftc.teamcode.MM.MM;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -40,6 +40,14 @@ public class MM_Collector {
         }
     }
 
+    public double getPower(){
+        return wheels.getPower();
+    }
+
+    public void setPower(double power){
+        wheels.setPower(power);
+    }
+
     public void score(){
         while(sampleTest.getDistance(DistanceUnit.MM) < 60) {
             wheels.setPower(-1);
@@ -61,8 +69,22 @@ public class MM_Collector {
 
     }
 
+    public boolean haveSample(){
+        if (sampleTest.getDistance(DistanceUnit.MM) > 60) {
+            haveSample = false;
+        } else {
+            haveSample = true;
+        }
+        return haveSample;
+    }
+
     public boolean collectDone(boolean collect){
-        return haveSample || !collect;
+        if(haveSample() || !collect || MM_Drivetrain.collectTime.milliseconds() > 1000){
+            wheels.setPower(0);
+            return true;
+        } else{
+            return false;
+        }
     }
 
     public void init(){
