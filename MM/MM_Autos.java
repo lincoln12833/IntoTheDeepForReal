@@ -36,13 +36,13 @@ public class MM_Autos extends MM_OpMode{
 //        sleep(30000); hihihihihihi
         robot.collector.score();
         robot.drivetrain.driveInches(6, -45, 90, 14, false, false);
-        robot.drivetrain.driveInches(8, 0, -13, 7.5, false, true);
+        robot.drivetrain.driveInches(7, 0, -13, 7.5, false, true);
         if(robot.collector.haveSample()) {
-            robot.drivetrain.driveInches(-14, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
+            robot.drivetrain.driveInches(-13, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
             robot.collector.score();
             robot.drivetrain.driveInches(13, 0, -5, 5, false, false);
         } else {
-            robot.drivetrain.driveInches(-2, 0, -5, 8.5, false, false);
+            //robot.drivetrain.driveInches(-2, 0, -5, 8.5, false, false);
             robot.drivetrain.strafeInches(-2, 0);
         }
         robot.drivetrain.strafeInches(-7.5, 0, -5, 8.5, false, false);

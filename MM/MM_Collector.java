@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.currentGamepad2;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.previousGamepad2;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +15,8 @@ public class MM_Collector {
 
     private ColorRangeSensor sampleTest;
     private DcMotor wheels;
+
+    //private boolean toggle = false;
 
     public static boolean haveSample;
 
@@ -26,7 +31,7 @@ public class MM_Collector {
             if (sampleTest.getDistance(DistanceUnit.MM) > 60) {
                 wheels.setPower(-.6);
                 haveSample = false;
-            } else if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75)){
+            } else if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
                 wheels.setPower(-1);
                 haveSample = false;
             } else {
@@ -38,6 +43,10 @@ public class MM_Collector {
         } else {
             wheels.setPower(0);
         }
+
+//        if(currentGamepad2.a && !previousGamepad2.a){
+//            toggle = !toggle;
+//        }
     }
 
     public double getPower(){
