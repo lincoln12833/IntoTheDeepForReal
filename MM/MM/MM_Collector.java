@@ -1,12 +1,7 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
-import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.currentGamepad2;
-import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.previousGamepad2;
-
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
