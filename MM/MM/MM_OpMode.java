@@ -21,6 +21,8 @@ public abstract class MM_OpMode extends LinearOpMode {
 
     @Override
     public void runOpMode(){
+
+
         alliance = BLUE;
         goal = BASKET;
         telemetry.addData("Status", "Initializing... please wait.");
