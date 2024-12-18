@@ -158,12 +158,12 @@ public class MM_Drivetrain {
 
         normalize(1);
         normalizeForMin(.28);
-        opMode.telemetry.addLine("normalized");
+        opMode.multipleTelemetry.addLine("normalized");
 
         setDrivePowers();
 
-        opMode.telemetry.addData("heading error", headingError);
-        opMode.telemetry.addData("inches error", driveInchesError);
+        opMode.multipleTelemetry.addData("heading error", headingError);
+        opMode.multipleTelemetry.addData("inches error", driveInchesError);
     }
 
     //hi
@@ -252,14 +252,14 @@ public class MM_Drivetrain {
         normalize(MAX_TURN_POWER);
         normalizeForMin(.28);
 
-        opMode.telemetry.addData("strafe error", strafeInchesError);
-        opMode.telemetry.addData("strafe power", strafePower);
-        opMode.telemetry.addData("Heading error", headingError);
-        opMode.telemetry.addData("rotate power", rotatePower);
-        opMode.telemetry.addData("flPower", flPower);
-        opMode.telemetry.addData("frPower", frPower);
-        opMode.telemetry.addData("blPower", blPower);
-        opMode.telemetry.addData("bbrPower", brPower);
+        opMode.multipleTelemetry.addData("strafe error", strafeInchesError);
+        opMode.multipleTelemetry.addData("strafe power", strafePower);
+        opMode.multipleTelemetry.addData("Heading error", headingError);
+        opMode.multipleTelemetry.addData("rotate power", rotatePower);
+        opMode.multipleTelemetry.addData("flPower", flPower);
+        opMode.multipleTelemetry.addData("frPower", frPower);
+        opMode.multipleTelemetry.addData("blPower", blPower);
+        opMode.multipleTelemetry.addData("bbrPower", brPower);
 
         setDrivePowers();
     }
@@ -288,10 +288,10 @@ public class MM_Drivetrain {
 
             headingError = getHeadingError(targetAngle, odometryPos.getHeading(AngleUnit.DEGREES));
 
-            opMode.telemetry.addData("power", power);
-            opMode.telemetry.addData("error", headingError);
-//            opMode.telemetry.addData("heading", heading);
-            opMode.telemetry.update();
+            opMode.multipleTelemetry.addData("power", power);
+            opMode.multipleTelemetry.addData("error", headingError);
+//            opMode.multipleTelemetry.addData("heading", heading);
+            opMode.multipleTelemetry.update();
         }
         setDrivePowers(0);
     }
@@ -340,14 +340,14 @@ public class MM_Drivetrain {
         normalize(MAX_TURN_POWER);
         normalizeForMin(.28);
 
-        opMode.telemetry.addData("strafe error", strafeInchesError);
-        opMode.telemetry.addData("strafe power", strafePower);
-        opMode.telemetry.addData("Heading error", headingError);
-        opMode.telemetry.addData("rotate power", rotatePower);
-        opMode.telemetry.addData("flPower", flPower);
-        opMode.telemetry.addData("frPower", frPower);
-        opMode.telemetry.addData("blPower", blPower);
-        opMode.telemetry.addData("bbrPower", brPower);
+        opMode.multipleTelemetry.addData("strafe error", strafeInchesError);
+        opMode.multipleTelemetry.addData("strafe power", strafePower);
+        opMode.multipleTelemetry.addData("Heading error", headingError);
+        opMode.multipleTelemetry.addData("rotate power", rotatePower);
+        opMode.multipleTelemetry.addData("flPower", flPower);
+        opMode.multipleTelemetry.addData("frPower", frPower);
+        opMode.multipleTelemetry.addData("blPower", blPower);
+        opMode.multipleTelemetry.addData("bbrPower", brPower);
 
         setDrivePowers();
     }
@@ -415,13 +415,24 @@ public class MM_Drivetrain {
         }
         boolean collectDone = opMode.robot.collector.collectDone(collect);
 
-        opMode.telemetry.addData("rotate Done", rotateDone);
-        opMode.telemetry.addData("strafe done", strafeDone);
-        opMode.telemetry.addData("drive done", driveDone);
-        opMode.telemetry.addData("transport done", transportDone);
-        opMode.telemetry.update();
+        opMode.multipleTelemetry.addData("rotate Done", rotateDone);
+        opMode.multipleTelemetry.addData("strafe done", strafeDone);
+        opMode.multipleTelemetry.addData("drive done", driveDone);
+        opMode.multipleTelemetry.addData("transport done", transportDone);
+        opMode.multipleTelemetry.update();
 
         return (driveDone && strafeDone && rotateDone && transportDone && collectDone);
+    }
+
+    public void updatePinpoint(){
+        odometryController.setPosition(MM_Robot.position);
+        odometryPos = odometryController.getPosition();
+    }
+
+    public void setPositionFromPinpoint(){
+        odometryController.update();
+        odometryPos = odometryController.getPosition();
+        MM_Robot.position = new Pose2D(DistanceUnit.INCH, odometryPos.getX(DistanceUnit.INCH), odometryPos.getY(DistanceUnit.INCH), AngleUnit.DEGREES, odometryPos.getHeading(AngleUnit.DEGREES));
     }
 
     private void init(){

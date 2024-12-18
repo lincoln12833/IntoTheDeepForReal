@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 public class MM_Robot{
     private final MM_OpMode opMode;
     
@@ -9,7 +13,8 @@ public class MM_Robot{
     public MM_VisionPortal visionPortal;
 
     public static double robotX;
-    public static double robotY;
+    public static double robotY; //TODO add robot heading
+    public static Pose2D position;
 
 
 
@@ -26,5 +31,18 @@ public class MM_Robot{
         visionPortal = new MM_VisionPortal(opMode);
     }
 
+
+    public void updatePosition(){
+        if(visionPortal.setPosFromApriltag()){
+            drivetrain.updatePinpoint();
+        }
+
+        drivetrain.setPositionFromPinpoint();
+
+        opMode.multipleTelemetry.addData("robot x", position.getX(DistanceUnit.INCH));
+        opMode.multipleTelemetry.addData("robot y", position.getY(DistanceUnit.INCH));
+        opMode.multipleTelemetry.addData("robot yaw", position.getHeading(AngleUnit.DEGREES));
+
+    }
 
 }

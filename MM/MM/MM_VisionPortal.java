@@ -4,18 +4,23 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.google.blocks.ftcrobotcontroller.runtime.obsolete.TfodAccess;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MM_VisionPortal {
@@ -31,6 +36,21 @@ public class MM_VisionPortal {
         init();
     }
 
+    public boolean setPosFromApriltag(){
+        List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
+        if(!detections.isEmpty()){
+            MM_Robot.robotX = detections.get(0).robotPose.getPosition().x;
+            MM_Robot.robotY = detections.get(0).robotPose.getPosition().y;
+            MM_Robot.position = new Pose2D(DistanceUnit.INCH, MM_Robot.robotX, MM_Robot.robotY, AngleUnit.DEGREES, detections.get(0).robotPose.getOrientation().getYaw()); //odometryPos.getHeading(AngleUnit.DEGREES));
+
+            opMode.multipleTelemetry.addData("got in if?", "yes");
+            opMode.multipleTelemetry.addData("robot pos x", detections.get(0).robotPose.getPosition().x);
+            opMode.multipleTelemetry.addData("robot pos y", detections.get(0).robotPose.getPosition().y);
+            return true;
+        }
+
+        return false;
+    }
 
     private void init(){
         final CameraStreamProcessor cameraStreamProcessor = new CameraStreamProcessor();
@@ -43,6 +63,7 @@ public class MM_VisionPortal {
                 .build();
 
         visionPortal = new VisionPortal.Builder()
+                .setCamera(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(aprilTagProcessor)
                 .addProcessor(cameraStreamProcessor)
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)

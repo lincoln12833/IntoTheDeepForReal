@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -19,14 +22,16 @@ public abstract class MM_OpMode extends LinearOpMode {
     public static Gamepad currentGamepad2 = new Gamepad();
     public static Gamepad previousGamepad2 = new Gamepad();
 
+    public MultipleTelemetry multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+
     @Override
     public void runOpMode(){
 
 
         alliance = BLUE;
         goal = BASKET;
-        telemetry.addData("Status", "Initializing... please wait.");
-        telemetry.update();
+        multipleTelemetry.addData("Status", "Initializing... please wait.");
+        multipleTelemetry.update();
 
         initMM();
 
@@ -37,12 +42,12 @@ public abstract class MM_OpMode extends LinearOpMode {
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
 
-            telemetry.addData("Status", "Initialized.");
+            multipleTelemetry.addData("Status", "Initialized.");
             if(getClass() == MM_Autos.class){
-                telemetry.addLine("Press right bumper to switch alliance.");
-                telemetry.addLine("Press left bumper to switch goal.");
-                telemetry.addData("Alliance", alliance);
-                telemetry.addData("Goal", goal);
+                multipleTelemetry.addLine("Press right bumper to switch alliance.");
+                multipleTelemetry.addLine("Press left bumper to switch goal.");
+                multipleTelemetry.addData("Alliance", alliance);
+                multipleTelemetry.addData("Goal", goal);
 
                 if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
                     alliance = alliance.equals(BLUE)? RED: BLUE;
@@ -51,7 +56,7 @@ public abstract class MM_OpMode extends LinearOpMode {
                     goal = goal.equals(CHAMBER)? BASKET: CHAMBER;
                 }
             }
-            telemetry.update();
+            multipleTelemetry.update();
         }
 
         runProcedures();

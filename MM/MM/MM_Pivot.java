@@ -65,15 +65,15 @@ public class MM_Pivot {
 
         MM_Transport.pivotAngle = getCurrentAngle();
 
-        opMode.telemetry.addData("angle", MM_Transport.pivotAngle);
-        opMode.telemetry.addData("Current pos", pivot.getCurrentPosition()); //telemetry
-        opMode.telemetry.addData("target pos", pivot.getTargetPosition());
-        opMode.telemetry.addData("Current current", pivot.getCurrent(CurrentUnit.AMPS));
-        opMode.telemetry.addData("Current velocity", pivot.getVelocity());
-        opMode.telemetry.addData("PID Coefficients", pivot.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-        opMode.telemetry.addData("target position tolerance", pivot.getTargetPositionTolerance());
-        opMode.telemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
-        opMode.telemetry.addData("is over current =",  pivot.isOverCurrent());
+        opMode.multipleTelemetry.addData("angle", MM_Transport.pivotAngle);
+        opMode.multipleTelemetry.addData("Current pos", pivot.getCurrentPosition()); //multipleTelemetry
+        opMode.multipleTelemetry.addData("target pos", pivot.getTargetPosition());
+        opMode.multipleTelemetry.addData("Current current", pivot.getCurrent(CurrentUnit.AMPS));
+        opMode.multipleTelemetry.addData("Current velocity", pivot.getVelocity());
+        opMode.multipleTelemetry.addData("PID Coefficients", pivot.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+        opMode.multipleTelemetry.addData("target position tolerance", pivot.getTargetPositionTolerance());
+        opMode.multipleTelemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
+        opMode.multipleTelemetry.addData("is over current =",  pivot.isOverCurrent());
     }
 
     public boolean bottomLimitIsTriggered(){

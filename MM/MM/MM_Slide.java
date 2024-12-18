@@ -72,12 +72,12 @@ public class MM_Slide {
             holdingHome = false;
         }
 
-        opMode.telemetry.addData("Max slide Ticks", maxSlideTicks);
-        opMode.telemetry.addData("target slide ticks - variable", slideTargetTicks);
-        opMode.telemetry.addData("current slide ticks", slide.getCurrentPosition());
-        opMode.telemetry.addData("bottom limit is pressed?", bottomLimit.isPressed());
-        opMode.telemetry.addData("bottom limit is handled?", BottomLimitIsHandled);
-        opMode.telemetry.addData("slide power", slide.getPower());
+        opMode.multipleTelemetry.addData("Max slide Ticks", maxSlideTicks);
+        opMode.multipleTelemetry.addData("target slide ticks - variable", slideTargetTicks);
+        opMode.multipleTelemetry.addData("current slide ticks", slide.getCurrentPosition());
+        opMode.multipleTelemetry.addData("bottom limit is pressed?", bottomLimit.isPressed());
+        opMode.multipleTelemetry.addData("bottom limit is handled?", BottomLimitIsHandled);
+        opMode.multipleTelemetry.addData("slide power", slide.getPower());
     }
 
     public void setTargetInches(double targetInches){

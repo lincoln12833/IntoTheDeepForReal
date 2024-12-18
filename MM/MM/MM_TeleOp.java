@@ -15,8 +15,9 @@ public class MM_TeleOp extends MM_OpMode {
             robot.drivetrain.driveWithSticks(); //control mechanisms
             robot.transport.runTransport();
             robot.collector.controlCollector();
+            robot.updatePosition();
 
-            telemetry.update();
+            multipleTelemetry.update();
         }
     }
 }
