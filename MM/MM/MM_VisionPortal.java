@@ -10,7 +10,10 @@ import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -36,20 +39,14 @@ public class MM_VisionPortal {
         init();
     }
 
-    public boolean setPosFromApriltag(){
+    public Pose2D setPosFromApriltag(){
         List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
         if(!detections.isEmpty()){
-            MM_Robot.robotX = detections.get(0).robotPose.getPosition().x;
-            MM_Robot.robotY = detections.get(0).robotPose.getPosition().y;
-            MM_Robot.position = new Pose2D(DistanceUnit.INCH, MM_Robot.robotX, MM_Robot.robotY, AngleUnit.DEGREES, detections.get(0).robotPose.getOrientation().getYaw()); //odometryPos.getHeading(AngleUnit.DEGREES));
-
-            opMode.multipleTelemetry.addData("got in if?", "yes");
-            opMode.multipleTelemetry.addData("robot pos x", detections.get(0).robotPose.getPosition().x);
-            opMode.multipleTelemetry.addData("robot pos y", detections.get(0).robotPose.getPosition().y);
-            return true;
+            return new Pose2D(DistanceUnit.INCH, detections.get(0).robotPose.getPosition().x,
+                    detections.get(0).robotPose.getPosition().y, AngleUnit.DEGREES, detections.get(0).robotPose.getOrientation().getYaw());
         }
 
-        return false;
+        return null;
     }
 
     private void init(){
@@ -60,6 +57,8 @@ public class MM_VisionPortal {
                 .setDrawTagOutline(true)
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
+                .setCameraPose(new Position(DistanceUnit.INCH, 0.0, 0.0, 0.0, 0L),
+                        new YawPitchRollAngles(AngleUnit.DEGREES, -90, -90, 0, 0L))
                 .build();
 
         visionPortal = new VisionPortal.Builder()

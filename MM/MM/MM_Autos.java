@@ -2,20 +2,21 @@ package org.firstinspires.ftc.teamcode.MM.MM;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Autos original", group="mm")
+@Autonomous(name="Autos", group="mm")
 public class MM_Autos extends MM_OpMode{
 
     @Override
     public void runProcedures(){
-        if (goal.equals(CHAMBER)){
-            chamber();
-        } else {
-            basket();
-        }
+//        if (goal.equals(CHAMBER)){
+//            chamber();
+//        } else {
+//            basket();
+//        }
+        robot.drivetrain.driveToPosition(48, 48, 0);
     }
 
     public void chamber(){
-        robot.drivetrain.driveInches(24, 0);
+    //    robot.drivetrain.driveInches(24, 0);
 
 //        robot.drivetrain.driveInches(4, 0);
 //        robot.drivetrain.rotateToAngle(179);
@@ -30,26 +31,26 @@ public class MM_Autos extends MM_OpMode{
 
     public void basket() { //pre-penfield code (before inch change)
 
-        //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-        robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false); //TODO test to see if doEverything() works then delete these lines
-        robot.drivetrain.driveInches(-5, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-//        sleep(30000); hihihihihihi
-        robot.collector.score();
-        robot.drivetrain.driveInches(6, -45, 90, 14, false, false);
-        robot.drivetrain.driveInches(7, 0, -13, 7.5, false, true);
-        if(robot.collector.haveSample()) {
-            robot.drivetrain.driveInches(-13, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-            robot.collector.score();
-            robot.drivetrain.driveInches(13, 0, -5, 5, false, false);
-        } else {
-            //robot.drivetrain.driveInches(-2, 0, -5, 8.5, false, false);
-            robot.drivetrain.strafeInches(-2, 0);
-        }
-        robot.drivetrain.strafeInches(-7.5, 0, -5, 8.5, false, false);
-        robot.drivetrain.strafeInches(-.1, 0, -12, 8.5, false, true);
-        robot.drivetrain.strafeInches(6.5, 0, 90, robot.transport.slide.MAX_TICKS, true, false);
-        robot.drivetrain.driveInches(-11.5, -50);
-        robot.collector.score();
+//        //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
+//        robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false); //TODO test to see if doEverything() works then delete these lines
+//        robot.drivetrain.driveInches(-5, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
+////        sleep(30000); hihihihihihi
+//        robot.collector.score();
+//        robot.drivetrain.driveInches(6, -45, 90, 14, false, false);
+//        robot.drivetrain.driveInches(7, 0, -13, 7.5, false, true);
+//        if(robot.collector.haveSample()) {
+//            robot.drivetrain.driveInches(-13, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
+//            robot.collector.score();
+//            robot.drivetrain.driveInches(13, 0, -5, 5, false, false);
+//        } else {
+//            //robot.drivetrain.driveInches(-2, 0, -5, 8.5, false, false);
+//            robot.drivetrain.strafeInches(-2, 0);
+//        }
+//        robot.drivetrain.strafeInches(-7.5, 0, -5, 8.5, false, false);
+//        robot.drivetrain.strafeInches(-.1, 0, -12, 8.5, false, true);
+//        robot.drivetrain.strafeInches(6.5, 0, 90, robot.transport.slide.MAX_TICKS, true, false);
+//        robot.drivetrain.driveInches(-11.5, -50);
+//        robot.collector.score();
 //        robot.drivetrain.driveInches(13, 29, 90, 11, false, false);
 //        robot.drivetrain.driveInches(.2, 29, -12, 8, false, true);
 ////        robot.drivetrain.rotateToAngle(-90);

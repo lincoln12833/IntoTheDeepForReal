@@ -10,39 +10,16 @@ public class MM_Robot{
     public MM_Drivetrain drivetrain;
     public MM_Transport transport;
     public MM_Collector collector;
-    public MM_VisionPortal visionPortal;
-
-    public static double robotX;
-    public static double robotY; //TODO add robot heading
-    public static Pose2D position;
-
-
+    public MM_Navigation navigation;
 
     MM_Robot(MM_OpMode opMode){
         this.opMode = opMode;
     }
 
-
-
     public void init() {
         drivetrain = new MM_Drivetrain(opMode);
         transport = new MM_Transport(opMode);
         collector = new MM_Collector(opMode);
-        visionPortal = new MM_VisionPortal(opMode);
+        navigation = new MM_Navigation(opMode);
     }
-
-
-    public void updatePosition(){
-        if(visionPortal.setPosFromApriltag()){
-            drivetrain.updatePinpoint();
-        }
-
-        drivetrain.setPositionFromPinpoint();
-
-        opMode.multipleTelemetry.addData("robot x", position.getX(DistanceUnit.INCH));
-        opMode.multipleTelemetry.addData("robot y", position.getY(DistanceUnit.INCH));
-        opMode.multipleTelemetry.addData("robot yaw", position.getHeading(AngleUnit.DEGREES));
-
-    }
-
 }
