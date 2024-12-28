@@ -45,6 +45,9 @@ public class MM_Drivetrain {
 
     private final double DISTANCE_THRESHOLD = .5;
 
+    private double xError;
+    private double yError;
+
     private double flPower;
     private double frPower;
     private double blPower;
@@ -166,7 +169,16 @@ public class MM_Drivetrain {
         opMode.multipleTelemetry.addData("inches error", driveInchesError);
     }
 
-    //hi
+    public void driveToPosition(double targetFieldPosX, double targetFieldPosY, double targetHeading) {
+        opMode.robot.updatePosition();
+        xError = MM_Robot.position.getX(DistanceUnit.INCH) - targetFieldPosX;
+        yError = MM_Robot.position.getY(DistanceUnit.INCH) - targetFieldPosY;
+        headingError = MM_Robot.position.getHeading(AngleUnit.DEGREES) - targetHeading;
+
+        drivePower = yError * DRIVE_P_COEFF * MAX_POWER;
+        strafePower = xError * DRIVE_P_COEFF * MAX_POWER;
+        //rotatePower
+    }
 
     public void driveToDistance(double targetDistance, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
         while (Math.abs(distanceError) > DISTANCE_THRESHOLD) {
@@ -327,7 +339,7 @@ public class MM_Drivetrain {
         strafeInchesError = targetStrafePos - (odometryPos.getY(DistanceUnit.INCH));
 
 
-        rotatePower = rotateDone? 0: MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
+        rotatePower = 0; //rotateDone? 0: MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
         strafePower = strafeDone? 0: MAX_POWER * strafeInchesError * DRIVE_P_COEFF;
         drivePower = driveDone? 0: MAX_POWER * driveInchesError * DRIVE_P_COEFF;
 

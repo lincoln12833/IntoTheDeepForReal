@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.MM.MM;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Autos", group="mm")
+@Autonomous(name="Autos original", group="mm")
 public class MM_Autos extends MM_OpMode{
 
     @Override
@@ -28,7 +28,7 @@ public class MM_Autos extends MM_OpMode{
         //TODO TEST
     }
 
-    public void basket() {
+    public void basket() { //pre-penfield code (before inch change)
 
         //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
         robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false); //TODO test to see if doEverything() works then delete these lines
