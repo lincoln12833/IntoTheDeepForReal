@@ -101,8 +101,6 @@ public class MM_Drivetrain {
     }
 
     public boolean driveToPosition(double targetX, double targetY, double targetHeading) {
-        targetHeading = opMode.robot.navigation.getHeading();
-
         while (opMode.opModeIsActive() && !allMovementDone(false)) {
             opMode.robot.navigation.updatePosition();
             xError = targetX - opMode.robot.navigation.getX();
@@ -116,14 +114,14 @@ public class MM_Drivetrain {
     }
 
     public void calculateAndSetDrivePowers(double xError, double yError, double headingError){
-        rotatePower = 0; //rotateDone? 0: MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
+        rotatePower = rotateDone? 0: MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
         xPower = driveDone? 0: MAX_POWER * xError * DRIVE_P_COEFF;
         yPower = strafeDone? 0: MAX_POWER * yError * DRIVE_P_COEFF;
 
-        flPower = xPower + yPower - rotatePower;
-        frPower = xPower - yPower + rotatePower;
-        blPower = xPower - yPower - rotatePower;
-        brPower = xPower + yPower + rotatePower;
+        flPower = xPower + yPower + rotatePower;
+        frPower = xPower - yPower - rotatePower;
+        blPower = xPower - yPower + rotatePower;
+        brPower = xPower + yPower - rotatePower;
 
         normalize(0.7);
         normalizeForMin(.28);
