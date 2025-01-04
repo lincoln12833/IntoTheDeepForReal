@@ -36,7 +36,7 @@ public class MM_Drivetrain {
     private final double DRIVE_ERROR_THRESHOLD = 1;
     private final double DRIVE_P_COEFF = 0.015625; //prev 0.03125
 
-    private final double TANGENT_THRESHOLD = 2;
+    private final double TANGENT_THRESHOLD = 1;
 
     private final double DISTANCE_THRESHOLD = .5;
 
@@ -123,21 +123,20 @@ public class MM_Drivetrain {
 
     public void calculateAndSetDrivePowers(double xError, double yError, double headingError){
         double moveAngle = Math.toDegrees(Math.atan2(yError, xError));
-        double theta = moveAngle - opMode.robot.navigation.odometryController.getHeading();
+        double theta = moveAngle - opMode.robot.navigation.odometryController.getHeading() + 45;
 
 //        rotatePower = rotateDone? 0: headingError * GYRO_TURN_P_COEFF;
 //        xPower = driveDone? 0: Math.abs(xError) * DRIVE_P_COEFF * Math.sin(theta);
 //        yPower = strafeDone? 0: Math.abs(yError) * DRIVE_P_COEFF * Math.cos(theta);
 
         rotatePower = headingError * GYRO_TURN_P_COEFF;
-        xPower = Math.abs(xError) * DRIVE_P_COEFF * Math.cos(theta);
-        yPower = Math.abs(yError) * DRIVE_P_COEFF * Math.sin(theta);
+        xPower = Math.cos(Math.toRadians(theta));//xError * DRIVE_P_COEFF;
+        yPower = Math.sin(Math.toRadians(theta));//yError * DRIVE_P_COEFF;
 
-
-        flPower = xPower + yPower - rotatePower;
-        frPower = xPower - yPower + rotatePower;
-        blPower = xPower - yPower - rotatePower;
-        brPower = xPower + yPower + rotatePower;
+        flPower = MAX_POWER * xPower - rotatePower;
+        frPower = MAX_POWER * yPower + rotatePower;
+        blPower = MAX_POWER * yPower - rotatePower;
+        brPower = MAX_POWER * xPower + rotatePower;
 
         normalize(MAX_POWER);
         normalizeForMin(.28);
