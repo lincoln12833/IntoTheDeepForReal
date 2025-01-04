@@ -126,6 +126,7 @@ public class MM_Slide {
     }
 
     private void init() {
+
         slide = opMode.hardwareMap.get(DcMotor.class, "slide");
         bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "bottomLimit");
 
