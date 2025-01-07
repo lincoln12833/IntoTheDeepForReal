@@ -23,13 +23,13 @@ public class MM_Drivetrain {
 
     private Rev2mDistanceSensor backDistance;
 
-    public static double MAX_POWER = 1; //previously 1
+    public static double MAX_POWER = .5; //previously 1
     public static double SLOW_POWER = .5;
 
     public static double MAX_TURN_POWER = .5; //previously .5
     public static double MIN_TURN_POWER = .15;
     public static double GYRO_TURN_P_COEFF = .016;
-    public static double HEADING_ERROR_THRESHOLD = 1.5;
+    public static double HEADING_ERROR_THRESHOLD = 2;
 
     public static ElapsedTime collectTime = new ElapsedTime();
 
@@ -48,10 +48,6 @@ public class MM_Drivetrain {
     private double frPower;
     private double blPower;
     private double brPower;
-
-    private double xPower;
-    private double yPower;
-    private double rotatePower;
 
     private double heading;
 
@@ -74,20 +70,20 @@ public class MM_Drivetrain {
     }
 
     public void driveWithSticks() {
-        xPower = -opMode.gamepad1.left_stick_y;
-        yPower = opMode.gamepad1.left_stick_x;
-        rotatePower = -opMode.gamepad1.right_stick_x; //left is a positive rotation
+        double drivePower = -opMode.gamepad1.left_stick_y;
+        double strafePower = opMode.gamepad1.left_stick_x;
+        double rotatePower = -opMode.gamepad1.right_stick_x; //left is a positive rotation
 
-        flPower = xPower + yPower - rotatePower;
-        frPower = xPower - yPower + rotatePower;
-        blPower = xPower - yPower - rotatePower;
-        brPower = xPower + yPower + rotatePower;
+        flPower = drivePower + strafePower - rotatePower;
+        frPower = drivePower - strafePower + rotatePower;
+        blPower = drivePower - strafePower - rotatePower;
+        brPower = drivePower + strafePower + rotatePower;
 
         if (currentGamepad1.a && !previousGamepad1.a) {
             slow = !slow;
         }
 
-        normalize(MAX_POWER);
+        normalize(1);
 
         if (slow){
             flPower *= SLOW_POWER;
@@ -102,18 +98,14 @@ public class MM_Drivetrain {
         brMotor.setPower(brPower);
     }
 
-    public boolean driveToPosition(double targetX, double targetY, double targetHeading) {
+    public boolean driveToPosition(double targetX, double targetY, double targetHeading, double rotateFactor) {
         boolean atLocation = false;
         while (opMode.opModeIsActive() && !atLocation) {
-            opMode.robot.navigation.updatePosition();
-            xError = targetX - opMode.robot.navigation.getX();
-            yError = targetY - opMode.robot.navigation.getY();
-            headingError = getHeadingError(targetHeading, opMode.robot.navigation.getHeading());
             if (allMovementDone(false)){
                 setDrivePowersToZero();
                 atLocation = true;
             } else{
-                calculateAndSetDrivePowers(xError, yError, headingError);
+                calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
             }
             opMode.multipleTelemetry.update();
         }
@@ -121,28 +113,30 @@ public class MM_Drivetrain {
         return true;
     }
 
-    public void calculateAndSetDrivePowers(double xError, double yError, double headingError){
+    public void calculateAndSetDrivePowers(double targetX, double targetY, double targetHeading, double rotateFactor){
+        opMode.robot.navigation.updatePosition();
+        xError = targetX - opMode.robot.navigation.getX();
+        yError = targetY - opMode.robot.navigation.getY();
+        headingError = getHeadingError(targetHeading, opMode.robot.navigation.getHeading());
+
         double moveAngle = Math.toDegrees(Math.atan2(yError, xError));
-        double theta = moveAngle - opMode.robot.navigation.odometryController.getHeading() + 45;
+        double theta = moveAngle - opMode.robot.navigation.getHeading() + 45;
 
-//        rotatePower = rotateDone? 0: headingError * GYRO_TURN_P_COEFF;
-//        xPower = driveDone? 0: Math.abs(xError) * DRIVE_P_COEFF * Math.sin(theta);
-//        yPower = strafeDone? 0: Math.abs(yError) * DRIVE_P_COEFF * Math.cos(theta);
+        double rotate = headingError * rotateFactor;
+        double strafe = Math.cos(Math.toRadians(theta)) - Math.sin(Math.toRadians(theta));//xError * DRIVE_P_COEFF;
+        double drive = Math.sin(Math.toRadians(theta)) + Math.cos(Math.toRadians(theta));//yError * DRIVE_P_COEFF;
 
-        rotatePower = headingError * GYRO_TURN_P_COEFF;
-        xPower = Math.cos(Math.toRadians(theta));//xError * DRIVE_P_COEFF;
-        yPower = Math.sin(Math.toRadians(theta));//yError * DRIVE_P_COEFF;
-
-        flPower = MAX_POWER * xPower - rotatePower;
-        frPower = MAX_POWER * yPower + rotatePower;
-        blPower = MAX_POWER * yPower - rotatePower;
-        brPower = MAX_POWER * xPower + rotatePower;
+        flPower = drive + strafe - rotate;
+        frPower = drive - strafe + rotate;
+        blPower = drive - strafe - rotate;
+        brPower = drive + strafe + rotate;
 
         normalize(MAX_POWER);
         normalizeForMin(.28);
 
         setDrivePowers();
 
+        opMode.multipleTelemetry.addData("move angle", moveAngle);
         opMode.multipleTelemetry.addData("heading error", headingError);
         opMode.multipleTelemetry.addData("xError", xError);
         opMode.multipleTelemetry.addData("yError", yError);

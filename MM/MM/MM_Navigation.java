@@ -55,4 +55,8 @@ public class MM_Navigation {
         return currentPos.getHeading(AngleUnit.DEGREES);
     }
 
+    public void setPosition(double xPos, double yPos, double yawPos){
+        odometryController.setPosition(new Pose2D(DistanceUnit.INCH, xPos, yPos, AngleUnit.DEGREES, yawPos));
+    }
+
 }

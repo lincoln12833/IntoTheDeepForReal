@@ -16,7 +16,6 @@ public class MM_Transport {
 
     public boolean transportMovementDone(){
 
-
         return slide.slideMovementDone() && pivot.pivotMovementDone();
     }
 
