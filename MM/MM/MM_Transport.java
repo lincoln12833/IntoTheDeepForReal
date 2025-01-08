@@ -15,13 +15,16 @@ public class MM_Transport {
     }
 
     public boolean transportMovementDone(){
-
+        opMode.multipleTelemetry.addData("pivot done", pivot.pivotMovementDone());
+        opMode.multipleTelemetry.addData("slide done", slide.slideMovementDone());
         return slide.slideMovementDone() && pivot.pivotMovementDone();
     }
 
     public void updateTransport(double pivotAngle, double slideInches, boolean wantMax){
         pivot.updatePivot(pivotAngle);
         slide.updateSlide(wantMax, slideInches);
+
+
     }
 
     public void runTransport(){

@@ -42,8 +42,10 @@ public class MM_VisionPortal {
     public Pose2D setPosFromApriltag(){
         List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
         if(!detections.isEmpty()){
+            opMode.multipleTelemetry.addLine("we are setting pos from apriltaq!");
             return new Pose2D(DistanceUnit.INCH, detections.get(0).robotPose.getPosition().x,
                     detections.get(0).robotPose.getPosition().y, AngleUnit.DEGREES, detections.get(0).robotPose.getOrientation().getYaw());
+
         }
 
         return null;

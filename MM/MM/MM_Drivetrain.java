@@ -29,7 +29,7 @@ public class MM_Drivetrain {
     public static double MAX_TURN_POWER = .5; //previously .5
     public static double MIN_TURN_POWER = .15;
     public static double GYRO_TURN_P_COEFF = .016;
-    public static double HEADING_ERROR_THRESHOLD = 2;
+    public static double HEADING_ERROR_THRESHOLD = 3;
 
     public static ElapsedTime collectTime = new ElapsedTime();
 
@@ -98,7 +98,7 @@ public class MM_Drivetrain {
         brMotor.setPower(brPower);
     }
 
-    public boolean driveToPosition(double targetX, double targetY, double targetHeading, double rotateFactor) {
+    public boolean driveToPosition(double targetX, double targetY, double targetHeading, double rotateFactor, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
         boolean atLocation = false;
         while (opMode.opModeIsActive() && !atLocation) {
             if (allMovementDone(false)){
@@ -106,6 +106,7 @@ public class MM_Drivetrain {
                 atLocation = true;
             } else{
                 calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
+                opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax);
             }
             opMode.multipleTelemetry.update();
         }
