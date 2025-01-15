@@ -99,7 +99,7 @@ public class MM_Slide {
     }
 
     public void updateSlide(boolean wantMax, double inches){
-
+        slide.setPower(1);
 
         maxSlideTicks = Math.min((int)((42 / Math.cos(Math.toRadians(MM_Transport.pivotAngle))) * TICKS_PER_INCH), MAX_TICKS);
         if(wantMax) {

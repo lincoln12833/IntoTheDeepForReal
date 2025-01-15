@@ -9,6 +9,7 @@ public class MM_Navigation {
 
     public MM_VisionPortal visionPortal;
     public GoBildaPinpointDriver odometryController;
+
     Pose2D currentPos;
 
     MM_Navigation(MM_OpMode opMode){
@@ -17,7 +18,7 @@ public class MM_Navigation {
 
         odometryController = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
 
-        odometryController.setOffsets(1.905, 2.54);
+        odometryController.setOffsets(49.08, 6.135);
         odometryController.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         odometryController.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
@@ -30,13 +31,29 @@ public class MM_Navigation {
 
     public void updatePosition(){
         Pose2D AprilTagPos = visionPortal.setPosFromApriltag();
+        currentPos = odometryController.getUpdatedPositon();
 
-        if(AprilTagPos != null){
-            odometryController.setPosition(AprilTagPos);
+        if(AprilTagPos != null ){
+            currentPos = odometryController.getUpdatedPositon();
+
+            opMode.multipleTelemetry.addData("ODOrobot x", getX());
+            opMode.multipleTelemetry.addData("ODOrobot y", getY());
+            opMode.multipleTelemetry.addData("ODOrobot yaw", getHeading());
+
+            opMode.multipleTelemetry.addData("APRILrobot x", AprilTagPos.getX(DistanceUnit.INCH));
+            opMode.multipleTelemetry.addData("APRILrobot y", AprilTagPos.getY(DistanceUnit.INCH));
+            opMode.multipleTelemetry.addData("APRILrobot yaw", AprilTagPos.getHeading(AngleUnit.DEGREES));
+
+            if (Math.abs(AprilTagPos.getHeading(AngleUnit.DEGREES) - currentPos.getHeading(AngleUnit.DEGREES)) <= Math.abs(currentPos.getHeading(AngleUnit.DEGREES) * .30)) {
+                odometryController.setPosition(AprilTagPos);
+                opMode.multipleTelemetry.addData("set From Apriltag", true);
+                currentPos = odometryController.getUpdatedPositon();
+            } else {
+                opMode.multipleTelemetry.addData("set From Apriltag", false);
+            }
         }
 
-        odometryController.update();
-        currentPos = odometryController.getPosition();
+        currentPos = odometryController.getUpdatedPositon();
 
         opMode.multipleTelemetry.addData("robot x", getX());
         opMode.multipleTelemetry.addData("robot y", getY());

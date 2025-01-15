@@ -190,6 +190,11 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
     }
 
 
+    public Pose2D getUpdatedPositon(){
+        update();
+        return getPosition();
+    }
+
     /**
      * Converts a float to a byte array
      * @param value the float array to convert

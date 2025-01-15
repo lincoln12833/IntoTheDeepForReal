@@ -19,8 +19,8 @@ public class MM_Pivot {
     public final int TICK_INCREMENT = 150;
 
     private final double OFFSET_PIVOT_ANGLE = -25; //Compensation for negative start angle: 25.7223
-    private final double MAX_PIVOT_ANGLE = 90;
-    public final int MAX_TICKS = (int)(TICKS_PER_PIVOT_DEGREE * (MAX_PIVOT_ANGLE - OFFSET_PIVOT_ANGLE)); //1450
+    private final double MAX_PIVOT_ANGLE = 93;
+    public final int MAX_TICKS = (int)(TICKS_PER_PIVOT_DEGREE * (MAX_PIVOT_ANGLE - OFFSET_PIVOT_ANGLE)); //3819
 
     private boolean homing = false;
     public int targetPos = 0;
@@ -59,7 +59,7 @@ public class MM_Pivot {
 
             if ( (pivot.getMode() != DcMotor.RunMode.RUN_TO_POSITION && !homing)) { //Only when coming off touch sensor or stopping homing
                 pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                pivot.setPower(1);
+                pivot.setPower(1); //1
             }
         }
 
@@ -82,9 +82,11 @@ public class MM_Pivot {
 
     public void updatePivot(double targetPivotAngle){
         pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot.setPower(1);
+        pivot.setPower(.8);
         setAngle(targetPivotAngle);
         getCurrentAngle();
+        opMode.multipleTelemetry.addData("Current pos", pivot.getCurrentPosition()); //multipleTelemetry
+        opMode.multipleTelemetry.addData("target pos", pivot.getTargetPosition());
     }
 
     public boolean pivotMovementDone(){
@@ -105,6 +107,10 @@ public class MM_Pivot {
 
     public void setAngle(double angle){
         pivot.setTargetPosition((int)((angle - OFFSET_PIVOT_ANGLE) * TICKS_PER_PIVOT_DEGREE));
+    }
+
+    public double getTargetAngle(){
+        return (pivot.getTargetPosition() / TICKS_PER_PIVOT_DEGREE) + OFFSET_PIVOT_ANGLE;
     }
 
     public void init(){

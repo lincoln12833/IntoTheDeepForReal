@@ -23,8 +23,6 @@ public class MM_Transport {
     public void updateTransport(double pivotAngle, double slideInches, boolean wantMax){
         pivot.updatePivot(pivotAngle);
         slide.updateSlide(wantMax, slideInches);
-
-
     }
 
     public void runTransport(){

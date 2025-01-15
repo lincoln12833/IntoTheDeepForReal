@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.MM.MM;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -10,6 +11,8 @@ public class MM_Collector {
 
     private ColorRangeSensor sampleTest;
     private DcMotor wheels;
+
+    public static ElapsedTime collectTime = new ElapsedTime();
 
     //private boolean toggle = false;
 
@@ -53,7 +56,8 @@ public class MM_Collector {
     }
 
     public void score(){
-        while(sampleTest.getDistance(DistanceUnit.MM) < 60) {
+        collectTime.reset();
+        while( opMode.opModeIsActive() && (sampleTest.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 1000)) {
             wheels.setPower(-1);
         }
         wheels.setPower(0);
@@ -83,12 +87,19 @@ public class MM_Collector {
     }
 
     public boolean collectDone(boolean collect){
-        if(haveSample() || !collect || MM_Drivetrain.collectTime.milliseconds() > 1000){
-            wheels.setPower(0);
-            return true;
-        } else{
-            return false;
+        if (!opMode.robot.drivetrain.collectDone) {
+            if (opMode.robot.transport.pivot.getCurrentAngle() < opMode.robot.transport.pivot.getTargetAngle() + 10 && getPower() == 0 && collect) {
+                wheels.setPower(-.6);
+                collectTime.reset();
+            }
+            if (haveSample() || !collect || (collectTime.milliseconds() > 3000 && wheels.getPower() < 0)) {
+                wheels.setPower(0);
+                return true;
+            } else {
+                return false;
+            }
         }
+        return true;
     }
 
     public void init(){

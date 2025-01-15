@@ -31,18 +31,16 @@ public class MM_Drivetrain {
     public static double GYRO_TURN_P_COEFF = .016;
     public static double HEADING_ERROR_THRESHOLD = 3;
 
-    public static ElapsedTime collectTime = new ElapsedTime();
-
     private final double DRIVE_ERROR_THRESHOLD = 1;
     private final double DRIVE_P_COEFF = 0.015625; //prev 0.03125
 
-    private final double TANGENT_THRESHOLD = 1;
+    private final double TANGENT_THRESHOLD = 0.5;
 
     private final double DISTANCE_THRESHOLD = .5;
 
     private double xError;
     private double yError;
-    private double headingError = 100;
+    private double headingError;
 
     private double flPower;
     private double frPower;
@@ -55,6 +53,7 @@ public class MM_Drivetrain {
     private boolean strafeDone = false;
     private boolean driveDone = false;
     private boolean rotateDone = false;
+    boolean collectDone = false;
 
     double targetPos;
     double targetDrivePos;
@@ -99,15 +98,16 @@ public class MM_Drivetrain {
     }
 
     public boolean driveToPosition(double targetX, double targetY, double targetHeading, double rotateFactor, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
-        boolean atLocation = false;
-        while (opMode.opModeIsActive() && !atLocation) {
-            if (allMovementDone(false)){
+        opMode.robot.collector.collectDone(collect);
+        calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
+        while (opMode.opModeIsActive() && !allMovementDone(collect)) {
+            if (driveDone && strafeDone && rotateDone){
                 setDrivePowersToZero();
-                atLocation = true;
             } else{
                 calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
-                opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax);
             }
+
+            opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax);
             opMode.multipleTelemetry.update();
         }
 
@@ -133,7 +133,7 @@ public class MM_Drivetrain {
         brPower = drive + strafe + rotate;
 
         normalize(MAX_POWER);
-        normalizeForMin(.28);
+        //normalizeForMin(.28);
 
         setDrivePowers();
 
@@ -433,7 +433,7 @@ public class MM_Drivetrain {
     }
 
     private void normalizeForMin(double minPower) {
-        if (flPower < minPower && frPower < minPower && blPower < minPower && brPower < minPower) {
+        if (Math.abs(flPower) < minPower && Math.abs(frPower) < minPower && Math.abs(blPower) < minPower && Math.abs(brPower) < minPower) {
             double rawMaxPower = Math.max(Math.max(Math.abs(flPower), Math.abs(frPower)),
                     Math.max(Math.abs(blPower), Math.abs(brPower)));
 
@@ -454,11 +454,8 @@ public class MM_Drivetrain {
             strafeDone = true;
         }
         boolean transportDone = opMode.robot.transport.transportMovementDone();
-        if (transportDone && opMode.robot.collector.getPower() == 0 && collect) {
-            opMode.robot.collector.setPower(-.6);
-            collectTime.reset();
-        }
-        boolean collectDone = opMode.robot.collector.collectDone(collect);
+
+        collectDone = opMode.robot.collector.collectDone(collect);
 
         opMode.multipleTelemetry.addData("rotate Done", rotateDone);
         opMode.multipleTelemetry.addData("strafe done", strafeDone);

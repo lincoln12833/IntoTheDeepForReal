@@ -59,7 +59,7 @@ public class MM_VisionPortal {
                 .setDrawTagOutline(true)
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
-                .setCameraPose(new Position(DistanceUnit.INCH, -0.25, -7, 0.0, 0L),
+                .setCameraPose(new Position(DistanceUnit.INCH, -.625, 7, 0.0, 0L),
                         new YawPitchRollAngles(AngleUnit.DEGREES, 0, -90, 38, 0L))
                 .build();
 

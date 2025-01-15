@@ -7,12 +7,12 @@ public class MM_Autos extends MM_OpMode{
 
     @Override
     public void runProcedures(){
-//        if (goal.equals(CHAMBER)){
-//            chamber();
-//        } else {
-//            basket();
-//        }
-        //robot.drivetrain.driveToPosition(48, 48, 0);
+        if (goal.equals(CHAMBER)){
+            chamber();
+        } else {
+            robot.navigation.setPosition(-36, -60, 60);
+            basket();
+        }
     }
 
     public void chamber(){
@@ -29,7 +29,21 @@ public class MM_Autos extends MM_OpMode{
         //TODO TEST
     }
 
-    public void basket() { //pre-penfield code (before inch change)
+    public void basket() {
+        robot.drivetrain.driveToPosition(-55.7, -58, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+        robot.collector.score();
+        //sleep(2000);
+        robot.drivetrain.driveToPosition(-47.4, -40, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
+        //sleep(2000);
+        robot.drivetrain.driveToPosition(-55.7, -58, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+        robot.collector.score();
+        //sleep(2000);
+        robot.drivetrain.driveToPosition(-57.4, -40, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
+        //sleep(2000);
+        robot.drivetrain.driveToPosition(-55.7, -58, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+        robot.collector.score();
+        robot.drivetrain.driveToPosition(-50, -50, 32, MM_TestTrigNav.ROTATE_FACTOR, -25, 0, false, false);
+        //pre-penfield code (before inch change)
 
 //        //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
 //        robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false); //TODO test to see if doEverything() works then delete these lines

@@ -95,7 +95,7 @@ public class ConceptAprilTagLocalizationMM extends MM_OpMode {
      * to +/-90 degrees if it's vertical, or 180 degrees if it's upside-down.
      */
     private Position cameraPosition = new Position(DistanceUnit.INCH,
-            -.25, -7, 0, 0); // -.25, 7, 0
+            -0.625, 7, 0, 0); // -.25, 7, 0
     private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
             0, -90, 38, 0); //
 
@@ -225,17 +225,21 @@ public class ConceptAprilTagLocalizationMM extends MM_OpMode {
             if (detection.metadata != null) {
                 double ji = detection.robotPose.getPosition().z;
 
-                multipleTelemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                multipleTelemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
-                        detection.robotPose.getPosition().x,
-                        detection.robotPose.getPosition().y,
-                        detection.robotPose.getPosition().z));
-                multipleTelemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
-                        detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
-                        detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
-                        detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)));
+//                multipleTelemetry.addData(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
+//                        detection.robotPose.getPosition().x,
+//                        detection.robotPose.getPosition().y,
+//                        detection.robotPose.getPosition().z), 0);
+//                multipleTelemetry.addData(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
+//                        detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
+//                        detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
+//                        detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)), 0);
+
+                multipleTelemetry.addData("robot x", detection.robotPose.getPosition().y);
+                multipleTelemetry.addData("robot y", detection.robotPose.getPosition().y);
+                multipleTelemetry.addData("robot heading", detection.robotPose.getOrientation().getYaw());
                 multipleTelemetry.addData("x from tag", detection.ftcPose.x);
                 multipleTelemetry.addData("y from tag", detection.ftcPose.y);
+                multipleTelemetry.addData("pitch", detection.robotPose.getOrientation().getPitch());
             } else {
                 multipleTelemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                 multipleTelemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
