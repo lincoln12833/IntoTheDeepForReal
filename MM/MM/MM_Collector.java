@@ -87,12 +87,12 @@ public class MM_Collector {
     }
 
     public boolean collectDone(boolean collect){
-        if (!opMode.robot.drivetrain.collectDone) {
+        if (!opMode.robot.drivetrain.collectDone && collect) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < opMode.robot.transport.pivot.getTargetAngle() + 10 && getPower() == 0 && collect) {
                 wheels.setPower(-.6);
                 collectTime.reset();
             }
-            if (haveSample() || !collect || (collectTime.milliseconds() > 3000 && wheels.getPower() < 0)) {
+            if (wheels.getPower() < 0 && (haveSample() || !collect || collectTime.milliseconds() > 3000)) {
                 wheels.setPower(0);
                 return true;
             } else {

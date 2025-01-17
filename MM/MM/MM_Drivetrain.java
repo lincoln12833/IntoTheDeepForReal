@@ -38,6 +38,7 @@ public class MM_Drivetrain {
 
     private final double DISTANCE_THRESHOLD = .5;
 
+
     private double xError;
     private double yError;
     private double headingError;
@@ -54,6 +55,8 @@ public class MM_Drivetrain {
     private boolean driveDone = false;
     private boolean rotateDone = false;
     boolean collectDone = false;
+
+    public static boolean robotAtLocation = false;
 
     double targetPos;
     double targetDrivePos;
@@ -98,12 +101,17 @@ public class MM_Drivetrain {
     }
 
     public boolean driveToPosition(double targetX, double targetY, double targetHeading, double rotateFactor, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
-        opMode.robot.collector.collectDone(collect);
+        collectDone = !collect;
+        robotAtLocation = false;
+
+        //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
         while (opMode.opModeIsActive() && !allMovementDone(collect)) {
             if (driveDone && strafeDone && rotateDone){
+                robotAtLocation = true;
                 setDrivePowersToZero();
             } else{
+                robotAtLocation = false;
                 calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
             }
 

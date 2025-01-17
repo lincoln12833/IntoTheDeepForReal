@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.MM.MM;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Autos", group="mm")
-public class MM_Autos extends MM_OpMode{
+@Autonomous(name = "Autos", group = "mm")
+public class MM_Autos extends MM_OpMode {
 
     @Override
-    public void runProcedures(){
-        if (goal.equals(CHAMBER)){
+    public void runProcedures() {
+        if (goal.equals(CHAMBER)) {
             chamber();
         } else {
             robot.navigation.setPosition(-36, -60, 60);
@@ -15,8 +15,8 @@ public class MM_Autos extends MM_OpMode{
         }
     }
 
-    public void chamber(){
-    //    robot.drivetrain.driveInches(24, 0);
+    public void chamber() {
+        //    robot.drivetrain.driveInches(24, 0);
 
 //        robot.drivetrain.driveInches(4, 0);
 //        robot.drivetrain.rotateToAngle(179);
@@ -30,18 +30,17 @@ public class MM_Autos extends MM_OpMode{
     }
 
     public void basket() {
-        robot.drivetrain.driveToPosition(-55.7, -58, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
-        robot.collector.score();
-        //sleep(2000);
-        robot.drivetrain.driveToPosition(-47.4, -40, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
-        //sleep(2000);
-        robot.drivetrain.driveToPosition(-55.7, -58, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
-        robot.collector.score();
-        //sleep(2000);
-        robot.drivetrain.driveToPosition(-57.4, -40, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
-        //sleep(2000);
-        robot.drivetrain.driveToPosition(-55.7, -58, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
-        robot.collector.score();
+        driveToBasketAndScore();
+
+        //collect
+        robot.drivetrain.driveToPosition(-47.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
+        driveToBasketAndScore();
+
+        //second collect
+        robot.drivetrain.driveToPosition(-57.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
+        driveToBasketAndScore();
+
+        //move away from basket-TEMPORARY
         robot.drivetrain.driveToPosition(-50, -50, 32, MM_TestTrigNav.ROTATE_FACTOR, -25, 0, false, false);
         //pre-penfield code (before inch change)
 
@@ -71,6 +70,13 @@ public class MM_Autos extends MM_OpMode{
 //        robot.drivetrain.strafeInches(46, -90);
 //        robot.drivetrain.driveToDistance(1, 90, 8, false, false);
         //TODO TEST
+    }
+
+    public void driveToBasketAndScore() {
+        if (robot.collector.haveSample()) {
+            robot.drivetrain.driveToPosition(-54.7, -57, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+            robot.collector.score();
+        }
     }
 
 }
