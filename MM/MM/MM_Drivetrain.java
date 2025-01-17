@@ -115,7 +115,7 @@ public class MM_Drivetrain {
                 calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
             }
 
-            opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax);
+            opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
             opMode.multipleTelemetry.update();
         }
 

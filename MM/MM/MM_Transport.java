@@ -20,11 +20,11 @@ public class MM_Transport {
         return slide.slideMovementDone() && pivot.pivotMovementDone();
     }
 
-    public void updateTransport(double pivotAngle, double slideInches, boolean wantMax){
-        if (MM_Drivetrain.robotAtLocation || pivot.getCurrentAngle() > pivot.getTargetAngle() + 20) {
+    public void updateTransport(double pivotAngle, double slideInches, boolean wantMax, boolean collect){
+        if (MM_Drivetrain.robotAtLocation || pivot.getCurrentAngle() > pivotAngle + 20 || !collect) {
             pivot.updatePivot(pivotAngle);
         } else {
-            pivot.setAngle(pivot.getTargetAngle() + 20);
+            pivot.setAngle(pivot.getCurrentAngle());
         }
         slide.updateSlide(wantMax, slideInches);
     }

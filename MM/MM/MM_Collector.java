@@ -57,7 +57,7 @@ public class MM_Collector {
 
     public void score(){
         collectTime.reset();
-        while( opMode.opModeIsActive() && (sampleTest.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 1000)) {
+        while( opMode.opModeIsActive() && (sampleTest.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 200)) {
             wheels.setPower(-1);
         }
         wheels.setPower(0);

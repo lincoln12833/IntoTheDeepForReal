@@ -33,11 +33,11 @@ public class MM_Autos extends MM_OpMode {
         driveToBasketAndScore();
 
         //collect
-        robot.drivetrain.driveToPosition(-47.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
+        robot.drivetrain.driveToPosition(-47.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -14, 6, false, true);
         driveToBasketAndScore();
 
         //second collect
-        robot.drivetrain.driveToPosition(-57.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -15, 5, false, true);
+        robot.drivetrain.driveToPosition(-57.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -14, 6, false, true);
         driveToBasketAndScore();
 
         //move away from basket-TEMPORARY
