@@ -14,6 +14,8 @@ public class MM_Collector {
 
     public static ElapsedTime collectTime = new ElapsedTime();
 
+    public boolean collectTimeIsStarted = false;
+
     //private boolean toggle = false;
 
     public static boolean haveSample;
@@ -86,18 +88,32 @@ public class MM_Collector {
         return haveSample;
     }
 
-    public boolean collectDone(boolean collect){
+    public boolean collectDone(boolean collect, double targetPivotAngle){
         if (!opMode.robot.drivetrain.collectDone && collect) {
-            if (opMode.robot.transport.pivot.getCurrentAngle() < opMode.robot.transport.pivot.getTargetAngle() + 10 && getPower() == 0 && collect) {
+            if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
                 wheels.setPower(-.6);
-                collectTime.reset();
+                //collectTime.reset();
             }
-            if (wheels.getPower() < 0 && (haveSample() || !collect || collectTime.milliseconds() > 3000)) {
-                wheels.setPower(0);
-                return true;
-            } else {
-                return false;
+
+            opMode.multipleTelemetry.addData("currentTarget", opMode.robot.transport.pivot.getTargetAngle());
+            opMode.multipleTelemetry.addData("finalTarget", targetPivotAngle);
+            opMode.multipleTelemetry.addData("currentPivotAngle", opMode.robot.transport.pivot.getCurrentAngle());
+
+            if (!opMode.robot.transport.pivot.pivot.isBusy() && opMode.robot.transport.pivot.getTargetAngle() <= targetPivotAngle){
+                if (!collectTimeIsStarted) {
+                    collectTime.reset();
+                    collectTimeIsStarted = true;
+                }
+                if (haveSample() || (collectTime.milliseconds() > 1000 && collectTimeIsStarted)) {
+                    wheels.setPower(0);
+                    collectTimeIsStarted = false;
+                    return true;
+                } else {
+                    return false;
+                }
             }
+            return false;
+
         }
         return true;
     }

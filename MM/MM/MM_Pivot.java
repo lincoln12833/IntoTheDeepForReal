@@ -82,7 +82,7 @@ public class MM_Pivot {
 
     public void updatePivot(double targetPivotAngle){
         pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot.setPower(.8);
+        pivot.setPower(.5);
         setAngle(targetPivotAngle);
         getCurrentAngle();
         opMode.multipleTelemetry.addData("Current pos", pivot.getCurrentPosition()); //multipleTelemetry

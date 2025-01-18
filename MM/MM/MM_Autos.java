@@ -33,15 +33,16 @@ public class MM_Autos extends MM_OpMode {
         driveToBasketAndScore();
 
         //collect
-        robot.drivetrain.driveToPosition(-47.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -14, 6, false, true);
+        robot.drivetrain.driveToPosition(-46.6, -42.6, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
         driveToBasketAndScore();
 
         //second collect
-        robot.drivetrain.driveToPosition(-57.4, -41, 90, MM_TestTrigNav.ROTATE_FACTOR, -14, 6, false, true);
+        robot.drivetrain.driveToPosition(-56.6, -42.6, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
         driveToBasketAndScore();
 
-        //move away from basket-TEMPORARY
-        robot.drivetrain.driveToPosition(-50, -50, 32, MM_TestTrigNav.ROTATE_FACTOR, -25, 0, false, false);
+        //third collect
+        //robot.drivetrain.driveToPosition(-56, -40.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 6, false, true);
+        driveToBasketAndScore();
         //pre-penfield code (before inch change)
 
 //        //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);

@@ -31,7 +31,7 @@ public class MM_Drivetrain {
     public static double GYRO_TURN_P_COEFF = .016;
     public static double HEADING_ERROR_THRESHOLD = 3;
 
-    private final double DRIVE_ERROR_THRESHOLD = 1;
+    private final double DRIVE_ERROR_THRESHOLD = .35;
     private final double DRIVE_P_COEFF = 0.015625; //prev 0.03125
 
     private final double TANGENT_THRESHOLD = 0.5;
@@ -106,7 +106,7 @@ public class MM_Drivetrain {
 
         //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
-        while (opMode.opModeIsActive() && !allMovementDone(collect)) {
+        while (opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle)) {
             if (driveDone && strafeDone && rotateDone){
                 robotAtLocation = true;
                 setDrivePowersToZero();
@@ -453,7 +453,7 @@ public class MM_Drivetrain {
         }
     }
 
-    private boolean allMovementDone(boolean collect){
+    private boolean allMovementDone(boolean collect, double pivotAngle){
         rotateDone = Math.abs(headingError) < HEADING_ERROR_THRESHOLD;
         strafeDone = Math.abs(yError) < DRIVE_ERROR_THRESHOLD;
         driveDone = Math.abs(xError) < DRIVE_ERROR_THRESHOLD;
@@ -463,7 +463,7 @@ public class MM_Drivetrain {
         }
         boolean transportDone = opMode.robot.transport.transportMovementDone();
 
-        collectDone = opMode.robot.collector.collectDone(collect);
+        collectDone = opMode.robot.collector.collectDone(collect, pivotAngle);
 
         opMode.multipleTelemetry.addData("rotate Done", rotateDone);
         opMode.multipleTelemetry.addData("strafe done", strafeDone);

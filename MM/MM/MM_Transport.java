@@ -24,7 +24,7 @@ public class MM_Transport {
         if (MM_Drivetrain.robotAtLocation || pivot.getCurrentAngle() > pivotAngle + 20 || !collect) {
             pivot.updatePivot(pivotAngle);
         } else {
-            pivot.setAngle(pivot.getCurrentAngle());
+            pivot.setAngle(pivotAngle + 20);
         }
         slide.updateSlide(wantMax, slideInches);
     }
