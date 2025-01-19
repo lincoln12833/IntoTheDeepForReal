@@ -8,7 +8,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class MM_Drivetrain {
 
@@ -140,16 +139,16 @@ public class MM_Drivetrain {
         blPower = drive - strafe - rotate;
         brPower = drive + strafe + rotate;
 
-        normalize(MAX_POWER);
+        normalize(.3);
         //normalizeForMin(.28);
 
         setDrivePowers();
 
-        opMode.multipleTelemetry.addData("move angle", moveAngle);
-        opMode.multipleTelemetry.addData("heading error", headingError);
-        opMode.multipleTelemetry.addData("xError", xError);
-        opMode.multipleTelemetry.addData("yError", yError);
-        opMode.multipleTelemetry.addData("theta", theta);
+        opMode.multipleTelemetry.addData("zMove angle", moveAngle);
+        opMode.multipleTelemetry.addData("zHeading error", headingError);
+        opMode.multipleTelemetry.addData("zXError", xError);
+        opMode.multipleTelemetry.addData("zYError", yError);
+        opMode.multipleTelemetry.addData("zTheta", theta);
     }
 
 //    public void driveInches(double targetInches, int targetHeading) {
@@ -462,13 +461,15 @@ public class MM_Drivetrain {
             strafeDone = true;
         }
         boolean transportDone = opMode.robot.transport.transportMovementDone();
+        //boolean transportDone = true; // temp - delete this & uncomment line above
 
         collectDone = opMode.robot.collector.collectDone(collect, pivotAngle);
+        //collectDone = true; // temp - delete this & uncomment line above
 
-        opMode.multipleTelemetry.addData("rotate Done", rotateDone);
-        opMode.multipleTelemetry.addData("strafe done", strafeDone);
-        opMode.multipleTelemetry.addData("drive done", driveDone);
-        opMode.multipleTelemetry.addData("transport done", transportDone);
+        opMode.multipleTelemetry.addData("doneRotate", rotateDone);
+        opMode.multipleTelemetry.addData("doneStrafe", strafeDone);
+        opMode.multipleTelemetry.addData("doneDrive", driveDone);
+        opMode.multipleTelemetry.addData("doneTransport", transportDone);
 
         return (driveDone && strafeDone && rotateDone && transportDone && collectDone);
     }

@@ -43,17 +43,16 @@ public class MM_VisionPortal {
 
     public Pose2D setPosFromApriltag(){
         List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
-        if(!detections.isEmpty()){
-            opMode.multipleTelemetry.addData("x from tag", detections.get(0).ftcPose.x);
-            opMode.multipleTelemetry.addData("y from tag", detections.get(0).ftcPose.y);
-            opMode.multipleTelemetry.addData("yaw from tag", detections.get(0).ftcPose.yaw);
-            opMode.multipleTelemetry.addLine("we are setting pos from apriltaq!");
+        if(!detections.isEmpty() && detections.get(0).ftcPose != null){
+            opMode.multipleTelemetry.addData("xIntrins", round2Dec(detections.get(0).ftcPose.x));
+            opMode.multipleTelemetry.addData("yIntrins", round2Dec(detections.get(0).ftcPose.y));
+            opMode.multipleTelemetry.addData("yawIntrins", round2Dec(detections.get(0).ftcPose.yaw));
+            //opMode.multipleTelemetry.addLine("we are setting pos from apriltaq!");
 
             previousIntrinsicX = intrinsicX;
             intrinsicX = detections.get(0).ftcPose.x;
             return new Pose2D(DistanceUnit.INCH, detections.get(0).robotPose.getPosition().x,
                     detections.get(0).robotPose.getPosition().y, AngleUnit.DEGREES, detections.get(0).robotPose.getOrientation().getYaw());
-
         }
 
         return null;
@@ -67,7 +66,7 @@ public class MM_VisionPortal {
                 .setDrawTagOutline(true)
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
-                .setCameraPose(new Position(DistanceUnit.INCH, -.625, 7, 0.0, 0L),
+                .setCameraPose(new Position(DistanceUnit.INCH, -.625, 6.8125, 0.0, 0L),
                         new YawPitchRollAngles(AngleUnit.DEGREES, 0, -90, 38, 0L))
                 .build();
 
@@ -82,7 +81,9 @@ public class MM_VisionPortal {
         FtcDashboard.getInstance().startCameraStream(cameraStreamProcessor, 0);
     }
 
-
+    private double round2Dec(double inDouble) {
+        return Math.round(inDouble * 100) / 100.0;
+    }
 
     public static class CameraStreamProcessor implements VisionProcessor, CameraStreamSource {
         private final AtomicReference<Bitmap> lastFrame =

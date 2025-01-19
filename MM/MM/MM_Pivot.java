@@ -85,8 +85,8 @@ public class MM_Pivot {
         pivot.setPower(.5);
         setAngle(targetPivotAngle);
         getCurrentAngle();
-        opMode.multipleTelemetry.addData("Current pos", pivot.getCurrentPosition()); //multipleTelemetry
-        opMode.multipleTelemetry.addData("target pos", pivot.getTargetPosition());
+        opMode.multipleTelemetry.addData("Pivot current", pivot.getCurrentPosition()); //multipleTelemetry
+        opMode.multipleTelemetry.addData("Pivot target", pivot.getTargetPosition());
     }
 
     public boolean pivotMovementDone(){

@@ -15,8 +15,8 @@ public class MM_Transport {
     }
 
     public boolean transportMovementDone(){
-        opMode.multipleTelemetry.addData("pivot done", pivot.pivotMovementDone());
-        opMode.multipleTelemetry.addData("slide done", slide.slideMovementDone());
+        opMode.multipleTelemetry.addData("donePivot", pivot.pivotMovementDone());
+        opMode.multipleTelemetry.addData("doneSlide", slide.slideMovementDone());
         return slide.slideMovementDone() && pivot.pivotMovementDone();
     }
 

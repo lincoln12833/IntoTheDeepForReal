@@ -10,7 +10,7 @@ public class MM_Autos extends MM_OpMode {
         if (goal.equals(CHAMBER)) {
             chamber();
         } else {
-            robot.navigation.setPosition(-36, -60, 60);
+            //robot.navigation.setPosition(-36, -60, 60);
             basket();
         }
     }
@@ -30,19 +30,35 @@ public class MM_Autos extends MM_OpMode {
     }
 
     public void basket() {
-        driveToBasketAndScore();
+        if (alliance.equals(RED)) {
+            driveToRedBasketAndScore();
 
-        //collect
-        robot.drivetrain.driveToPosition(-46.6, -42.6, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
-        driveToBasketAndScore();
+            //collect
+            robot.drivetrain.driveToPosition(-46.6, -38.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+            driveToRedBasketAndScore();
 
-        //second collect
-        robot.drivetrain.driveToPosition(-56.6, -42.6, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
-        driveToBasketAndScore();
+            //second collect
+            robot.drivetrain.driveToPosition(-56.6, -38.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+            driveToRedBasketAndScore();
 
-        //third collect
-        //robot.drivetrain.driveToPosition(-56, -40.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 6, false, true);
-        driveToBasketAndScore();
+            //third collect
+            //robot.drivetrain.driveToPosition(-56, -40.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 6, false, true);
+            driveToRedBasketAndScore();
+        } else{
+            driveToBlueBasketAndScore();
+
+            //collect
+            robot.drivetrain.driveToPosition(46.6, 38.5, -88.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+            driveToBlueBasketAndScore();
+
+            //second collect
+            robot.drivetrain.driveToPosition(56.6, 38.5, -88.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+            driveToBlueBasketAndScore();
+
+            //third collect
+            //robot.drivetrain.driveToPosition(-56, -40.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 6, false, true);
+            driveToBlueBasketAndScore();
+        }
         //pre-penfield code (before inch change)
 
 //        //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
@@ -73,11 +89,17 @@ public class MM_Autos extends MM_OpMode {
         //TODO TEST
     }
 
-    public void driveToBasketAndScore() {
+    public void driveToRedBasketAndScore() {
         if (robot.collector.haveSample()) {
             robot.drivetrain.driveToPosition(-54.7, -57, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
             robot.collector.score();
         }
     }
 
+    public void driveToBlueBasketAndScore() {
+        if (robot.collector.haveSample()) {
+            robot.drivetrain.driveToPosition(54.7, 57, -148, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+            robot.collector.score();
+        }
+    }
 }
