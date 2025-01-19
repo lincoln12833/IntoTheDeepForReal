@@ -5,12 +5,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 public class MM_Navigation {
+    public static final double TAG_FLIP_THRESHOLD = .2;
     private final MM_OpMode opMode;
 
     public MM_VisionPortal visionPortal;
     public GoBildaPinpointDriver odometryController;
 
     Pose2D currentPos;
+    Pose2D AprilTagPos;
+    double pastExtrinsicY;
 
     MM_Navigation(MM_OpMode opMode){
         this.opMode = opMode;
@@ -30,7 +33,10 @@ public class MM_Navigation {
     }
 
     public void updatePosition(){
-        Pose2D AprilTagPos = visionPortal.setPosFromApriltag();
+        if (AprilTagPos != null) {
+            pastExtrinsicY = AprilTagPos.getY(DistanceUnit.INCH);
+        }
+        AprilTagPos = visionPortal.setPosFromApriltag();
         currentPos = odometryController.getUpdatedPositon();
 
         if(AprilTagPos != null ){
@@ -43,8 +49,8 @@ public class MM_Navigation {
             opMode.multipleTelemetry.addData("APRILrobot x", AprilTagPos.getX(DistanceUnit.INCH));
             opMode.multipleTelemetry.addData("APRILrobot y", AprilTagPos.getY(DistanceUnit.INCH));
             opMode.multipleTelemetry.addData("APRILrobot yaw", AprilTagPos.getHeading(AngleUnit.DEGREES));
-
-            if (Math.abs(AprilTagPos.getHeading(AngleUnit.DEGREES) - currentPos.getHeading(AngleUnit.DEGREES)) <= Math.abs(currentPos.getHeading(AngleUnit.DEGREES) * .30)) {
+            opMode.multipleTelemetry.addData("APRILrobot x", AprilTagPos.getX(DistanceUnit.INCH));
+            if (Math.abs((Math.abs(MM_VisionPortal.intrinsicX - MM_VisionPortal.previousIntrinsicX)) - (Math.abs(AprilTagPos.getY(DistanceUnit.INCH) - pastExtrinsicY) )) <= TAG_FLIP_THRESHOLD || opMode.opModeInInit() || opMode.getClass() == MM_TeleOp.class) { //Math.abs(AprilTagPos.getHeading(AngleUnit.DEGREES) - currentPos.getHeading(AngleUnit.DEGREES)) <= Math.abs(currentPos.getHeading(AngleUnit.DEGREES) * .25)
                 odometryController.setPosition(AprilTagPos);
                 opMode.multipleTelemetry.addData("set From Apriltag", true);
                 currentPos = odometryController.getUpdatedPositon();

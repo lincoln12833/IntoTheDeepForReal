@@ -10,7 +10,6 @@ import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -33,6 +32,9 @@ public class MM_VisionPortal {
     private VisionPortal visionPortal;
     private AprilTagProcessor aprilTagProcessor;
 
+    public static double intrinsicX;
+    public static double previousIntrinsicX;
+
 
     public MM_VisionPortal(MM_OpMode opMode){
         this.opMode = opMode;
@@ -42,7 +44,13 @@ public class MM_VisionPortal {
     public Pose2D setPosFromApriltag(){
         List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
         if(!detections.isEmpty()){
+            opMode.multipleTelemetry.addData("x from tag", detections.get(0).ftcPose.x);
+            opMode.multipleTelemetry.addData("y from tag", detections.get(0).ftcPose.y);
+            opMode.multipleTelemetry.addData("yaw from tag", detections.get(0).ftcPose.yaw);
             opMode.multipleTelemetry.addLine("we are setting pos from apriltaq!");
+
+            previousIntrinsicX = intrinsicX;
+            intrinsicX = detections.get(0).ftcPose.x;
             return new Pose2D(DistanceUnit.INCH, detections.get(0).robotPose.getPosition().x,
                     detections.get(0).robotPose.getPosition().y, AngleUnit.DEGREES, detections.get(0).robotPose.getOrientation().getYaw());
 
