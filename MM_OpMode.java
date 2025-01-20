@@ -43,16 +43,11 @@ public abstract class MM_OpMode extends LinearOpMode {
 
             multipleTelemetry.addData("Status", "Initialized.");
             if(getClass() == MM_Autos.class){
-                multipleTelemetry.addLine("Press right bumper to switch alliance.");
-                multipleTelemetry.addLine("Press left bumper to switch goal.");
                 multipleTelemetry.addData("Alliance", alliance == 1? "Red": "Blue");
                 multipleTelemetry.addData("Goal", goal);
 
                 if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
                     alliance *= -1;
-                }
-                if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
-                    goal = goal.equals(CHAMBER)? BASKET: CHAMBER;
                 }
             }
             multipleTelemetry.update();

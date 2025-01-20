@@ -35,6 +35,7 @@ public class MM_VisionPortal {
     public static double intrinsicX;
     public static double previousIntrinsicX;
 
+    public static int startingTag;
 
     public MM_VisionPortal(MM_OpMode opMode){
         this.opMode = opMode;
@@ -48,7 +49,7 @@ public class MM_VisionPortal {
             opMode.multipleTelemetry.addData("yIntrins", round2Dec(detections.get(0).ftcPose.y));
             opMode.multipleTelemetry.addData("yawIntrins", round2Dec(detections.get(0).ftcPose.yaw));
             //opMode.multipleTelemetry.addLine("we are setting pos from apriltaq!");
-
+            startingTag = detections.get(0).id;
             previousIntrinsicX = intrinsicX;
             intrinsicX = detections.get(0).ftcPose.x;
             return new Pose2D(DistanceUnit.INCH, detections.get(0).robotPose.getPosition().x,

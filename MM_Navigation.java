@@ -52,6 +52,10 @@ public class MM_Navigation {
                 opMode.multipleTelemetry.addData("yawApril", round2Dec(AprilTagPos.getHeading(AngleUnit.DEGREES)));
                 if ((opMode.opModeInInit() && MM_OpMode.currentGamepad1.b && !MM_OpMode.previousGamepad1.b) || !opMode.opModeInInit()) {
                     odometryController.setPosition(AprilTagPos);
+                    if(opMode.opModeInInit()){
+                        MM_OpMode.alliance = MM_VisionPortal.startingTag == 13 || MM_VisionPortal.startingTag == 11? -1: 1;
+                        MM_OpMode.goal = MM_VisionPortal.startingTag == 13 || MM_VisionPortal.startingTag == 16? "Basket": "Chamber";
+                    }
                 }
 
                 if (Math.abs(intrinsicDiff() - extrinsicDiff()) <= TAG_FLIP_THRESHOLD || opMode.opModeInInit() || opMode.getClass() == MM_TeleOp.class) {
