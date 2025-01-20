@@ -78,7 +78,7 @@ public class MM_Collector {
     }
 
     public boolean haveSample(){
-        if (sampleTest.getDistance(DistanceUnit.MM) < 55) {
+        if (sampleTest.getDistance(DistanceUnit.MM) < 60) {
             haveSample = true;
         } else {
             haveSample = false;
@@ -89,7 +89,7 @@ public class MM_Collector {
     public boolean collectDone(boolean collect, double targetPivotAngle){
         if (!opMode.robot.drivetrain.collectDone && collect) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
-                wheels.setPower(-.4);
+                wheels.setPower(-.37);
                 //collectTime.reset();
             }
 
