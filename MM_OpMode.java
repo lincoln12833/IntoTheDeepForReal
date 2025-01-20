@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public abstract class MM_OpMode extends LinearOpMode {
     MM_Robot robot = null;
-    public static String BLUE = "Blue";
-    public static String RED = "Red";
-    public static String alliance;
+    public static int BLUE = -1;
+    public static int RED = 1;
+    public static int alliance;
 
     public static String CHAMBER = "Chamber";
     public static String BASKET = "Basket";
@@ -26,7 +26,7 @@ public abstract class MM_OpMode extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        alliance = RED;
+        alliance = 1;
         goal = BASKET;
         multipleTelemetry.addData("Status", "Initializing... please wait.");
         multipleTelemetry.update();
@@ -45,11 +45,11 @@ public abstract class MM_OpMode extends LinearOpMode {
             if(getClass() == MM_Autos.class){
                 multipleTelemetry.addLine("Press right bumper to switch alliance.");
                 multipleTelemetry.addLine("Press left bumper to switch goal.");
-                multipleTelemetry.addData("Alliance", alliance);
+                multipleTelemetry.addData("Alliance", alliance == 1? "Red": "Blue");
                 multipleTelemetry.addData("Goal", goal);
 
                 if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
-                    alliance = alliance.equals(BLUE)? RED: BLUE;
+                    alliance *= -1;
                 }
                 if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
                     goal = goal.equals(CHAMBER)? BASKET: CHAMBER;

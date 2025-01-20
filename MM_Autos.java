@@ -33,24 +33,24 @@ public class MM_Autos extends MM_OpMode {
     }
 
     public void basket() {
-        if (alliance.equals(RED)) {
-            driveToRedBasketAndScore();
 
-            redLookAtAprilTag();
+            driveToBasketAndScore();
+
+            lookAtAprilTag();
 
             multipleTelemetry.addData("Status", "Trying to Collect");
-            robot.drivetrain.driveToPosition(-46.6, -39.5, .2, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+            robot.drivetrain.driveToPosition(-46.6 * alliance, -39.5 * alliance, .2, alliance == 1?91.5:91.5 + 180, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
             //multipleTelemetry.addData("Status", "re-align collect");
 
             //robot.drivetrain.driveToPosition(-46.6, -39.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
-            driveToRedBasketAndScore();
+            driveToBasketAndScore();
 
-            redLookAtAprilTag();
+            lookAtAprilTag();
 
             multipleTelemetry.addData("Status", "Trying to Collect");
-            robot.drivetrain.driveToPosition(-56.6, -39.5, .3, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+            robot.drivetrain.driveToPosition(-56.6 * alliance, -39.5 * alliance, .3, alliance == 1?91.5:91.5 + 180, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
 
-            driveToRedBasketAndScore();
+            driveToBasketAndScore();
 //            //second collect
 //            multipleTelemetry.addData("Status", "Trying to Collect");
 //            robot.drivetrain.driveToPosition(-56.6, -39.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
@@ -60,22 +60,7 @@ public class MM_Autos extends MM_OpMode {
 //            //robot.drivetrain.driveToPosition(-56, -40.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 6, false, true);
 //            //driveToRedBasketAndScore();
 //            robot.drivetrain.driveToPosition(-50, -50, 32, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 0, false, true);
-        } else{ // Blue
-            driveToBlueBasketAndScore();
 
-            //collect
-            robot.drivetrain.driveToPosition(46.6, 39.5, .3, -88.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
-            driveToBlueBasketAndScore();
-
-            //second collect
-            robot.drivetrain.driveToPosition(56.6, 39.5, .3, -88.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
-            driveToBlueBasketAndScore();
-
-            //third collect
-            //robot.drivetrain.driveToPosition(-56, -40.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 6, false, true);
-            //driveToBlueBasketAndScore();
-            robot.drivetrain.driveToPosition(50, 50, .3, -148, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 0, false, true);
-        }
         //pre-penfield code (before inch change)
 
 //        //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
@@ -106,9 +91,9 @@ public class MM_Autos extends MM_OpMode {
         //TODO TEST
     }
 
-    private void redLookAtAprilTag() {
+    private void lookAtAprilTag() {
         multipleTelemetry.addData("Status", "Driving to April Tag");
-        robot.drivetrain.driveToPosition(-47, -47, .5, 90, .043, 0, 5.5, false, false);
+        robot.drivetrain.driveToPosition(-47 * alliance, -47 * alliance, .5, alliance==1?90:90+180, .043, 0, 5.5, false, false);
 
         aprilTagTime.reset();
         while(opModeIsActive() && aprilTagTime.milliseconds() <= 500) {
@@ -118,10 +103,10 @@ public class MM_Autos extends MM_OpMode {
         }
     }
 
-    public void driveToRedBasketAndScore() {
+    public void driveToBasketAndScore() {
         if (robot.collector.haveSample()) {
             multipleTelemetry.addData("Status", "Trying to Score");
-            robot.drivetrain.driveToPosition(-53.7, -55, .5, 32, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+            robot.drivetrain.driveToPosition(-53.7 * alliance, -55 * alliance, .5, alliance == 1?32: 32+180, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
             robot.collector.score();
         }
     }
