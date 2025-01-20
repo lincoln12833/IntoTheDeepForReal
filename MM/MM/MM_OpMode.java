@@ -34,7 +34,7 @@ public abstract class MM_OpMode extends LinearOpMode {
         initMM();
 
         while(opModeInInit()){
-            robot.navigation.updatePosition();
+            robot.navigation.updatePosition(true);
             previousGamepad1.copy(currentGamepad1);
             currentGamepad1.copy(gamepad1);
 

@@ -28,7 +28,7 @@ public class MM_Drivetrain {
     public static double MAX_TURN_POWER = .5; //previously .5
     public static double MIN_TURN_POWER = .15;
     public static double GYRO_TURN_P_COEFF = .016;
-    public static double HEADING_ERROR_THRESHOLD = 3;
+    public static double HEADING_ERROR_THRESHOLD = 2;
 
     private final double DRIVE_ERROR_THRESHOLD = .35;
     private final double DRIVE_P_COEFF = 0.015625; //prev 0.03125
@@ -99,19 +99,19 @@ public class MM_Drivetrain {
         brMotor.setPower(brPower);
     }
 
-    public boolean driveToPosition(double targetX, double targetY, double targetHeading, double rotateFactor, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
+    public boolean driveToPosition(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
         collectDone = !collect;
         robotAtLocation = false;
 
         //opMode.robot.collector.collectDone(collect);
-        calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
+        calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
         while (opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle)) {
             if (driveDone && strafeDone && rotateDone){
                 robotAtLocation = true;
                 setDrivePowersToZero();
             } else{
                 robotAtLocation = false;
-                calculateAndSetDrivePowers(targetX, targetY, targetHeading, rotateFactor);
+                calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
             }
 
             opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
@@ -121,7 +121,7 @@ public class MM_Drivetrain {
         return true;
     }
 
-    public void calculateAndSetDrivePowers(double targetX, double targetY, double targetHeading, double rotateFactor){
+    public void calculateAndSetDrivePowers(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor){
         opMode.robot.navigation.updatePosition();
         xError = targetX - opMode.robot.navigation.getX();
         yError = targetY - opMode.robot.navigation.getY();
@@ -139,7 +139,7 @@ public class MM_Drivetrain {
         blPower = drive - strafe - rotate;
         brPower = drive + strafe + rotate;
 
-        normalize(.45);
+        normalize(maxPower);
         //normalizeForMin(.28);
 
         setDrivePowers();

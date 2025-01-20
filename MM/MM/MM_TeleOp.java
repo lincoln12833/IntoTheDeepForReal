@@ -16,9 +16,6 @@ public class MM_TeleOp extends MM_OpMode {
             robot.transport.runTransport();
             robot.collector.controlCollector();
             robot.navigation.updatePosition();
-            if (currentGamepad1.y && !previousGamepad1.y) {
-                robot.drivetrain.driveToPosition(-46.6, -42.6, 91.5, .036, -13.2, 0, false, true);
-            }
 
             multipleTelemetry.update();
         }

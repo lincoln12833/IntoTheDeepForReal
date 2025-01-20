@@ -31,43 +31,46 @@ public class MM_Navigation {
     }
 
     public void updatePosition(){
+        updatePosition(false);
+    }
+
+    public void updatePosition(boolean useApriltag){
         currentPos = odometryController.getUpdatedPositon();
+
         opMode.multipleTelemetry.addData("xOdom", round2Dec(getX()));
         opMode.multipleTelemetry.addData("yOdom", round2Dec(getY()));
         opMode.multipleTelemetry.addData("yawOdom", round2Dec(getHeading()));
 
-        if (AprilTagPos != null) {
-            pastExtrinsicY = AprilTagPos.getY(DistanceUnit.INCH);
-        }
-        AprilTagPos = visionPortal.setPosFromApriltag();
-        if(AprilTagPos != null ){
-            opMode.multipleTelemetry.addData("xApril", round2Dec(AprilTagPos.getX(DistanceUnit.INCH)));
-            opMode.multipleTelemetry.addData("yApril", round2Dec(AprilTagPos.getY(DistanceUnit.INCH)));
-            opMode.multipleTelemetry.addData("yawApril", round2Dec(AprilTagPos.getHeading(AngleUnit.DEGREES)));
-            if (MM_OpMode.currentGamepad1.b && !MM_OpMode.previousGamepad1.b) {
-                odometryController.setPosition(AprilTagPos);
+        if (useApriltag) {
+            if (AprilTagPos != null) {
+                pastExtrinsicY = AprilTagPos.getY(DistanceUnit.INCH);
             }
+            AprilTagPos = visionPortal.setPosFromApriltag();
+            if (AprilTagPos != null) {
+                opMode.multipleTelemetry.addData("xApril", round2Dec(AprilTagPos.getX(DistanceUnit.INCH)));
+                opMode.multipleTelemetry.addData("yApril", round2Dec(AprilTagPos.getY(DistanceUnit.INCH)));
+                opMode.multipleTelemetry.addData("yawApril", round2Dec(AprilTagPos.getHeading(AngleUnit.DEGREES)));
+                if ((opMode.opModeInInit() && MM_OpMode.currentGamepad1.b && !MM_OpMode.previousGamepad1.b) || !opMode.opModeInInit()) {
+                    odometryController.setPosition(AprilTagPos);
+                }
 
-            if (Math.abs(intrinsicDiff() - extrinsicDiff()) <= TAG_FLIP_THRESHOLD || opMode.opModeInInit() || opMode.getClass() == MM_TeleOp.class) {
+                if (Math.abs(intrinsicDiff() - extrinsicDiff()) <= TAG_FLIP_THRESHOLD || opMode.opModeInInit() || opMode.getClass() == MM_TeleOp.class) {
 //                if (opMode.opModeInInit()) {
 //                    odometryController.setPosition(AprilTagPos);
 //                }
-                opMode.multipleTelemetry.addData("set From Apriltag", true);
-                //currentPos = odometryController.getUpdatedPositon();
-            } else {
-                opMode.multipleTelemetry.addData("set From Apriltag", false);
+                    opMode.multipleTelemetry.addData("set From Apriltag", true);
+                    //currentPos = odometryController.getUpdatedPositon();
+                } else {
+                    opMode.multipleTelemetry.addData("set From Apriltag", false);
+                }
+            } else { //just here for dashboard
+                opMode.multipleTelemetry.addData("xApril", "");
+                opMode.multipleTelemetry.addData("yApril", "");
+                opMode.multipleTelemetry.addData("yawApril", "");
             }
         }
-        else { //just here for dashboard
-            opMode.multipleTelemetry.addData("xApril", "");
-            opMode.multipleTelemetry.addData("yApril", "");
-            opMode.multipleTelemetry.addData("yawApril", "");
-        }
-        currentPos = odometryController.getUpdatedPositon();
 
-//        opMode.multipleTelemetry.addData("xRobot", round2Dec(getX()));
-//        opMode.multipleTelemetry.addData("yRobot", round2Dec(getY()));
-//        opMode.multipleTelemetry.addData("yawRobot", round2Dec(getHeading()));
+        currentPos = odometryController.getUpdatedPositon();
     }
 
     private double extrinsicDiff() {

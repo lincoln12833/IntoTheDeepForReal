@@ -59,7 +59,7 @@ public class MM_Collector {
 
     public void score(){
         collectTime.reset();
-        while( opMode.opModeIsActive() && (sampleTest.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 250)) {
+        while( opMode.opModeIsActive() && (sampleTest.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 300)) {
             wheels.setPower(-1);
         }
         wheels.setPower(0);
@@ -89,7 +89,7 @@ public class MM_Collector {
     public boolean collectDone(boolean collect, double targetPivotAngle){
         if (!opMode.robot.drivetrain.collectDone && collect) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
-                wheels.setPower(-.35);
+                wheels.setPower(-.4);
                 //collectTime.reset();
             }
 
@@ -102,7 +102,7 @@ public class MM_Collector {
                     collectTime.reset();
                     collectTimeIsStarted = true;
                 }
-                if (haveSample() || (collectTime.milliseconds() > 1000 && collectTimeIsStarted)) {
+                if (haveSample() || (collectTime.milliseconds() > 1500 && collectTimeIsStarted)) {
                     wheels.setPower(0);
                     collectTimeIsStarted = false;
                     return true;
