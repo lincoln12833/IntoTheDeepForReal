@@ -74,16 +74,14 @@ public class MM_Collector {
                 wheels.setPower(0);
                 haveSample = true;
             }
-
         }
-
     }
 
     public boolean haveSample(){
-        if (sampleTest.getDistance(DistanceUnit.MM) > 60) {
-            haveSample = false;
-        } else {
+        if (sampleTest.getDistance(DistanceUnit.MM) < 55) {
             haveSample = true;
+        } else {
+            haveSample = false;
         }
         return haveSample;
     }
@@ -91,7 +89,7 @@ public class MM_Collector {
     public boolean collectDone(boolean collect, double targetPivotAngle){
         if (!opMode.robot.drivetrain.collectDone && collect) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
-                wheels.setPower(-.6);
+                wheels.setPower(-.35);
                 //collectTime.reset();
             }
 
@@ -113,7 +111,6 @@ public class MM_Collector {
                 }
             }
             return false;
-
         }
         return true;
     }

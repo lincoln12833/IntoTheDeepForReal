@@ -139,7 +139,7 @@ public class MM_Drivetrain {
         blPower = drive - strafe - rotate;
         brPower = drive + strafe + rotate;
 
-        normalize(.3);
+        normalize(.45);
         //normalizeForMin(.28);
 
         setDrivePowers();

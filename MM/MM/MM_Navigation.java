@@ -65,9 +65,9 @@ public class MM_Navigation {
         }
         currentPos = odometryController.getUpdatedPositon();
 
-        opMode.multipleTelemetry.addData("xRobot", round2Dec(getX()));
-        opMode.multipleTelemetry.addData("yRobot", round2Dec(getY()));
-        opMode.multipleTelemetry.addData("yawRobot", round2Dec(getHeading()));
+//        opMode.multipleTelemetry.addData("xRobot", round2Dec(getX()));
+//        opMode.multipleTelemetry.addData("yRobot", round2Dec(getY()));
+//        opMode.multipleTelemetry.addData("yawRobot", round2Dec(getHeading()));
     }
 
     private double extrinsicDiff() {
