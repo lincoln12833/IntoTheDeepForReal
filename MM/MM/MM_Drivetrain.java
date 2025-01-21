@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.DRIVE_ERROR_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.HEADING_ERROR_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.currentGamepad1;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.previousGamepad1;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.TANGENT_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.HEADING_ERROR_THRESHOLD;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -28,12 +32,10 @@ public class MM_Drivetrain {
     public static double MAX_TURN_POWER = .5; //previously .5
     public static double MIN_TURN_POWER = .15;
     public static double GYRO_TURN_P_COEFF = .016;
-    public static double HEADING_ERROR_THRESHOLD = 2;
 
-    private final double DRIVE_ERROR_THRESHOLD = .35;
     private final double DRIVE_P_COEFF = 0.015625; //prev 0.03125
 
-    private final double TANGENT_THRESHOLD = 0.5;
+
 
     private final double DISTANCE_THRESHOLD = .5;
 
@@ -151,262 +153,6 @@ public class MM_Drivetrain {
         opMode.multipleTelemetry.addData("zTheta", theta);
     }
 
-//    public void driveInches(double targetInches, int targetHeading) {
-//        MM_Navigation.odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        targetPos = targetInches + odometryPos.getX(DistanceUnit.INCH);
-//        headingError = 100;
-//        while (opMode.opModeIsActive() && (!allMovementDone(false))) {
-//           updateDrivePowers(targetInches, targetHeading);
-//        }
-//        setDrivePowers(0);
-//    }
-//
-//    public void driveInches(double targetInches, int targetHeading, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
-//        odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        targetPos = targetInches + odometryPos.getX(DistanceUnit.INCH);
-//
-//        if (slideTargetInches > 0) {
-//            opMode.robot.transport.slide.setPower(.5);
-//        }
-//        if (targetPivotAngle > -25) {
-//            opMode.robot.transport.pivot.pivot.setPower(1);
-//        }
-//
-//        headingError = 100;
-//        while (opMode.opModeIsActive() && (!allMovementDone(collect))) {
-//            updateDrivePowers(targetInches, targetHeading);
-//            opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
-//        }
-//        setDrivePowers(0);
-//
-//    }
-//
-//    public void updateDrivePowers(double targetInches, int targetHeading){
-//
-//        odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
-//        driveInchesError = targetPos - odometryPos.getX(DistanceUnit.INCH);
-//
-//
-//        rotatePower = rotateDone? 0: MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
-//        drivePower = driveDone? 0: MAX_POWER * driveInchesError * DRIVE_P_COEFF;
-//
-//        flPower = drivePower - rotatePower;
-//        frPower = drivePower + rotatePower;
-//        blPower = drivePower - rotatePower;
-//        brPower = drivePower + rotatePower;
-//
-//        normalize(1);
-//        normalizeForMin(.28);
-//        opMode.multipleTelemetry.addLine("normalized");
-//
-//        setDrivePowers();
-//
-//        opMode.multipleTelemetry.addData("heading error", headingError);
-//        opMode.multipleTelemetry.addData("inches error", driveInchesError);
-//    }
-//
-//    public void driveToPosition(double targetFieldPosX, double targetFieldPosY, double targetHeading) {
-//        opMode.robot.updatePosition();
-//        xError = MM_Robot.position.getX(DistanceUnit.INCH) - targetFieldPosX;
-//        yError = MM_Robot.position.getY(DistanceUnit.INCH) - targetFieldPosY;
-//        headingError = MM_Robot.position.getHeading(AngleUnit.DEGREES) - targetHeading;
-//
-//        drivePower = yError * DRIVE_P_COEFF * MAX_POWER;
-//        strafePower = xError * DRIVE_P_COEFF * MAX_POWER;
-//        //rotatePower
-//    }
-//
-//    public void driveToDistance(double targetDistance, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect) {
-//        while (Math.abs(distanceError) > DISTANCE_THRESHOLD) {
-//            updateDistancePowers(targetDistance);
-//            opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
-//            opMode.robot.collector.handleCollect(collect);
-//        }
-//        setDrivePowers(0);
-//    }
-//
-//    public void driveToDistance(double targetDistance) {
-//        while (Math.abs(distanceError) > DISTANCE_THRESHOLD) {
-//            updateDistancePowers(targetDistance);
-//        }
-//        setDrivePowers(0);
-//    }
-//
-//
-//    public void updateDistancePowers(double targetDistance) {
-//        distance = backDistance.getDistance(DistanceUnit.INCH);
-//        distanceError = targetDistance - distance;
-//
-//        drivePower = distanceError * MAX_POWER * DRIVE_P_COEFF;
-//
-//        flPower = drivePower;
-//        frPower = drivePower;
-//        blPower = drivePower;
-//        brPower = drivePower;
-//
-//        normalizeForMin(.14);
-//
-//        setDrivePowers();
-//    }
-//
-//    public void strafeInches(double targetInches, int targetHeading, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect){
-//        odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        targetPos = targetInches + odometryPos.getY(DistanceUnit.INCH);
-//        headingError = 100;
-//        if (slideTargetInches > 0) {
-//            opMode.robot.transport.slide.setPower(.5);
-//        }
-//        if (targetPivotAngle > -25) {
-//            opMode.robot.transport.pivot.pivot.setPower(1);
-//        }
-//        while ( opMode.opModeIsActive() && !allMovementDone(collect)){
-//            updateStrafePowers(targetInches, targetHeading);
-//            opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
-//        }
-//        setDrivePowers(0);
-//    }
-//
-//    public void strafeInches(double targetInches, int targetHeading){
-//        odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        targetPos = targetInches + odometryPos.getY(DistanceUnit.INCH);
-//        headingError = 100;
-//
-//        while (opMode.opModeIsActive() && !allMovementDone(false)){
-//            updateStrafePowers(targetInches, targetHeading);
-//        }
-//        setDrivePowers(0);
-//    }
-//
-//    private void updateStrafePowers(double targetInches, int targetHeading) {
-//        odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
-//        strafeInchesError = targetPos - (odometryPos.getY(DistanceUnit.INCH));
-//
-//
-//        rotatePower = rotateDone? 0: MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
-//        strafePower = strafeDone? 0: MAX_POWER * strafeInchesError * DRIVE_P_COEFF;
-//
-//        flPower = strafePower - rotatePower;
-//        frPower = -strafePower + rotatePower;
-//        blPower = -strafePower - rotatePower;
-//        brPower = strafePower + rotatePower;
-//
-//        normalize(MAX_TURN_POWER);
-//        normalizeForMin(.28);
-//
-//        opMode.multipleTelemetry.addData("strafe error", strafeInchesError);
-//        opMode.multipleTelemetry.addData("strafe power", strafePower);
-//        opMode.multipleTelemetry.addData("Heading error", headingError);
-//        opMode.multipleTelemetry.addData("rotate power", rotatePower);
-//        opMode.multipleTelemetry.addData("flPower", flPower);
-//        opMode.multipleTelemetry.addData("frPower", frPower);
-//        opMode.multipleTelemetry.addData("blPower", blPower);
-//        opMode.multipleTelemetry.addData("brPower", brPower);
-//
-//        setDrivePowers();
-//    }
-//
-//    public void rotateToAngle(int targetAngle) {
-//        setDriveMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-//
-//        headingError = getHeadingError(targetAngle, odometryPos.getHeading(AngleUnit.DEGREES));
-//
-//
-//        while (opMode.opModeIsActive() && Math.abs(headingError) > HEADING_ERROR_THRESHOLD) {
-//            double power = headingError * GYRO_TURN_P_COEFF * MAX_TURN_POWER;
-//
-//            flPower = -(power);
-//            frPower = power;
-//            blPower = -(power);
-//            brPower = power;
-//
-////            normalizeForMin(MIN_TURN_POWER);
-////            normalize(MAX_TURN_POWER);
-//
-//            setDrivePowers();
-//
-//            odometryController.update();
-//            odometryPos = odometryController.getPosition();
-//
-//            headingError = getHeadingError(targetAngle, odometryPos.getHeading(AngleUnit.DEGREES));
-//
-//            opMode.multipleTelemetry.addData("power", power);
-//            opMode.multipleTelemetry.addData("error", headingError);
-////            opMode.multipleTelemetry.addData("heading", heading);
-//            opMode.multipleTelemetry.update();
-//        }
-//        setDrivePowers(0);
-//    }
-//
-//    public void doEverything(double targetDriveInches, double targetStrafeInches, int targetHeading, double targetPivotAngle, double slideTargetInches, boolean slideWantMax, boolean collect){
-//        odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        targetDrivePos = targetDriveInches + odometryPos.getX(DistanceUnit.INCH);
-//        targetStrafePos = targetStrafeInches + odometryPos.getY(DistanceUnit.INCH);
-//
-//        if (slideTargetInches > 0) {
-//            opMode.robot.transport.slide.setPower(.5);
-//        }
-//        if (targetPivotAngle > -25) {
-//            opMode.robot.transport.pivot.pivot.setPower(1);
-//        }
-//
-//        headingError = 100;
-//        while (opMode.opModeIsActive() && !allMovementDone(collect)) {
-//            updateDriveAndStrafe(targetHeading);
-//            opMode.robot.transport.updateTransport(targetPivotAngle, slideTargetInches, slideWantMax);
-//            opMode.robot.collector.handleCollect(collect);
-//        }
-//    }
-//
-//    public void updateDriveAndStrafe(int targetHeading){
-//        odometryController.update();
-//        odometryPos = odometryController.getPosition();
-//
-//        driveInchesError = targetDrivePos - odometryPos.getX(DistanceUnit.INCH);
-//        headingError = getHeadingError(targetHeading, odometryPos.getHeading(AngleUnit.DEGREES));
-//        strafeInchesError = targetStrafePos - (odometryPos.getY(DistanceUnit.INCH));
-//
-//
-//        rotatePower = 0; //rotateDone? 0: MAX_TURN_POWER * headingError * GYRO_TURN_P_COEFF;
-//        strafePower = strafeDone? 0: MAX_POWER * strafeInchesError * DRIVE_P_COEFF;
-//        drivePower = driveDone? 0: MAX_POWER * driveInchesError * DRIVE_P_COEFF;
-//
-//
-//        flPower = drivePower + strafePower - rotatePower;
-//        frPower = drivePower - strafePower + rotatePower;
-//        blPower = drivePower - strafePower - rotatePower;
-//        brPower = drivePower + strafePower + rotatePower;
-//
-//        normalize(MAX_TURN_POWER);
-//        normalizeForMin(.28);
-//
-//        opMode.multipleTelemetry.addData("strafe error", strafeInchesError);
-//        opMode.multipleTelemetry.addData("strafe power", strafePower);
-//        opMode.multipleTelemetry.addData("Heading error", headingError);
-//        opMode.multipleTelemetry.addData("rotate power", rotatePower);
-//        opMode.multipleTelemetry.addData("flPower", flPower);
-//        opMode.multipleTelemetry.addData("frPower", frPower);
-//        opMode.multipleTelemetry.addData("blPower", blPower);
-//        opMode.multipleTelemetry.addData("brPower", brPower);
-//
-//        setDrivePowers();
-//    }
-//
     private double getHeadingError(double targetAngle, double currentAngle) {
         double error = targetAngle - currentAngle;
 

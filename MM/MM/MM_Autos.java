@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.BASE_ROTATE_FACTOR;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -50,7 +52,7 @@ public class MM_Autos extends MM_OpMode {
             lookAtAprilTag();
 
             multipleTelemetry.addData("Status", "Trying to Collect");
-            robot.drivetrain.driveToPosition(-46.6 * alliance, -39.5 * alliance, .2, alliance == 1?91.5:91.5 + 180, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+            robot.drivetrain.driveToPosition(-46.6 * alliance, -39.5 * alliance, .2, alliance == 1?91.5:91.5 + 180, BASE_ROTATE_FACTOR, -13.2, 5.5, false, true);
             //multipleTelemetry.addData("Status", "re-align collect");
 
             //robot.drivetrain.driveToPosition(-46.6, -39.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
@@ -59,50 +61,11 @@ public class MM_Autos extends MM_OpMode {
             lookAtAprilTag();
 
             multipleTelemetry.addData("Status", "Trying to Collect");
-            robot.drivetrain.driveToPosition(-56.6 * alliance, -39.5 * alliance, .4, alliance == 1?91.5:91.5 + 180, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
+        robot.drivetrain.driveToPosition(-56.6 * alliance, -39.5 * alliance, .4, alliance == 1?91.5:91.5 + 180, BASE_ROTATE_FACTOR, -13.2, 5.5, false, true);
 
-            driveToBasketAndScore();
+        driveToBasketAndScore();
+        robot.drivetrain.driveToPosition(-35.78 * alliance, -7 * alliance, .5, alliance == 1?180:180 + 180, BASE_ROTATE_FACTOR, 90, 1, false, false);
 
-            robot.drivetrain.driveToPosition(-35.78 * alliance, -7 * alliance, .5, alliance == 1?180:180 + 180, MM_TestTrigNav.ROTATE_FACTOR, 90, 1, false, false);
-
-//            //second collect
-//            multipleTelemetry.addData("Status", "Trying to Collect");
-//            robot.drivetrain.driveToPosition(-56.6, -39.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
-//            driveToRedBasketAndScore();
-//
-//            //third collect
-//            //robot.drivetrain.driveToPosition(-56, -40.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 6, false, true);
-//            //driveToRedBasketAndScore();
-//            robot.drivetrain.driveToPosition(-50, -50, 32, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 0, false, true);
-
-        //pre-penfield code (before inch change)
-
-//        //robot.drivetrain.doEverything(5, -8, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-//        robot.drivetrain.strafeInches(-8, -45, 90, robot.transport.slide.MAX_TICKS, true, false); //TODO test to see if doEverything() works then delete these lines
-//        robot.drivetrain.driveInches(-5, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-////        sleep(30000); hihihihihihi
-//        robot.collector.score();
-//        robot.drivetrain.driveInches(6, -45, 90, 14, false, false);
-//        robot.drivetrain.driveInches(7, 0, -13, 7.5, false, true);
-//        if(robot.collector.haveSample()) {
-//            robot.drivetrain.driveInches(-13, -45, 90, robot.transport.slide.MAX_TICKS, true, false);
-//            robot.collector.score();
-//            robot.drivetrain.driveInches(13, 0, -5, 5, false, false);
-//        } else {
-//            //robot.drivetrain.driveInches(-2, 0, -5, 8.5, false, false);
-//            robot.drivetrain.strafeInches(-2, 0);
-//        }
-//        robot.drivetrain.strafeInches(-7.5, 0, -5, 8.5, false, false);
-//        robot.drivetrain.strafeInches(-.1, 0, -12, 8.5, false, true);
-//        robot.drivetrain.strafeInches(6.5, 0, 90, robot.transport.slide.MAX_TICKS, true, false);
-//        robot.drivetrain.driveInches(-11.5, -50);
-//        robot.collector.score();
-//        robot.drivetrain.driveInches(13, 29, 90, 11, false, false);
-//        robot.drivetrain.driveInches(.2, 29, -12, 8, false, true);
-////        robot.drivetrain.rotateToAngle(-90);
-//        robot.drivetrain.strafeInches(46, -90);
-//        robot.drivetrain.driveToDistance(1, 90, 8, false, false);
-        //TODO TEST
     }
 
     private void lookAtAprilTag() {
@@ -120,7 +83,7 @@ public class MM_Autos extends MM_OpMode {
     public void driveToBasketAndScore() {
         if (robot.collector.haveSample()) {
             multipleTelemetry.addData("Status", "Trying to Score");
-            robot.drivetrain.driveToPosition(-53.7 * alliance, -55 * alliance, .5, alliance == 1?32: 32+180, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+            robot.drivetrain.driveToPosition(-53.7 * alliance, -55 * alliance, .5, alliance == 1?32: 32+180, BASE_ROTATE_FACTOR, 93, 52, false, false);
             robot.collector.score();
         }
     }
@@ -128,7 +91,7 @@ public class MM_Autos extends MM_OpMode {
     public void driveToBlueBasketAndScore() {
         if (robot.collector.haveSample()) {
             multipleTelemetry.addData("Status", "Trying to Score");
-            robot.drivetrain.driveToPosition(53.7, 55, .5, -148, MM_TestTrigNav.ROTATE_FACTOR, 93, 52, false, false);
+            robot.drivetrain.driveToPosition(53.7, 55, .5, -148, BASE_ROTATE_FACTOR, 93, 52, false, false);
             robot.collector.score();
         }
     }

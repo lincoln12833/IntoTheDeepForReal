@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.COLLECT_POWER;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.SCORE_POWER;
+
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -29,17 +33,17 @@ public class MM_Collector {
     public void controlCollector(){
         if(opMode.gamepad2.right_bumper){
             if (sampleTest.getDistance(DistanceUnit.MM) > 60) {
-                wheels.setPower(-.6);
+                wheels.setPower(COLLECT_POWER);
                 haveSample = false;
             } else if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
-                wheels.setPower(-1);
+                wheels.setPower(SCORE_POWER);
                 haveSample = false;
             } else {
                 wheels.setPower(0);
                 haveSample = true;
             }
         } else if(opMode.gamepad2.left_bumper){
-            wheels.setPower(1);
+            wheels.setPower(SCORE_POWER);
         } else {
             wheels.setPower(0);
         }
@@ -60,7 +64,7 @@ public class MM_Collector {
     public void score(){
         collectTime.reset();
         while( opMode.opModeIsActive() && (sampleTest.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 300)) {
-            wheels.setPower(-1);
+            wheels.setPower(SCORE_POWER);
         }
         wheels.setPower(0);
     }
@@ -68,7 +72,7 @@ public class MM_Collector {
     public void handleCollect(boolean collect) {
         if(collect) {
             if (sampleTest.getDistance(DistanceUnit.MM) > 60) {
-                wheels.setPower(-.6);
+                wheels.setPower(COLLECT_POWER);
                 haveSample = false;
             } else {
                 wheels.setPower(0);
@@ -89,7 +93,7 @@ public class MM_Collector {
     public boolean collectDone(boolean collect, double targetPivotAngle){
         if (!opMode.robot.drivetrain.collectDone && collect) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
-                wheels.setPower(-.37);
+                wheels.setPower(COLLECT_POWER); //previously -.35
                 //collectTime.reset();
             }
 
@@ -117,6 +121,8 @@ public class MM_Collector {
 
     public void init(){
         wheels = opMode.hardwareMap.get(DcMotor.class, "wheels");
+
+        wheels.setDirection(DcMotor.Direction.REVERSE);
 
         wheels.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
