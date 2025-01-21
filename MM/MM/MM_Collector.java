@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
-import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.COLLECT_POWER;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.COLLECT_BASE_POWER;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.COLLECT_POWER_EFFECTOR;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.SCORE_POWER;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -13,12 +13,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class MM_Collector {
     private MM_OpMode opMode;
 
-    private ColorRangeSensor sampleTest;
+    private ColorRangeSensor innerSampleSensor;
+    private ColorRangeSensor outerSampleSensor;
     private DcMotor wheels;
 
     public static ElapsedTime collectTime = new ElapsedTime();
 
     public boolean collectTimeIsStarted = false;
+    public double collectPower = COLLECT_BASE_POWER;
 
     //private boolean toggle = false;
 
@@ -31,9 +33,10 @@ public class MM_Collector {
 
 
     public void controlCollector(){
+        updateCollectPower();
         if(opMode.gamepad2.right_bumper){
-            if (sampleTest.getDistance(DistanceUnit.MM) > 60) {
-                wheels.setPower(COLLECT_POWER);
+            if (innerSampleSensor.getDistance(DistanceUnit.MM) > 60) {
+                wheels.setPower(collectPower);
                 haveSample = false;
             } else if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
                 wheels.setPower(SCORE_POWER);
@@ -63,7 +66,7 @@ public class MM_Collector {
 
     public void score(){
         collectTime.reset();
-        while( opMode.opModeIsActive() && (sampleTest.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 300)) {
+        while( opMode.opModeIsActive() && (innerSampleSensor.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 300)) {
             wheels.setPower(SCORE_POWER);
         }
         wheels.setPower(0);
@@ -71,8 +74,8 @@ public class MM_Collector {
 
     public void handleCollect(boolean collect) {
         if(collect) {
-            if (sampleTest.getDistance(DistanceUnit.MM) > 60) {
-                wheels.setPower(COLLECT_POWER);
+            if (innerSampleSensor.getDistance(DistanceUnit.MM) > 60) {
+                wheels.setPower(collectPower);
                 haveSample = false;
             } else {
                 wheels.setPower(0);
@@ -82,7 +85,7 @@ public class MM_Collector {
     }
 
     public boolean haveSample(){
-        if (sampleTest.getDistance(DistanceUnit.MM) < 60) {
+        if (innerSampleSensor.getDistance(DistanceUnit.MM) < 60) {
             haveSample = true;
         } else {
             haveSample = false;
@@ -90,10 +93,19 @@ public class MM_Collector {
         return haveSample;
     }
 
+    public void updateCollectPower(){
+        if(outerSampleSensor.getDistance(DistanceUnit.MM) <= 60){
+            collectPower = COLLECT_BASE_POWER * COLLECT_POWER_EFFECTOR;
+        } else {
+            collectPower = COLLECT_BASE_POWER;
+        }
+    }
+
     public boolean collectDone(boolean collect, double targetPivotAngle){
+        updateCollectPower();
         if (!opMode.robot.drivetrain.collectDone && collect) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
-                wheels.setPower(COLLECT_POWER); //previously -.35
+                wheels.setPower(collectPower); //previously -.35
                 //collectTime.reset();
             }
 
@@ -126,7 +138,8 @@ public class MM_Collector {
 
         wheels.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        sampleTest = opMode.hardwareMap.get(ColorRangeSensor.class, "sampleLimit");
+        innerSampleSensor = opMode.hardwareMap.get(ColorRangeSensor.class, "sampleLimit");
+        outerSampleSensor = opMode.hardwareMap.get(ColorRangeSensor.class, "outerSampleLimit");
 
     }
 }

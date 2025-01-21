@@ -17,7 +17,8 @@ public class MM_CONSTANTS {
     }
 
     public static class COLLECT_CONSTANTS{
-        public static double COLLECT_POWER = .6;
+        public static double COLLECT_BASE_POWER = .6;
         public static int SCORE_POWER = 1;
+        public static double COLLECT_POWER_EFFECTOR = .4;
     }
 }
