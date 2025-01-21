@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-
 public class MM_Robot{
     private final MM_OpMode opMode;
     
@@ -11,6 +7,7 @@ public class MM_Robot{
     public MM_Transport transport;
     public MM_Collector collector;
     public MM_Navigation navigation;
+    public MM_Ascent ascent;
 
     MM_Robot(MM_OpMode opMode){
         this.opMode = opMode;
@@ -21,5 +18,6 @@ public class MM_Robot{
         transport = new MM_Transport(opMode);
         collector = new MM_Collector(opMode);
         navigation = new MM_Navigation(opMode);
+        ascent = new MM_Ascent(opMode);
     }
 }

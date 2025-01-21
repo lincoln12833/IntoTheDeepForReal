@@ -16,6 +16,7 @@ public class MM_TeleOp extends MM_OpMode {
             robot.transport.runTransport();
             robot.collector.controlCollector();
             robot.navigation.updatePosition();
+            robot.ascent.controlAscent();
 
             multipleTelemetry.update();
         }
