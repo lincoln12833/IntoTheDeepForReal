@@ -10,6 +10,7 @@ public class MM_Ascent {
     @Config
     public static class ASCENT_CONSTANTS {
         public static double ASCENT_LVL_1 = .7;
+        public static double FOLD_POSITION = 0;
     }
 
     public MM_Ascent(MM_OpMode opMode){
@@ -24,13 +25,17 @@ public class MM_Ascent {
         if(opMode.getRuntime() >= 110 && MM_OpMode.currentGamepad1.y && !MM_OpMode.previousGamepad1.y){
             ascentServo.setPosition(ASCENT_CONSTANTS.ASCENT_LVL_1);
         }
+
+        if(opMode.gamepad1.b){
+            ascentServo.setPosition(ASCENT_CONSTANTS.FOLD_POSITION);
+        }
     }
 
     public void init(){
         ascentServo = opMode.hardwareMap.get(Servo.class, "ascentServo");
 
         if(opMode.getClass() == MM_Autos.class) {
-            ascentServo.setPosition(0);
+            ascentServo.setPosition(ASCENT_CONSTANTS.FOLD_POSITION);
         }
     }
 }
