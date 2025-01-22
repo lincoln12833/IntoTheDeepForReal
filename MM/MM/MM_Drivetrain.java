@@ -12,6 +12,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class MM_Drivetrain {
 
@@ -59,13 +60,7 @@ public class MM_Drivetrain {
 
     public static boolean robotAtLocation = false;
 
-    double targetPos;
-    double targetDrivePos;
-    double targetStrafePos;
-    double driveInchesError;
-    double distance;
-    double distanceError;
-    double strafeInchesError;
+    private ElapsedTime telemetryTimer = new ElapsedTime();
 
     MM_Drivetrain(MM_OpMode opMode) {
         this.opMode = opMode;
@@ -119,7 +114,6 @@ public class MM_Drivetrain {
             opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
             opMode.multipleTelemetry.update();
         }
-
         return true;
     }
 
