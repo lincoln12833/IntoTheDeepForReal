@@ -101,7 +101,7 @@ public class MM_Drivetrain {
         brMotor.setPower(brPower);
     }
 
-    public boolean driveToPosition(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor, double fineThreshold, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
+    public boolean driveToPosition(double targetX, double targetY, double maxPower, double fineMaxPower, double targetHeading, double rotateFactor, double fineThreshold, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
         collectDone = !collect;
         robotAtLocation = false;
 
