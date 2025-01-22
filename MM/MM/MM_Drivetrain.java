@@ -101,13 +101,13 @@ public class MM_Drivetrain {
         brMotor.setPower(brPower);
     }
 
-    public boolean driveToPosition(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
+    public boolean driveToPosition(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor, double fineThreshold, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
         collectDone = !collect;
         robotAtLocation = false;
 
         //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
-        while (opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle)) {
+        while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold < 0?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
             if (driveDone && strafeDone && rotateDone){
                 robotAtLocation = true;
                 setDrivePowersToZero();
@@ -118,6 +118,21 @@ public class MM_Drivetrain {
 
             opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
             opMode.multipleTelemetry.update();
+        }
+        if(fineThreshold >= 0){
+            robotAtLocation = false;
+            while(opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle, fineThreshold)){
+                if (driveDone && strafeDone && rotateDone){
+                    robotAtLocation = true;
+                    setDrivePowersToZero();
+                } else{
+                    robotAtLocation = false;
+                    calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
+                }
+
+                opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
+                opMode.multipleTelemetry.update();
+            }
         }
 
         return true;
@@ -198,10 +213,10 @@ public class MM_Drivetrain {
         }
     }
 
-    private boolean allMovementDone(boolean collect, double pivotAngle){
+    private boolean allMovementDone(boolean collect, double pivotAngle, double driveThreshold){
         rotateDone = Math.abs(headingError) < HEADING_ERROR_THRESHOLD;
-        strafeDone = Math.abs(yError) < DRIVE_ERROR_THRESHOLD;
-        driveDone = Math.abs(xError) < DRIVE_ERROR_THRESHOLD;
+        strafeDone = Math.abs(yError) < driveThreshold;
+        driveDone = Math.abs(xError) < driveThreshold;
         if (Math.hypot(yError, xError) <= TANGENT_THRESHOLD){
             driveDone = true;
             strafeDone = true;
