@@ -129,13 +129,14 @@ public class MM_Drivetrain {
                     setDrivePowersToZero();
                 } else{
                     robotAtLocation = false;
-                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.01);
+                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.02);
                 }
                 opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
                 opMode.multipleTelemetry.addData("Status", "adjusting pos");
                 opMode.multipleTelemetry.update();
             }
         }
+        setDrivePowersToZero();
 
         return true;
     }
