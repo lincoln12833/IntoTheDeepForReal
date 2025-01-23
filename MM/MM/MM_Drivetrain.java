@@ -107,7 +107,7 @@ public class MM_Drivetrain {
 
         //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
-        while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold < 0?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
+        while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
             if (driveDone && strafeDone && rotateDone){
                 robotAtLocation = true;
                 setDrivePowersToZero();
@@ -115,22 +115,24 @@ public class MM_Drivetrain {
                 robotAtLocation = false;
                 calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
             }
-
-            opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
+            opMode.multipleTelemetry.addData("Status", "driving to pos");
+            opMode.robot.transport.updateTransport(fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, targetSlidePos, slideWantMax, collect);
             opMode.multipleTelemetry.update();
         }
         if(fineThreshold >= 0){
+            collectDone = !collect;
             robotAtLocation = false;
+
             while(opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle, fineThreshold)){
                 if (driveDone && strafeDone && rotateDone){
                     robotAtLocation = true;
                     setDrivePowersToZero();
                 } else{
                     robotAtLocation = false;
-                    calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
+                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.01);
                 }
-
                 opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
+                opMode.multipleTelemetry.addData("Status", "adjusting pos");
                 opMode.multipleTelemetry.update();
             }
         }
@@ -171,7 +173,7 @@ public class MM_Drivetrain {
     private double getHeadingError(double targetAngle, double currentAngle) {
         double error = targetAngle - currentAngle;
 
-        error = (error > 180) ? error - 360 : ((error <= -180) ? error + 360 : error); // a nested ternary to determine error
+        error = (error >= 180) ? error - 360 : ((error <= -180) ? error + 360 : error); // a nested ternary to determine error
         return error;
     }
 

@@ -17,7 +17,7 @@ public class MM_TestTrigNav extends MM_OpMode {
         robot.navigation.setPosition(-48, -48, 90);
         while(opModeIsActive()) {
             if(gamepad1.a) {
-                robot.drivetrain.driveToPosition(TARGET_X, TARGET_Y, .6, TARGET_HEADING, BASE_ROTATE_FACTOR, -25, 0, false, false);//rotateFactor speeds up the rotate and is based on the distance we are moving
+                //robot.drivetrain.driveToPosition(TARGET_X, TARGET_Y, .6, TARGET_HEADING, BASE_ROTATE_FACTOR, -25, 0, false, false);//rotateFactor speeds up the rotate and is based on the distance we are moving
             }
         }
     }

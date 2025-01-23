@@ -12,6 +12,7 @@ public class MM_Ascent {
 
     public MM_Ascent(MM_OpMode opMode){
         this.opMode = opMode;
+        init();
     }
 
     public void ascendFirstLevel(){
@@ -19,7 +20,7 @@ public class MM_Ascent {
     }
 
     public void controlAscent(){
-        if(opMode.getRuntime() >= 110 && MM_OpMode.currentGamepad1.y && !MM_OpMode.previousGamepad1.y){
+        if(MM_OpMode.currentGamepad1.y && !MM_OpMode.previousGamepad1.y){
             ascentServo.setPosition(ASCENT_LVL_1);
         }
 
