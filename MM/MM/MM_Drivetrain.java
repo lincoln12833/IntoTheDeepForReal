@@ -151,8 +151,8 @@ public class MM_Drivetrain {
         double theta = moveAngle - opMode.robot.navigation.getHeading() + 45;
 
         double rotate = headingError * rotateFactor;
-        double strafe = Math.cos(Math.toRadians(theta)) - Math.sin(Math.toRadians(theta));//xError * DRIVE_P_COEFF;
-        double drive = Math.sin(Math.toRadians(theta)) + Math.cos(Math.toRadians(theta));//yError * DRIVE_P_COEFF;
+        double strafe = Math.cos(Math.toRadians(theta)) - Math.sin(Math.toRadians(theta));
+        double drive = Math.sin(Math.toRadians(theta)) + Math.cos(Math.toRadians(theta));
 
         flPower = drive + strafe - rotate;
         frPower = drive - strafe + rotate;
