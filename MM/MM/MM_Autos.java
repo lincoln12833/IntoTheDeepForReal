@@ -52,7 +52,7 @@ public class MM_Autos extends MM_OpMode {
         lookAtAprilTag();
 
         multipleTelemetry.addData("Status", "Trying to Collect");
-        robot.drivetrain.driveToPosition(-46.6 * alliance, -38.5 * alliance, .5, .3, alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR, .37, -13.2, 5.5, false, true);
+        robot.drivetrain.driveToPosition(-46.6 * alliance, -38.5 * alliance, .5, .3, alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR, .37, -14.2, 5.5, false, true);
         //multipleTelemetry.addData("Status", "re-align collect");
 
         //robot.drivetrain.driveToPosition(-46.6, -39.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
@@ -61,13 +61,13 @@ public class MM_Autos extends MM_OpMode {
         lookAtAprilTag();
 
         multipleTelemetry.addData("Status", "Trying to Collect");
-        robot.drivetrain.driveToPosition(-56.6 * alliance, -38.5 * alliance, .5, .3, alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR,.37,  -13.2, 5.5, false, true);
+        robot.drivetrain.driveToPosition(-56.6 * alliance, -38.5 * alliance, .5, .3, alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR,.37,  -14.2, 5.5, false, true);
 
 
         driveToBasketAndScore(.043);
 
-        robot.drivetrain.driveToPosition(-33, -10, .8, .3, 0, .036, .37, -24, .5, false, false);
-        robot.drivetrain.driveToPosition(-27, -10, .2, .3, 0, .036, .37, -24, .5, false, false);
+        robot.drivetrain.driveToPosition(-33 * alliance, -10 * alliance, .8, .3, alliance==1?0: 180, .036, .37, -24, .5, false, false);
+        robot.drivetrain.driveToPosition(-25 * alliance, -10 * alliance, .2, .3,  alliance==1?0: 180, .036, .37, -24, .5, false, false);
         robot.ascent.ascendFirstLevel();
         while (opModeIsActive()){
 

@@ -36,7 +36,7 @@ public class MM_Collector {
         updateCollectPower();
         if(opMode.gamepad2.right_bumper){
             if (innerSampleSensor.getDistance(DistanceUnit.MM) > 60) {
-                wheels.setPower(collectPower);
+                wheels.setPower(.6);
                 haveSample = false;
             } else if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
                 wheels.setPower(SCORE_POWER);
@@ -46,7 +46,7 @@ public class MM_Collector {
                 haveSample = true;
             }
         } else if(opMode.gamepad2.left_bumper){
-            wheels.setPower(SCORE_POWER);
+            wheels.setPower(-SCORE_POWER);
         } else {
             wheels.setPower(0);
         }

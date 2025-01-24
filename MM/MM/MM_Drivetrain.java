@@ -129,7 +129,7 @@ public class MM_Drivetrain {
                     setDrivePowersToZero();
                 } else{
                     robotAtLocation = false;
-                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.02);
+                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.037);
                 }
                 opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
                 opMode.multipleTelemetry.addData("Status", "adjusting pos");

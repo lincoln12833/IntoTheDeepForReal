@@ -20,7 +20,7 @@ public class MM_CONSTANTS {
 
     @Config
     public static class COLLECT_CONSTANTS{
-        public static double COLLECT_BASE_POWER = .4;
+        public static double COLLECT_BASE_POWER = .3;
         public static int SCORE_POWER = 1;
         public static double COLLECT_POWER_EFFECTOR = .4;
     }
