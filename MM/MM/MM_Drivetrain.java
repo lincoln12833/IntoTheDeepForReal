@@ -109,14 +109,12 @@ public class MM_Drivetrain {
         calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
         while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
             if (driveDone && strafeDone && rotateDone){
-                robotAtLocation = true;
                 setDrivePowersToZero();
             } else{
-                robotAtLocation = false;
                 calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
             }
             opMode.multipleTelemetry.addData("Status", "driving to pos");
-            opMode.robot.transport.updateTransport(fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, targetSlidePos, slideWantMax, collect);
+            opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
             opMode.multipleTelemetry.update();
         }
         if(fineThreshold >= 0){
@@ -235,7 +233,7 @@ public class MM_Drivetrain {
         opMode.multipleTelemetry.addData("doneDrive", driveDone);
         opMode.multipleTelemetry.addData("doneTransport", transportDone);
 
-        return (driveDone && strafeDone && rotateDone && transportDone && collectDone);
+        return (driveDone && strafeDone && rotateDone && (transportDone || (pivotAngle > 80 && driveThreshold == DRIVE_ERROR_THRESHOLD)) && collectDone);
     }
 
     private void init(){

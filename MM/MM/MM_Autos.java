@@ -69,10 +69,7 @@ public class MM_Autos extends MM_OpMode {
         robot.drivetrain.driveToPosition(-33 * alliance, -10 * alliance, .8, .3, alliance==1?0: 180, .036, .37, -24, .5, false, false);
         robot.drivetrain.driveToPosition(-25 * alliance, -10 * alliance, .2, .3,  alliance==1?0: 180, .036, .37, -24, .5, false, false);
         robot.ascent.ascendFirstLevel();
-        while (opModeIsActive()){
-
-        }
-
+        while (opModeIsActive()){}
     }
 
     private void lookAtAprilTag() {
