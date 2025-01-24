@@ -66,10 +66,16 @@ public class MM_Autos extends MM_OpMode {
 
         driveToBasketAndScore(.043);
 
-        robot.drivetrain.driveToPosition(-33 * alliance, -10 * alliance, .8, .3, alliance==1?0: 180, .036, .37, -24, .5, false, false);
-        robot.drivetrain.driveToPosition(-25 * alliance, -10 * alliance, .2, .3,  alliance==1?0: 180, .036, .37, -24, .5, false, false);
-        robot.ascent.ascendFirstLevel();
-        while (opModeIsActive()){}
+        lookAtAprilTag();
+
+        robot.drivetrain.driveToPosition(-58.75 * alliance, -46.8 * alliance, .5, .3, alliance==1?110.86: 110.86 +180, .05, .37, -13, 14, false, true);
+        driveToBasketAndScore( .05);
+
+
+        //        robot.drivetrain.driveToPosition(-33 * alliance, -10 * alliance, .8, .3, alliance==1?0: 180, .036, .37, -24, .5, false, false);
+//        robot.drivetrain.driveToPosition(-25 * alliance, -10 * alliance, .2, .3,  alliance==1?0: 180, .036, .37, -24, .5, false, false);
+//        robot.ascent.ascendFirstLevel();
+//        while (opModeIsActive()){}
     }
 
     private void lookAtAprilTag() {
@@ -77,7 +83,7 @@ public class MM_Autos extends MM_OpMode {
         robot.drivetrain.driveToPosition(-47 * alliance, -45 * alliance, .8, .3, alliance == 1 ? 90 : 90 + 180, .043, -1, 0, 5.5, false, false);
 
         aprilTagTime.reset();
-        while (opModeIsActive() && aprilTagTime.milliseconds() <= 100) {
+        while (opModeIsActive() && aprilTagTime.milliseconds() <= 350) {
             multipleTelemetry.addData("Status", "looking, at apriltag");
             robot.navigation.updatePosition(true);
             multipleTelemetry.update();

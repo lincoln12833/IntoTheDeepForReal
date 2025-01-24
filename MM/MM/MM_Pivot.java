@@ -82,7 +82,7 @@ public class MM_Pivot {
 
     public void updatePivot(double targetPivotAngle){
         pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot.setPower(.7);
+        pivot.setPower(.75);
         setAngle(targetPivotAngle);
         getCurrentAngle();
         opMode.multipleTelemetry.addData("Pivot current", pivot.getCurrentPosition()); //multipleTelemetry
@@ -120,10 +120,10 @@ public class MM_Pivot {
 
         pivot.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         pivot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        pivot.setTargetPosition(0);
-        //pivot.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        pivot.setTargetPosition(1789);
+        pivot.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-        pivot.setPower(0);
+        pivot.setPower(.85);
 
         bottomLimit = opMode.hardwareMap.get(TouchSensor.class, "pivotBottomLimit");
     }

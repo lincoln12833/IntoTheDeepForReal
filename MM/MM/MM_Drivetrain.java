@@ -110,6 +110,10 @@ public class MM_Drivetrain {
         while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
             if (driveDone && strafeDone && rotateDone){
                 setDrivePowersToZero();
+
+                if(fineThreshold < 0){
+                    break;
+                }
             } else{
                 calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
             }
