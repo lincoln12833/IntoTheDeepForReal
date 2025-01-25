@@ -24,4 +24,11 @@ public class MM_CONSTANTS {
         public static int SCORE_POWER = 1;
         public static double COLLECT_POWER_EFFECTOR = .4;
     }
+
+    @Config
+    public static class PID_CONSTANTS{
+        public static double P_CO_EFF = 1;
+        public static int I_CO_EFF = 0;
+        public static double D_CO_EFF = .4;
+    }
 }
