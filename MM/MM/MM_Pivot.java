@@ -120,7 +120,8 @@ public class MM_Pivot {
 
         pivot.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         pivot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        pivot.setTargetPosition(1789);
+        pivot.setTargetPosition(opMode.getClass()== MM_Autos.class? 1789: pivot.getCurrentPosition());
+
         pivot.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         pivot.setPower(.85);

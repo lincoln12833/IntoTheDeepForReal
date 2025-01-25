@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.MM.MM;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.BASE_ROTATE_FACTOR;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="TestTrigNav", group="mm")
+@Disabled
 public class MM_TestTrigNav extends MM_OpMode {
     public static double TARGET_X = 0;
     public static double TARGET_Y = -48;

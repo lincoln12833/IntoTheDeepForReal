@@ -72,6 +72,14 @@ public class MM_Collector {
         wheels.setPower(0);
     }
 
+    public void uncollect(){
+        collectTime.reset();
+        while( opMode.opModeIsActive() && (innerSampleSensor.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 250)) {
+            wheels.setPower(-SCORE_POWER);
+        }
+        wheels.setPower(0);
+    }
+
     public void handleCollect(boolean collect) {
         if(collect) {
             if (innerSampleSensor.getDistance(DistanceUnit.MM) > 60) {
