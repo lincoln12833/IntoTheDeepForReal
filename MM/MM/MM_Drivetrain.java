@@ -17,6 +17,8 @@ public class MM_Drivetrain {
 
     private final MM_OpMode opMode;
 
+    private MM_Pid_Controller pidController;
+
     private DcMotorEx flMotor;
     private DcMotorEx frMotor;
     private DcMotorEx blMotor;
@@ -69,6 +71,7 @@ public class MM_Drivetrain {
 
     MM_Drivetrain(MM_OpMode opMode) {
         this.opMode = opMode;
+        pidController = new MM_Pid_Controller(opMode);
         init();
     }
 
@@ -142,6 +145,8 @@ public class MM_Drivetrain {
     }
 
     public void calculateAndSetDrivePowers(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor){
+        double[] powers;
+
         opMode.robot.navigation.updatePosition();
         xError = targetX - opMode.robot.navigation.getX();
         yError = targetY - opMode.robot.navigation.getY();
@@ -153,6 +158,11 @@ public class MM_Drivetrain {
         double rotate = headingError * rotateFactor;
         double strafe = Math.cos(Math.toRadians(theta)) - Math.sin(Math.toRadians(theta));
         double drive = Math.sin(Math.toRadians(theta)) + Math.cos(Math.toRadians(theta));
+
+        powers = pidController.calculatePowers(drive, strafe);
+
+        drive = powers[0];
+        strafe = powers[1];
 
         flPower = drive + strafe - rotate;
         frPower = drive - strafe + rotate;
@@ -168,6 +178,7 @@ public class MM_Drivetrain {
         opMode.multipleTelemetry.addData("zHeading error", headingError);
         opMode.multipleTelemetry.addData("zXError", xError);
         opMode.multipleTelemetry.addData("zYError", yError);
+        opMode.multipleTelemetry.addData("zeroError", 0);
         opMode.multipleTelemetry.addData("zTheta", theta);
     }
 
