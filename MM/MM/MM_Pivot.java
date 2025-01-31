@@ -32,48 +32,52 @@ public class MM_Pivot {
     }
 
     public void controlPivot(){
-        if(bottomLimit.isPressed() && !(opMode.gamepad2.left_stick_y < -.1)){
-            if(pivot.getCurrentPosition() != 0){
-                pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                pivot.setPower(0);
-                targetPos = 0;
-                homing = false;
-            }
-        } else {
-            if (Math.abs(opMode.gamepad2.left_stick_y) > .1) {
-                homing = false;
-                targetPos = Math.min((int) (pivot.getCurrentPosition() + (-opMode.gamepad2.left_stick_y * TICK_INCREMENT)), MAX_TICKS);
-            } else if (opMode.gamepad2.y){
-                homing = false;
-                targetPos = MAX_TICKS;
-            } else if (opMode.gamepad2.x){ // home
-                pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                pivot.setPower(-.7);
-                targetPos = 0;
-                homing = true;
-            } else if (homing){
-                home();
-            }
-            pivot.setTargetPosition(targetPos);
+        if(!opMode.robot.ascent.lifting) {
+            if (bottomLimit.isPressed() && !(opMode.gamepad2.left_stick_y < -.1)) {
+                if (pivot.getCurrentPosition() != 0) {
+                    pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    pivot.setPower(0);
+                    targetPos = 0;
+                    homing = false;
+                }
+            } else {
+                if (Math.abs(opMode.gamepad2.left_stick_y) > .1) {
+                    homing = false;
+                    targetPos = Math.min((int) (pivot.getCurrentPosition() + (-opMode.gamepad2.left_stick_y * TICK_INCREMENT)), MAX_TICKS);
+                } else if (opMode.gamepad2.y) {
+                    homing = false;
+                    targetPos = MAX_TICKS;
+                } else if (opMode.gamepad2.x) { // home
+                    pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    pivot.setPower(-.7);
+                    targetPos = 0;
+                    homing = true;
+                } else if (homing) {
+                    home();
+                }
+                pivot.setTargetPosition(targetPos);
 
-            if ( (pivot.getMode() != DcMotor.RunMode.RUN_TO_POSITION && !homing)) { //Only when coming off touch sensor or stopping homing
-                pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                pivot.setPower(1); //1
+                if ((pivot.getMode() != DcMotor.RunMode.RUN_TO_POSITION && !homing)) { //Only when coming off touch sensor or stopping homing
+                    pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    pivot.setPower(1); //1
+                }
             }
+
+            MM_Transport.pivotAngle = getCurrentAngle();
+
+            opMode.multipleTelemetry.addData("angle", MM_Transport.pivotAngle);
+            opMode.multipleTelemetry.addData("Current pos", pivot.getCurrentPosition()); //multipleTelemetry
+            opMode.multipleTelemetry.addData("target pos", pivot.getTargetPosition());
+            opMode.multipleTelemetry.addData("Current current", pivot.getCurrent(CurrentUnit.AMPS));
+            opMode.multipleTelemetry.addData("Current velocity", pivot.getVelocity());
+            opMode.multipleTelemetry.addData("PID Coefficients", pivot.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+            opMode.multipleTelemetry.addData("target position tolerance", pivot.getTargetPositionTolerance());
+            opMode.multipleTelemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
+            opMode.multipleTelemetry.addData("is over current =", pivot.isOverCurrent());
+        } else if(opMode.robot.ascent.pivotReadyForLift){
+            pivot.setPower(0);
         }
-
-        MM_Transport.pivotAngle = getCurrentAngle();
-
-        opMode.multipleTelemetry.addData("angle", MM_Transport.pivotAngle);
-        opMode.multipleTelemetry.addData("Current pos", pivot.getCurrentPosition()); //multipleTelemetry
-        opMode.multipleTelemetry.addData("target pos", pivot.getTargetPosition());
-        opMode.multipleTelemetry.addData("Current current", pivot.getCurrent(CurrentUnit.AMPS));
-        opMode.multipleTelemetry.addData("Current velocity", pivot.getVelocity());
-        opMode.multipleTelemetry.addData("PID Coefficients", pivot.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-        opMode.multipleTelemetry.addData("target position tolerance", pivot.getTargetPositionTolerance());
-        opMode.multipleTelemetry.addData("current alert", pivot.getCurrentAlert(CurrentUnit.AMPS));
-        opMode.multipleTelemetry.addData("is over current =",  pivot.isOverCurrent());
     }
 
     public boolean bottomLimitIsTriggered(){
