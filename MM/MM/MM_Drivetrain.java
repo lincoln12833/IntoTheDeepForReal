@@ -73,9 +73,9 @@ public class MM_Drivetrain {
     }
 
     public void driveWithSticks() {
-        double drivePower = -opMode.gamepad1.left_stick_y;
-        double strafePower = opMode.gamepad1.left_stick_x;
-        double rotatePower = -opMode.gamepad1.right_stick_x; //left is a positive rotation
+        double drivePower = -Math.pow(opMode.gamepad1.left_stick_y, 2);
+        double strafePower = Math.pow(opMode.gamepad1.left_stick_x, 2);
+        double rotatePower = -Math.pow(opMode.gamepad1.right_stick_x, 2); //left is a positive rotation
 
         flPower = drivePower + strafePower - rotatePower;
         frPower = drivePower - strafePower + rotatePower;
