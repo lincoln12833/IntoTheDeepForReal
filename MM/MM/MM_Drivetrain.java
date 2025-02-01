@@ -76,9 +76,9 @@ public class MM_Drivetrain {
     }
 
     public void driveWithSticks() {
-        double drivePower = -opMode.gamepad1.left_stick_y;
-        double strafePower = opMode.gamepad1.left_stick_x;
-        double rotatePower = -opMode.gamepad1.right_stick_x; //left is a positive rotation
+        double drivePower = -Math.pow(opMode.gamepad1.left_stick_y, 2);
+        double strafePower = Math.pow(opMode.gamepad1.left_stick_x, 2);
+        double rotatePower = -Math.pow(opMode.gamepad1.right_stick_x, 2); //left is a positive rotation
 
         flPower = drivePower + strafePower - rotatePower;
         frPower = drivePower - strafePower + rotatePower;
@@ -104,41 +104,40 @@ public class MM_Drivetrain {
         brMotor.setPower(brPower);
     }
 
-    public boolean driveToPosition(double targetX, double targetY, double maxPower, double fineMaxPower, double targetHeading, double rotateFactor, double fineThreshold, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
+    public boolean driveToPosition(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor, double pivotAngle, double targetSlidePos, boolean slideWantMax, boolean collect) {
         collectDone = !collect;
         robotAtLocation = false;
 
         //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
-        while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
+        while (opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle, DRIVE_ERROR_THRESHOLD)) {
             if (driveDone && strafeDone && rotateDone){
-                robotAtLocation = true;
                 setDrivePowersToZero();
+                robotAtLocation = true;
             } else{
-                robotAtLocation = false;
                 calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
             }
             opMode.multipleTelemetry.addData("Status", "driving to pos");
-            opMode.robot.transport.updateTransport(fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, targetSlidePos, slideWantMax, collect);
+            opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
             opMode.multipleTelemetry.update();
         }
-        if(fineThreshold >= 0){
-            collectDone = !collect;
-            robotAtLocation = false;
-
-            while(opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle, fineThreshold)){
-                if (driveDone && strafeDone && rotateDone){
-                    robotAtLocation = true;
-                    setDrivePowersToZero();
-                } else{
-                    robotAtLocation = false;
-                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.02);
-                }
-                opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
-                opMode.multipleTelemetry.addData("Status", "adjusting pos");
-                opMode.multipleTelemetry.update();
-            }
-        }
+//        if(fineThreshold >= 0){
+//            collectDone = !collect;
+//            robotAtLocation = false;
+//
+//            while(opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle, fineThreshold)){
+//                if (driveDone && strafeDone && rotateDone){
+//                    robotAtLocation = true;
+//                    setDrivePowersToZero();
+//                } else{
+//                    robotAtLocation = false;
+//                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.037);
+//                }
+//                opMode.robot.transport.updateTransport(pivotAngle, targetSlidePos, slideWantMax, collect);
+//                opMode.multipleTelemetry.addData("Status", "adjusting pos");
+//                opMode.multipleTelemetry.update();
+//            }
+//        }
         setDrivePowersToZero();
 
         return true;
@@ -168,6 +167,7 @@ public class MM_Drivetrain {
         frPower = drive - strafe + rotate;
         blPower = drive - strafe - rotate;
         brPower = drive + strafe + rotate;
+
 
         normalize(maxPower);
         //normalizeForMin(.28);

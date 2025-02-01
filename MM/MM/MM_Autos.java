@@ -21,15 +21,15 @@ public class MM_Autos extends MM_OpMode {
     }
 
     public void chamber() {
-        robot.drivetrain.driveToPosition(35 * alliance, -12.58 * alliance, .5, .2, alliance == 1 ? 0 : 180, .038,  -1, 93, 1, false, false);
-        robot.drivetrain.driveToPosition(42 * alliance, -12.58 * alliance, .5, .2, alliance == 1 ? 0 : 180, .038, -1,93, 1, false, false);
-        robot.drivetrain.driveToPosition(42 * alliance, -55 * alliance, .5, .2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
-        robot.drivetrain.driveToPosition(42 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
-        robot.drivetrain.driveToPosition(52 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
-        robot.drivetrain.driveToPosition(52 * alliance, -55 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
-        robot.drivetrain.driveToPosition(52 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
-        robot.drivetrain.driveToPosition(59 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
-        robot.drivetrain.driveToPosition(59 * alliance, -55 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(35 * alliance, -12.58 * alliance, .5, .2, alliance == 1 ? 0 : 180, .038,  -1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(42 * alliance, -12.58 * alliance, .5, .2, alliance == 1 ? 0 : 180, .038, -1,93, 1, false, false);
+//        robot.drivetrain.driveToPosition(42 * alliance, -55 * alliance, .5, .2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(42 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(52 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(52 * alliance, -55 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(52 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(59 * alliance, -12.58 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
+//        robot.drivetrain.driveToPosition(59 * alliance, -55 * alliance, .5,.2, alliance == 1 ? 0 : 180, .038,-1, 93, 1, false, false);
 
 
         //    robot.drivetrain.driveInches(24, 0);
@@ -52,7 +52,7 @@ public class MM_Autos extends MM_OpMode {
         lookAtAprilTag();
 
         multipleTelemetry.addData("Status", "Trying to Collect");
-        robot.drivetrain.driveToPosition(-46.6 * alliance, -38.5 * alliance, .5, .3, alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR, .37, -13.2, 5.5, false, true);
+        robot.drivetrain.driveToPosition(-46.6 * alliance, -38.5 * alliance, .5, alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR, -13.2, 5.5, false, true);
         //multipleTelemetry.addData("Status", "re-align collect");
 
         //robot.drivetrain.driveToPosition(-46.6, -39.5, 91.5, MM_TestTrigNav.ROTATE_FACTOR, -13.2, 5.5, false, true);
@@ -61,13 +61,13 @@ public class MM_Autos extends MM_OpMode {
         lookAtAprilTag();
 
         multipleTelemetry.addData("Status", "Trying to Collect");
-        robot.drivetrain.driveToPosition(-56.6 * alliance, -38.5 * alliance, .5, .3, alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR,.37,  -13.2, 5.5, false, true);
+        robot.drivetrain.driveToPosition(-56.6 * alliance, -38.5 * alliance, .5,  alliance == 1 ? 90 : 90 + 180, BASE_ROTATE_FACTOR, -13.2, 5.5, false, true);
 
 
         driveToBasketAndScore(.043);
 
-        robot.drivetrain.driveToPosition(-33, -10, .8, .3, 0, .036, .37, -24, .5, false, false);
-        robot.drivetrain.driveToPosition(-27, -10, .2, .3, 0, .036, .37, -24, .5, false, false);
+        robot.drivetrain.driveToPosition(-33, -10, .8, 0, .036, -24, .5, false, false);
+        robot.drivetrain.driveToPosition(-27, -10, .2, 0, .036, -24, .5, false, false);
         robot.ascent.ascendFirstLevel();
         while (opModeIsActive()){
 
@@ -77,7 +77,7 @@ public class MM_Autos extends MM_OpMode {
 
     private void lookAtAprilTag() {
         multipleTelemetry.addData("Status", "Driving to April Tag");
-        robot.drivetrain.driveToPosition(-47 * alliance, -45 * alliance, .8, .3, alliance == 1 ? 90 : 90 + 180, .043, -1, 0, 5.5, false, false);
+        robot.drivetrain.driveToPosition(-47 * alliance, -45 * alliance, .8, alliance == 1 ? 90 : 90 + 180, .043, 0, 5.5, false, false);
 
         aprilTagTime.reset();
         while (opModeIsActive() && aprilTagTime.milliseconds() <= 100) {
@@ -90,7 +90,7 @@ public class MM_Autos extends MM_OpMode {
     public void driveToBasketAndScore(double rotateFactor) {
         if (robot.collector.haveSample()) {
             multipleTelemetry.addData("Status", "Trying to Score");
-            robot.drivetrain.driveToPosition(-53.7 * alliance, -55 * alliance, .8, .3, alliance == 1 ? 32 : 32 + 180, rotateFactor, .37, 93, 52, false, false);
+            robot.drivetrain.driveToPosition(-53.7 * alliance, -55 * alliance, .8,  alliance == 1 ? 32 : 32 + 180, rotateFactor, 93, 52, false, false);
             robot.collector.score();
         }
     }
