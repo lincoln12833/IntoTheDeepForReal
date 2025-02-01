@@ -229,8 +229,8 @@ public class MM_Drivetrain {
 
     private boolean allMovementDone(boolean collect, double pivotAngle, double driveThreshold){
         rotateDone = Math.abs(headingError) < HEADING_ERROR_THRESHOLD;
-        strafeDone = Math.abs(yError) < driveThreshold;
-        driveDone = Math.abs(xError) < driveThreshold;
+        strafeDone = Math.abs(yError) <= driveThreshold;
+        driveDone = Math.abs(xError) <= driveThreshold;
         if (Math.hypot(yError, xError) <= TANGENT_THRESHOLD){
             driveDone = true;
             strafeDone = true;

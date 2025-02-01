@@ -15,7 +15,7 @@ public class MM_CONSTANTS {
         public static double BASE_ROTATE_FACTOR = 0.036;
         public static double TANGENT_THRESHOLD = 0.5;
         public static double HEADING_ERROR_THRESHOLD = 2;
-        public static  double DRIVE_ERROR_THRESHOLD = 4;
+        public static  double DRIVE_ERROR_THRESHOLD = 0;
     }
 
     @Config

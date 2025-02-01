@@ -46,9 +46,6 @@ public abstract class MM_OpMode extends LinearOpMode {
                 multipleTelemetry.addData("Alliance", alliance == 1? "Red": "Blue");
                 multipleTelemetry.addData("Goal", goal);
 
-                if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
-                    alliance *= -1;
-                }
             }
             multipleTelemetry.update();
         }
