@@ -8,7 +8,7 @@ public class MM_CONSTANTS {
     public static class ASCENT_CONSTANTS{
         public static double ASCENT_LVL_1 = 0.6;
         public static double FOLD_POSITION = .95;
-
+        public static double TICK_INCREMENT = 100;
         public static int OPERATION = 1;
     }
 

@@ -33,7 +33,7 @@ public class MM_Pivot {
 
     public void controlPivot(){
         if(!opMode.robot.ascent.lifting) {
-            if (bottomLimit.isPressed() && !(opMode.gamepad2.left_stick_y < -.1)) {
+            if (bottomLimit.isPressed() && !(-opMode.gamepad2.left_stick_y > .1)) {
                 if (pivot.getCurrentPosition() != 0) {
                     pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -77,6 +77,11 @@ public class MM_Pivot {
             opMode.multipleTelemetry.addData("is over current =", pivot.isOverCurrent());
         } else if(opMode.robot.ascent.pivotReadyForLift){
             pivot.setPower(0);
+        } else {
+            if (pivot.getMode() != DcMotor.RunMode.RUN_TO_POSITION) { //Only when coming off touch sensor or stopping homing
+                pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                pivot.setPower(1); //1
+            }
         }
     }
 
