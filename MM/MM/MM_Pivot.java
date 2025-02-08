@@ -99,7 +99,7 @@ public class MM_Pivot {
     }
 
     public boolean pivotMovementDone(){
-        return !pivot.isBusy();
+        return (!pivot.isBusy() || getCurrentAngle() - getTargetAngle() <= 10);
     }
 
     public double getCurrentAngle(){

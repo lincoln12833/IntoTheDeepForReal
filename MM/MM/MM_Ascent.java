@@ -35,6 +35,9 @@ public class MM_Ascent {
     public void ascendFirstLevel(){
         parkServo.setPosition(ASCENT_LVL_1);
     }
+    public void prepareFirstLvlAscent(){
+        parkServo.setPosition(ASCENT_LVL_1 + .3);
+    }
 
     public void controlAscent(){
         if(MM_OpMode.currentGamepad1.y && !MM_OpMode.previousGamepad1.y){

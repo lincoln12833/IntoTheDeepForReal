@@ -165,6 +165,12 @@ public class MM_Drivetrain {
         //normalizeForMin(.28);
 
         setDrivePowers();
+//        if(MM_OpMode.matchTimer.seconds() >= 27.5){
+//            opMode.robot.ascent.prepareFirstLvlAscent();
+//            if(MM_OpMode.matchTimer.seconds() >= 29.5){
+//                opMode.robot.ascent.ascendFirstLevel();
+//            }
+//        }
 
         opMode.multipleTelemetry.addData("zMove angle", moveAngle);
         opMode.multipleTelemetry.addData("zHeading error", headingError);

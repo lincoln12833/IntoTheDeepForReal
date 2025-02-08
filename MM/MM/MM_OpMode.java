@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class MM_OpMode extends LinearOpMode {
     MM_Robot robot = null;
@@ -23,6 +24,8 @@ public abstract class MM_OpMode extends LinearOpMode {
     public static Gamepad previousGamepad2 = new Gamepad();
 
     public MultipleTelemetry multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+
+    public static ElapsedTime matchTimer = new ElapsedTime();
 
     @Override
     public void runOpMode(){
@@ -52,7 +55,7 @@ public abstract class MM_OpMode extends LinearOpMode {
             }
             multipleTelemetry.update();
         }
-
+        matchTimer.reset();
         runProcedures();
     }
 
