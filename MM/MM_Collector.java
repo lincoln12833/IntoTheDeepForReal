@@ -56,6 +56,19 @@ public class MM_Collector {
 //        }
     }
 
+    public void getSensorStuff(){
+        opMode.multipleTelemetry.addData("distance(mm)", innerSampleSensor.getDistance(DistanceUnit.MM));
+        opMode.multipleTelemetry.addData("light detected", innerSampleSensor.getLightDetected());
+        opMode.multipleTelemetry.addData("argb", innerSampleSensor.argb());
+        opMode.multipleTelemetry.addData("gain", innerSampleSensor.getGain());
+        opMode.multipleTelemetry.addData("color", innerSampleSensor.getNormalizedColors().toColor());
+        opMode.multipleTelemetry.addData("Sensor status", innerSampleSensor.status());
+        opMode.multipleTelemetry.addData("red", innerSampleSensor.red());
+        opMode.multipleTelemetry.addData("green", innerSampleSensor.green());
+        opMode.multipleTelemetry.addData("blue", innerSampleSensor.blue());
+        opMode.multipleTelemetry.update();
+    }
+
     public double getPower(){
         return wheels.getPower();
     }
