@@ -143,6 +143,50 @@ public class MM_Drivetrain {
         return true;
     }
 
+    public boolean testDriveToPosition(double targetX, double targetY, double maxPower, double fineMaxPower, double targetHeading, double rotateFactor, double fineThreshold, double targetSlidePos, boolean slideWantMax, boolean collect) {
+        collectDone = !collect;
+        robotAtLocation = false;
+
+        //opMode.robot.collector.collectDone(collect);
+        calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
+        while (opMode.opModeIsActive() && !testAllMovementDone(fineThreshold < 0 && collect, 0, DRIVE_ERROR_THRESHOLD)) {
+            if (driveDone && strafeDone && rotateDone){
+                setDrivePowersToZero();
+
+                if(fineThreshold < 0){
+                    break;
+                }
+            } else{
+                calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
+            }
+            opMode.multipleTelemetry.addData("Status", "driving to pos");
+            opMode.robot.transport.updateTransport(0, targetSlidePos, slideWantMax, collect);
+            opMode.robot.collector.getSensorStuff();
+            opMode.multipleTelemetry.update();
+        }
+        if(fineThreshold >= 0){
+            collectDone = !collect;
+            robotAtLocation = false;
+
+            while(opMode.opModeIsActive() && !testAllMovementDone(collect, 0, fineThreshold)){
+                if (driveDone && strafeDone && rotateDone){
+                    robotAtLocation = true;
+                    setDrivePowersToZero();
+                } else{
+                    robotAtLocation = false;
+                    calculateAndSetDrivePowers(targetX, targetY, fineMaxPower, targetHeading, 0.037);
+                }
+                opMode.robot.transport.updateTransport(0, targetSlidePos, slideWantMax, collect);
+                opMode.multipleTelemetry.addData("Status", "adjusting pos");
+                opMode.robot.collector.getSensorStuff();
+                opMode.multipleTelemetry.update();
+            }
+        }
+        setDrivePowersToZero();
+
+        return true;
+    }
+
     public void calculateAndSetDrivePowers(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor){
         opMode.robot.navigation.updatePosition();
         xError = targetX - opMode.robot.navigation.getX();
@@ -235,7 +279,33 @@ public class MM_Drivetrain {
         boolean transportDone = opMode.robot.transport.transportMovementDone();
         //boolean transportDone = true; // temp - delete this & uncomment line above
 
-        collectDone = opMode.robot.collector.collectDone(collect, pivotAngle);
+        if (!collectDone) {
+            collectDone = opMode.robot.collector.collectDone(collect, pivotAngle);
+        }
+        //collectDone = true; // temp - delete this & uncomment line above
+
+        opMode.multipleTelemetry.addData("doneRotate", rotateDone);
+        opMode.multipleTelemetry.addData("doneStrafe", strafeDone);
+        opMode.multipleTelemetry.addData("doneDrive", driveDone);
+        opMode.multipleTelemetry.addData("doneTransport", transportDone);
+
+        return (driveDone && strafeDone && rotateDone && (transportDone || (pivotAngle > 80 && driveThreshold == DRIVE_ERROR_THRESHOLD)) && collectDone);
+    }
+
+    private boolean testAllMovementDone(boolean collect, double pivotAngle, double driveThreshold){
+        rotateDone = Math.abs(headingError) < HEADING_ERROR_THRESHOLD;
+        strafeDone = Math.abs(yError) < driveThreshold;
+        driveDone = Math.abs(xError) < driveThreshold;
+        if (Math.hypot(yError, xError) <= TANGENT_THRESHOLD){
+            driveDone = true;
+            strafeDone = true;
+        }
+        boolean transportDone = opMode.robot.transport.transportMovementDone();
+        //boolean transportDone = true; // temp - delete this & uncomment line above
+
+        if (!collectDone) {
+            collectDone = opMode.robot.collector.testCollectDone(collect);
+        }
         //collectDone = true; // temp - delete this & uncomment line above
 
         opMode.multipleTelemetry.addData("doneRotate", rotateDone);

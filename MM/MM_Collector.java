@@ -33,20 +33,20 @@ public class MM_Collector {
 
 
     public void controlCollector(){
-        updateCollectPower();
+        //updateCollectPower();
         if(opMode.gamepad2.right_bumper){
-            if (innerSampleSensor.getDistance(DistanceUnit.MM) > 60) {
-                wheels.setPower(.6);
-                haveSample = false;
-            } else if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
+            if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
                 wheels.setPower(SCORE_POWER);
                 haveSample = false;
-            } else {
+            } else if (innerSampleSensor.getDistance(DistanceUnit.MM) < 60 && !haveSample) {
                 wheels.setPower(0);
                 haveSample = true;
+            } else if (!haveSample) {
+                wheels.setPower(1);
             }
         } else if(opMode.gamepad2.left_bumper){
             wheels.setPower(-SCORE_POWER);
+            haveSample = false;
         } else {
             wheels.setPower(0);
         }
@@ -66,7 +66,7 @@ public class MM_Collector {
         opMode.multipleTelemetry.addData("red", innerSampleSensor.red());
         opMode.multipleTelemetry.addData("green", innerSampleSensor.green());
         opMode.multipleTelemetry.addData("blue", innerSampleSensor.blue());
-        opMode.multipleTelemetry.update();
+        //opMode.multipleTelemetry.update();
     }
 
     public double getPower(){
@@ -111,6 +111,8 @@ public class MM_Collector {
         } else {
             haveSample = false;
         }
+        opMode.multipleTelemetry.addData("have sample", haveSample);
+
         return haveSample;
     }
 
@@ -152,6 +154,26 @@ public class MM_Collector {
         return true;
     }
 
+    public boolean testCollectDone(boolean collect){
+        updateCollectPower();
+        if (!opMode.robot.drivetrain.collectDone && collect) {
+            wheels.setPower(collectPower); //previously -.35
+
+                if (!collectTimeIsStarted) {
+                    collectTime.reset();
+                    collectTimeIsStarted = true;
+                }
+                if (haveSample() || (collectTime.milliseconds() > 1500 && collectTimeIsStarted)) {
+                    wheels.setPower(0);
+                    collectTimeIsStarted = false;
+                    return true;
+                } else {
+                    return false;
+                }
+        }
+        return true;
+    }
+
     public void init(){
         wheels = opMode.hardwareMap.get(DcMotor.class, "wheels");
 
@@ -162,5 +184,8 @@ public class MM_Collector {
         innerSampleSensor = opMode.hardwareMap.get(ColorRangeSensor.class, "sampleLimit");
         outerSampleSensor = opMode.hardwareMap.get(ColorRangeSensor.class, "outerSampleLimit");
 
+        opMode.multipleTelemetry.addData("distance(mm)", innerSampleSensor.getDistance(DistanceUnit.MM));
+        opMode.multipleTelemetry.addData("light detected", innerSampleSensor.getLightDetected());
+        opMode.multipleTelemetry.update();
     }
 }

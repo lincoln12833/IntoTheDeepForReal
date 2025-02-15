@@ -22,7 +22,7 @@ public class MM_CONSTANTS {
 
     @Config
     public static class COLLECT_CONSTANTS{
-        public static double COLLECT_BASE_POWER = .37; // 2-7-2025 was .37
+        public static double COLLECT_BASE_POWER = 1; // 2-7-2025 (and 2-15) was .37
         public static int SCORE_POWER = 1;
         public static double COLLECT_POWER_EFFECTOR = .4;
     }
