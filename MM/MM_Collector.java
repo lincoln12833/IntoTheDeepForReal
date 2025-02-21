@@ -33,7 +33,7 @@ public class MM_Collector {
 
 
     public void controlCollector(){
-        //updateCollectPower();
+        updateCollectPower();
         if(opMode.gamepad2.right_bumper){
             if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
                 wheels.setPower(SCORE_POWER);
@@ -42,7 +42,7 @@ public class MM_Collector {
                 wheels.setPower(0);
                 haveSample = true;
             } else if (!haveSample) {
-                wheels.setPower(1);
+                wheels.setPower(collectPower);
             }
         } else if(opMode.gamepad2.left_bumper){
             wheels.setPower(-SCORE_POWER);
@@ -57,6 +57,7 @@ public class MM_Collector {
     }
 
     public void getSensorStuff(){
+        opMode.multipleTelemetry.addData("outer distance(mm)", outerSampleSensor.getDistance(DistanceUnit.MM));
         opMode.multipleTelemetry.addData("distance(mm)", innerSampleSensor.getDistance(DistanceUnit.MM));
         opMode.multipleTelemetry.addData("light detected", innerSampleSensor.getLightDetected());
         opMode.multipleTelemetry.addData("argb", innerSampleSensor.argb());
@@ -117,7 +118,7 @@ public class MM_Collector {
     }
 
     public void updateCollectPower(){
-        if(outerSampleSensor.getDistance(DistanceUnit.MM) <= 60){
+        if(outerSampleSensor.getDistance(DistanceUnit.MM) <= 80){
             collectPower = COLLECT_BASE_POWER * COLLECT_POWER_EFFECTOR;
         } else {
             collectPower = COLLECT_BASE_POWER;
