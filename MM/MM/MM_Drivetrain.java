@@ -73,11 +73,11 @@ public class MM_Drivetrain {
     }
 
     public void driveWithSticks() {
-        double drivePower = -opMode.gamepad1.left_stick_y;
-        double strafePower = opMode.gamepad1.left_stick_x;
-        double rotatePower = -opMode.gamepad1.right_stick_x; //left is a positive rotation
+        double drivePower = -opMode.gamepad1.left_stick_y; //Math.pow(-opMode.gamepad1.left_stick_y, 2) * (opMode.gamepad1.left_stick_y / Math.abs(opMode.gamepad1.left_stick_y)) ;
+        double strafePower = opMode.gamepad1.left_stick_x;//Math.pow(opMode.gamepad1.left_stick_x, 2)* (opMode.gamepad1.left_stick_x / Math.abs(opMode.gamepad1.left_stick_x)) ;
+        double rotatePower = -opMode.gamepad1.right_stick_x;//Math.pow(-opMode.gamepad1.right_stick_x, 2) * (opMode.gamepad1.right_stick_x / Math.abs(opMode.gamepad1.right_stick_x)); //left is a positive rotation
 
-        flPower = drivePower + strafePower - rotatePower;
+        flPower = drivePower + strafePower - rotatePower  ;
         frPower = drivePower - strafePower + rotatePower;
         blPower = drivePower - strafePower - rotatePower;
         brPower = drivePower + strafePower + rotatePower;
@@ -108,6 +108,9 @@ public class MM_Drivetrain {
         //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
         while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
+            if (pivotAngle > 80 && !opMode.robot.collector.haveSample()){
+                break;
+            }
             if (driveDone && strafeDone && rotateDone){
                 setDrivePowersToZero();
 
@@ -126,6 +129,9 @@ public class MM_Drivetrain {
             robotAtLocation = false;
 
             while(opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle, fineThreshold)){
+                if (pivotAngle > 80 && !opMode.robot.collector.haveSample()){
+                    break;
+                }
                 if (driveDone && strafeDone && rotateDone){
                     robotAtLocation = true;
                     setDrivePowersToZero();
@@ -221,6 +227,7 @@ public class MM_Drivetrain {
         opMode.multipleTelemetry.addData("zXError", xError);
         opMode.multipleTelemetry.addData("zYError", yError);
         opMode.multipleTelemetry.addData("zTheta", theta);
+
     }
 
     private double getHeadingError(double targetAngle, double currentAngle) {

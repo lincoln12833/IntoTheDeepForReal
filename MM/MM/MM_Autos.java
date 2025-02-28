@@ -106,7 +106,9 @@ public class MM_Autos extends MM_OpMode {
             multipleTelemetry.addData("Status", "Trying to Score");
             multipleTelemetry.update();
             robot.drivetrain.driveToPosition(-53.7 * alliance, -55 * alliance, .8, .3, alliance == 1 ? 32 : 32 + 180, rotateFactor, .37, 93, 52, false, false);
-            robot.collector.score();
+            if(robot.collector.haveSample()) {
+                robot.collector.score();
+            }
         }
     }
 

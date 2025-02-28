@@ -33,7 +33,7 @@ public class MM_Pivot {
 
     public void controlPivot(){
         if(!opMode.robot.ascent.lifting) {
-            if (bottomLimit.isPressed() && !(-opMode.gamepad2.left_stick_y > .1)) {
+            if (bottomLimit.isPressed() && !(-opMode.gamepad2.left_stick_y > .1) && !opMode.gamepad2.y && !opMode.gamepad2.b) {
                 if (pivot.getCurrentPosition() != 0) {
                     pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -45,16 +45,22 @@ public class MM_Pivot {
                 if (Math.abs(opMode.gamepad2.left_stick_y) > .1) {
                     homing = false;
                     targetPos = Math.min((int) (pivot.getCurrentPosition() + (-opMode.gamepad2.left_stick_y * TICK_INCREMENT)), MAX_TICKS);
-                } else if (opMode.gamepad2.y) {
+                } else if (opMode.gamepad2.y && !opMode.gamepad2.b) {
                     homing = false;
                     targetPos = MAX_TICKS;
-                } else if (opMode.gamepad2.x) { // home
+                } else if (opMode.gamepad2.x && !opMode.gamepad2.b) { // home
                     pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     pivot.setPower(-.7);
                     targetPos = 0;
                     homing = true;
                 } else if (homing) {
                     home();
+                }
+
+                if(opMode.gamepad2.b && opMode.gamepad2.y){
+                    targetPos = 3910;
+                } else if (opMode.gamepad2.b && opMode.gamepad2.x){
+                    targetPos = 830;
                 }
                 pivot.setTargetPosition(targetPos);
 

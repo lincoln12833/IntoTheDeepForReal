@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANT
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -16,8 +17,10 @@ public class MM_Collector {
     private ColorRangeSensor innerSampleSensor;
     private ColorRangeSensor outerSampleSensor;
     private DcMotor wheels;
+    private Servo specClaw;
 
     public static ElapsedTime collectTime = new ElapsedTime();
+    public static ElapsedTime outtakeTimer = new ElapsedTime();
 
     public boolean collectTimeIsStarted = false;
     public double collectPower = COLLECT_BASE_POWER;
@@ -33,12 +36,12 @@ public class MM_Collector {
 
 
     public void controlCollector(){
-        updateCollectPower();
+        //updateCollectPower();
         if(opMode.gamepad2.right_bumper){
             if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
                 wheels.setPower(SCORE_POWER);
                 haveSample = false;
-            } else if (innerSampleSensor.getDistance(DistanceUnit.MM) < 60 && !haveSample) {
+            } else if ((innerSampleSensor.getDistance(DistanceUnit.MM) < 60 || outerSampleSensor.getDistance(DistanceUnit.MM) < 70) && !haveSample) {
                 wheels.setPower(0);
                 haveSample = true;
             } else if (!haveSample) {
@@ -47,8 +50,20 @@ public class MM_Collector {
         } else if(opMode.gamepad2.left_bumper){
             wheels.setPower(-SCORE_POWER);
             haveSample = false;
+        } else if(outtakeTimer.milliseconds() < 125) {
+            wheels.setPower(-.3);
+        } else if (collectTime.milliseconds() < 125) {
+            wheels.setPower(.3);
         } else {
-            wheels.setPower(0);
+                wheels.setPower(0);
+
+        }
+
+        if ( MM_OpMode.currentGamepad2.dpad_down && !MM_OpMode.previousGamepad2.dpad_down){
+        outtakeTimer.reset();
+        }
+        if(MM_OpMode.currentGamepad2.dpad_up && !MM_OpMode.previousGamepad2.dpad_up){
+            collectTime.reset();
         }
 
 //        if(currentGamepad2.a && !previousGamepad2.a){
@@ -107,7 +122,7 @@ public class MM_Collector {
     }
 
     public boolean haveSample(){
-        if (innerSampleSensor.getDistance(DistanceUnit.MM) < 60) {
+        if (innerSampleSensor.getDistance(DistanceUnit.MM) < 60 || outerSampleSensor.getDistance(DistanceUnit.MM) < 65) {
             haveSample = true;
         } else {
             haveSample = false;
@@ -115,6 +130,16 @@ public class MM_Collector {
         opMode.multipleTelemetry.addData("have sample", haveSample);
 
         return haveSample;
+    }
+
+    public void runSpecClaw(){
+        if((MM_OpMode.currentGamepad2.right_bumper && !MM_OpMode.previousGamepad2.right_bumper) && opMode.gamepad2.b){
+            specClaw.setPosition(specClaw.getPosition() == .75? 1: .75);
+        }
+    }
+
+    public void scoreSpec(){
+        specClaw.setPosition(.75);
     }
 
     public void updateCollectPower(){
@@ -126,10 +151,11 @@ public class MM_Collector {
     }
 
     public boolean collectDone(boolean collect, double targetPivotAngle){
-        updateCollectPower();
+        //updateCollectPower();
+        getSensorStuff();
         if (!opMode.robot.drivetrain.collectDone && collect) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
-                wheels.setPower(collectPower); //previously -.35
+                wheels.setPower(1); //previously -.35
                 //collectTime.reset();
             }
 
@@ -177,6 +203,8 @@ public class MM_Collector {
 
     public void init(){
         wheels = opMode.hardwareMap.get(DcMotor.class, "wheels");
+        specClaw = opMode.hardwareMap.get(Servo.class, "specClaw");
+        specClaw.setPosition(1);
 
         wheels.setDirection(DcMotor.Direction.REVERSE);
 

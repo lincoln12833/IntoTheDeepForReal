@@ -18,6 +18,8 @@ public class MM_Slide {
     private final double TICKS_PER_INCH = (TICKS_PER_REV / PULLEY_CIRCUMFERENCE);
     private final double MAX_EXTENSION_AT_HORIZONTAL = 18;
     private final double MAX_INCHES_BELOW_HORIZONTAL = 4;
+    private boolean maxExtending = false;
+    private boolean  goingToChamber = false;
 
     private int maxSlideTicks = 0;
     private boolean BottomLimitIsHandled = false;
@@ -33,7 +35,7 @@ public class MM_Slide {
     public void runSlide() {
         setMaxSlideTicks(MM_Transport.pivotAngle);
 
-        if ((bottomLimit.isPressed() || holdingHome) && opMode.gamepad2.right_trigger < 0.05){  // dead weight - is this ok, or does it need to be powered?
+        if ((bottomLimit.isPressed() || holdingHome) && opMode.gamepad2.right_trigger < 0.05 && !opMode.gamepad2.y){  // dead weight - is this ok, or does it need to be powered?
             if (!holdingHome) { // chunk 1
                 slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
                 slide.setTargetPosition(0);
@@ -62,8 +64,37 @@ public class MM_Slide {
                 homing = true;
             }
 
+            if(opMode.gamepad2.y && !opMode.gamepad2.b){
+                homing = false;
+                maxExtending = true;
+            }
+            if(maxExtending){
+                if(opMode.robot.transport.pivot.getCurrentAngle() > 0) {
+                    slideTargetTicks = maxSlideTicks;
+                } else {
+                    maxExtending = true;
+                }
+                if(Math.abs(slide.getCurrentPosition() - MAX_TICKS) < 60  || opMode.gamepad2.right_trigger >= .005 || opMode.gamepad2.left_trigger >= .005){
+                    maxExtending = false;
+                    slideTargetTicks = slide.getCurrentPosition();
+                }
+            }
+
+            if (opMode.gamepad2.b && opMode.gamepad2.y){
+                goingToChamber = true;
+            }else if(opMode.gamepad2.b && opMode.gamepad2.x){
+                slideTargetTicks = 0;
+            }
+
             slideTargetTicks = Math.min(slideTargetTicks, MM_Transport.maxSlideTicksForAngle);
             slide.setTargetPosition(slideTargetTicks);
+
+            if(goingToChamber){
+                slideTargetTicks = Math.min(maxSlideTicks, 1828);
+                if (!slide.isBusy()){
+                    goingToChamber = false;
+                }
+            } //2625
 
             if (holdingHome || !homing) {
                 slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
