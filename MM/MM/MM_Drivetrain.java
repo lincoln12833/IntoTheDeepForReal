@@ -113,6 +113,10 @@ public class MM_Drivetrain {
         while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
             if (pivotAngle > 80 && !opMode.robot.collector.haveSample() && !MM_OpMode.goal.equals(CHAMBER)){
                 break;
+
+            }
+            if(Math.abs(opMode.gamepad1.left_stick_x) > 0.1 || Math.abs(opMode.gamepad1.left_stick_y) > 0.1 || Math.abs(opMode.gamepad1.right_stick_y) > 0.1  ){
+                break;
             }
             if (driveDone && strafeDone && rotateDone){
                 setDrivePowersToZero();
@@ -349,6 +353,10 @@ public class MM_Drivetrain {
     }
 
     private void init(){
+        if (opMode.getClass() == MM_Autos.class){
+
+        }
+
         flMotor = opMode.hardwareMap.get(DcMotorEx.class, "flMotor");
         frMotor = opMode.hardwareMap.get(DcMotorEx.class, "frMotor");
         blMotor = opMode.hardwareMap.get(DcMotorEx.class, "blMotor");

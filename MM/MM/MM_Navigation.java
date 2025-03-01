@@ -24,7 +24,9 @@ public class MM_Navigation {
         odometryController.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         odometryController.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
-        odometryController.resetPosAndIMU();
+        if(opMode.getClass() == MM_Autos.class) {
+            odometryController.resetPosAndIMU();
+        }
 
         odometryController.update();
         currentPos = odometryController.getPosition();

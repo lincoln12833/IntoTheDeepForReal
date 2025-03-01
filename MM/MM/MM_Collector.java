@@ -93,6 +93,10 @@ public class MM_Collector {
         wheels.setPower(power);
     }
 
+    public void teleScoreSpec(){
+        specClaw.setPosition(.75);
+    }
+
     public void score(){
         collectTime.reset();
         while( opMode.opModeIsActive() && (innerSampleSensor.getDistance(DistanceUnit.MM) < 60 || collectTime.milliseconds() < 500)) {
