@@ -142,6 +142,10 @@ public class MM_Collector {
         specClaw.setPosition(.75);
     }
 
+    public void collectSpec(){
+        specClaw.setPosition(1);
+    }
+
     public void updateCollectPower(){
         if(outerSampleSensor.getDistance(DistanceUnit.MM) <= 80){
             collectPower = COLLECT_BASE_POWER * COLLECT_POWER_EFFECTOR;

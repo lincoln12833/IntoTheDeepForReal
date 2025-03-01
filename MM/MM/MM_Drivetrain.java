@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.MM.MM;
 
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.DRIVE_ERROR_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.HEADING_ERROR_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.CHAMBER;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.currentGamepad1;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.previousGamepad1;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.TANGENT_THRESHOLD;
@@ -12,6 +13,8 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class MM_Drivetrain {
 
@@ -108,7 +111,7 @@ public class MM_Drivetrain {
         //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
         while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?pivotAngle + 20: pivotAngle, DRIVE_ERROR_THRESHOLD)) {
-            if (pivotAngle > 80 && !opMode.robot.collector.haveSample()){
+            if (pivotAngle > 80 && !opMode.robot.collector.haveSample() && !MM_OpMode.goal.equals(CHAMBER)){
                 break;
             }
             if (driveDone && strafeDone && rotateDone){
@@ -129,7 +132,7 @@ public class MM_Drivetrain {
             robotAtLocation = false;
 
             while(opMode.opModeIsActive() && !allMovementDone(collect, pivotAngle, fineThreshold)){
-                if (pivotAngle > 80 && !opMode.robot.collector.haveSample()){
+                if (pivotAngle > 80 && !opMode.robot.collector.haveSample() && !MM_OpMode.goal.equals(CHAMBER)){
                     break;
                 }
                 if (driveDone && strafeDone && rotateDone){
@@ -192,6 +195,28 @@ public class MM_Drivetrain {
 
         return true;
     }
+
+    public void driveToDistance(double targetDistance, double maxPower){
+        double distance = backDistance.getDistance(DistanceUnit.INCH);
+        distanceError = targetDistance - distance;
+        double drivePower;
+
+            while (opMode.opModeIsActive() && Math.abs(distanceError) > DISTANCE_THRESHOLD) {
+                distance = backDistance.getDistance(DistanceUnit.INCH);
+                distanceError = targetDistance - distance;
+
+                drivePower = distanceError * DRIVE_P_COEFF;
+
+                flPower = drivePower;
+                frPower = drivePower;
+                blPower = drivePower;
+                brPower = drivePower;
+
+                normalizeForMin(.14);
+                setDrivePowers();
+            }
+            setDrivePowersToZero();
+        }
 
     public void calculateAndSetDrivePowers(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor){
         opMode.robot.navigation.updatePosition();

@@ -14,11 +14,18 @@ public class MM_Robot{
     }
 
     public void scoreSpecimen(){
-        transport.slide.setTargetTicks(1393);
+        transport.slide.setTargetTicks(1350);
         while(!transport.slide.slideMovementDone()){}
         collector.scoreSpec();
         opMode.sleep(500);
     }
+
+    public void collectSpec(){
+        collector.collectSpec();
+        opMode.sleep(1000);
+        transport.slide.setTargetTicks(1828);
+    }
+
     public void init() {
         drivetrain = new MM_Drivetrain(opMode);
         transport = new MM_Transport(opMode);
