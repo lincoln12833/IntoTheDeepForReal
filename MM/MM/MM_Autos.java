@@ -22,38 +22,38 @@ public class MM_Autos extends MM_OpMode {
     }
 
     public void chamber() {
-        robot.drivetrain.driveToPosition(0, -36.1, .4, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
-        robot.drivetrain.driveToDistance(4.7, .6);
+        robot.drivetrain.driveToPosition(0, -36.1* alliance, .4, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
+        robot.drivetrain.driveToDistance(4.9, .6);
         robot.scoreSpecimen();
 
         //start pushing
-        robot.drivetrain.driveToPosition(6, -39,.8, 0,alliance == 1? -90: 90, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
-        robot.drivetrain.driveToPosition(32, -39, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(34.5, -12, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(40.5, -12, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(40.5, -56, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(6* alliance, -39* alliance,.8, 0,alliance == 1? -90: 90, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
+        robot.drivetrain.driveToPosition(34* alliance, -39* alliance, .8, .3, alliance == 1? 180:0, BASE_ROTATE_FACTOR, .37, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(34* alliance, -12* alliance, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(40.5* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(40.5* alliance, -56* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
 
         //        robot.drivetrain.driveToPosition(37.5, -24, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
 //        robot.drivetrain.driveToPosition(37.5, -57, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
 //        robot.drivetrain.driveToPosition(37.5, -24, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(45, -12, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(50, -12, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(45* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(50* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
 
-        robot.drivetrain.driveToPosition(55, -56,.8, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
+        robot.drivetrain.driveToPosition(55 * alliance, -54* alliance,1, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
         //robot.drivetrain.driveToPosition(46.76, -57, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92,0, false, false);
         robot.drivetrain.driveToDistance(4.7, .8);
         robot.collectSpec();
-        robot.drivetrain.driveToPosition(-4, -41.1, .8, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
-        robot.drivetrain.driveToDistance(4.7, .6);
+        robot.drivetrain.driveToPosition(-4* alliance, -41.1* alliance, 1, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
+        robot.drivetrain.driveToDistance(4.9, .6);
         robot.scoreSpecimen();
         //end pushing
-        robot.drivetrain.driveToPosition(0, -39,.8, 0,alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
-        robot.drivetrain.driveToPosition(55, -56,.8, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
+        robot.drivetrain.driveToPosition(0, -39* alliance,.8, 0,alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
+        robot.drivetrain.driveToPosition(55* alliance, -56* alliance,.8, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
         //robot.drivetrain.driveToPosition(46.76, -57, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92,0, false, false);
         robot.drivetrain.driveToDistance(4.7, .8);
         robot.collectSpec();
-        robot.drivetrain.driveToPosition(4, -41.1, .8, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
-        robot.drivetrain.driveToDistance(4.7, .6);
+        robot.drivetrain.driveToPosition(4* alliance, -41.1* alliance, .8, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
+        robot.drivetrain.driveToDistance(4.9, .6);
         robot.scoreSpecimen();
 
     }
@@ -89,14 +89,14 @@ public class MM_Autos extends MM_OpMode {
 
         lookAtAprilTag();
 
-        robot.drivetrain.driveToPosition(-58.75 * alliance, -46.8 * alliance, .5, .3, alliance==1?110.86: 110.86 +180, .05, .37, -13, 14, false, true);
+        robot.drivetrain.driveToPosition(-58.75 * alliance, -46.8 * alliance, .5, .3, alliance==1?110.86: 110.86 +180, .05, .37, -11, 15.5, false, true);
         if(!haveSample){
             robot.collector.uncollect();
         }
         driveToBasketAndScore( .07);
 
 
-        robot.drivetrain.driveToPosition(-33 * alliance, -10 * alliance, .8, .3, alliance==1?0: 180, .036, .37, -24, .5, false, false);
+        robot.drivetrain.driveToPosition(-33 * alliance, -10 * alliance, .8, .3, alliance==1?0: 180, .036, .37, 0, .5, false, false);
         robot.ascent.ascendFirstLevel();
         while (opModeIsActive()){}
     }
@@ -117,7 +117,7 @@ public class MM_Autos extends MM_OpMode {
         if (robot.collector.haveSample()) {
             multipleTelemetry.addData("Status", "Trying to Score");
             multipleTelemetry.update();
-            robot.drivetrain.driveToPosition(-53.7 * alliance, -55 * alliance, .8, .3, alliance == 1 ? 32 : 32 + 180, rotateFactor, .37, 93, 52, false, false);
+            robot.drivetrain.driveToPosition(-53.8 * alliance, -52.5 * alliance, .7, .3, alliance == 1 ? 45 : 45 + 180, rotateFactor, .37, 93, 52, false, false);
             if(robot.collector.haveSample()) {
                 robot.collector.score();
             }

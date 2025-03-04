@@ -17,7 +17,7 @@ public class MM_Collector {
     private ColorRangeSensor innerSampleSensor;
     private ColorRangeSensor outerSampleSensor;
     private DcMotor wheels;
-    private Servo specClaw;
+    public Servo specClaw;
 
     public static ElapsedTime collectTime = new ElapsedTime();
     public static ElapsedTime outtakeTimer = new ElapsedTime();
@@ -72,6 +72,8 @@ public class MM_Collector {
     }
 
     public void getSensorStuff(){
+        opMode.multipleTelemetry.addData("haveSample", haveSample);
+
         opMode.multipleTelemetry.addData("outer distance(mm)", outerSampleSensor.getDistance(DistanceUnit.MM));
         opMode.multipleTelemetry.addData("distance(mm)", innerSampleSensor.getDistance(DistanceUnit.MM));
         opMode.multipleTelemetry.addData("light detected", innerSampleSensor.getLightDetected());
@@ -158,31 +160,23 @@ public class MM_Collector {
         }
     }
 
-    public boolean collectDone(boolean collect, double targetPivotAngle){
-        //updateCollectPower();
-        getSensorStuff();
-        if (!opMode.robot.drivetrain.collectDone && collect) {
+    public boolean collectDone(double targetPivotAngle){
+        if (!opMode.robot.drivetrain.collectDone) {
             if (opMode.robot.transport.pivot.getCurrentAngle() < targetPivotAngle + 10 && getPower() == 0) {
                 wheels.setPower(1); //previously -.35
                 //collectTime.reset();
             }
-
-            opMode.multipleTelemetry.addData("currentTarget", opMode.robot.transport.pivot.getTargetAngle());
-            opMode.multipleTelemetry.addData("finalTarget", targetPivotAngle);
-            opMode.multipleTelemetry.addData("currentPivotAngle", opMode.robot.transport.pivot.getCurrentAngle());
-
-            if (!opMode.robot.transport.pivot.pivot.isBusy() && opMode.robot.transport.pivot.getTargetAngle() <= targetPivotAngle){
+            if (!opMode.robot.transport.pivot.pivot.isBusy()){
                 if (!collectTimeIsStarted) {
                     collectTime.reset();
                     collectTimeIsStarted = true;
                 }
-                if (haveSample() || (collectTime.milliseconds() > 1500 && collectTimeIsStarted)) {
-                    wheels.setPower(0);
-                    collectTimeIsStarted = false;
-                    return true;
-                } else {
-                    return false;
-                }
+
+            }
+            if (haveSample() || (collectTime.milliseconds() > 1500 && collectTimeIsStarted)) {
+                wheels.setPower(0);
+                collectTimeIsStarted = false;
+                return true;
             }
             return false;
         }
@@ -212,7 +206,9 @@ public class MM_Collector {
     public void init(){
         wheels = opMode.hardwareMap.get(DcMotor.class, "wheels");
         specClaw = opMode.hardwareMap.get(Servo.class, "specClaw");
-        specClaw.setPosition(1);
+        if(opMode.getClass() == MM_Autos.class) {
+            specClaw.setPosition(1);
+        }
 
         wheels.setDirection(DcMotor.Direction.REVERSE);
 
