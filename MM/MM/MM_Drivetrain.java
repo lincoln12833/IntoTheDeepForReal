@@ -204,14 +204,16 @@ public class MM_Drivetrain {
         return true;
     }
 
-    public void driveToDistance(double targetDistance, double maxPower){
-        double distance = backDistance.getDistance(DistanceUnit.INCH);
-        distanceError = targetDistance - distance;
+    public void driveToDistance(double targetDistance, double junk){
+        distanceError = targetDistance - backDistance.getDistance(DistanceUnit.INCH);
         double drivePower;
 
             while (opMode.opModeIsActive() && Math.abs(distanceError) > DISTANCE_THRESHOLD) {
-                distance = backDistance.getDistance(DistanceUnit.INCH);
-                distanceError = targetDistance - distance;
+                if(Math.abs(opMode.gamepad1.left_stick_x) > 0.1 || Math.abs(opMode.gamepad1.left_stick_y) > 0.1 || Math.abs(opMode.gamepad1.right_stick_y) > 0.1  ) {
+                    opMode.robot.scoring = false;
+                    break;
+                }
+                distanceError = targetDistance - backDistance.getDistance(DistanceUnit.INCH);
 
                 drivePower = distanceError * DRIVE_P_COEFF;
 

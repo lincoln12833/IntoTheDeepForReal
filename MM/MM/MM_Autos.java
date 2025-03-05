@@ -22,38 +22,34 @@ public class MM_Autos extends MM_OpMode {
     }
 
     public void chamber() {
-        robot.drivetrain.driveToPosition(0, -36.1* alliance, .4, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
-        robot.drivetrain.driveToDistance(4.9, .6);
+        robot.drivetrain.driveToPosition(0, -41.1* alliance, .4, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
+        //sleep(5000);
+        robot.drivetrain.driveToDistance(5.9, .6);
         robot.scoreSpecimen();
 
         //start pushing
         robot.drivetrain.driveToPosition(6* alliance, -39* alliance,.8, 0,alliance == 1? -90: 90, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
         robot.drivetrain.driveToPosition(34* alliance, -39* alliance, .8, .3, alliance == 1? 180:0, BASE_ROTATE_FACTOR, .37, 92, .2, false, false);
         robot.drivetrain.driveToPosition(34* alliance, -12* alliance, .8, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(40.5* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(40.5* alliance, -56* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-
-        //        robot.drivetrain.driveToPosition(37.5, -24, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-//        robot.drivetrain.driveToPosition(37.5, -57, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-//        robot.drivetrain.driveToPosition(37.5, -24, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(41.5* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(41.5* alliance, -56* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
         robot.drivetrain.driveToPosition(45* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-        robot.drivetrain.driveToPosition(50* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
-
-        robot.drivetrain.driveToPosition(55 * alliance, -54* alliance,1, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
-        //robot.drivetrain.driveToPosition(46.76, -57, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92,0, false, false);
+        robot.drivetrain.driveToPosition(52* alliance, -12* alliance, 1, 0, alliance == 1? 180:0, BASE_ROTATE_FACTOR, -1, 92, .2, false, false);
+        robot.drivetrain.driveToPosition(55 * alliance, -52* alliance,1, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
+        //end pushing
         robot.drivetrain.driveToDistance(4.7, .8);
         robot.collectSpec();
         robot.drivetrain.driveToPosition(-4* alliance, -41.1* alliance, 1, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
-        robot.drivetrain.driveToDistance(4.9, .6);
+        robot.drivetrain.driveToDistance(5.9, .6);
         robot.scoreSpecimen();
         //end pushing
         robot.drivetrain.driveToPosition(0, -39* alliance,.8, 0,alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
-        robot.drivetrain.driveToPosition(55* alliance, -56* alliance,.8, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
+        robot.drivetrain.driveToPosition(55* alliance, -54* alliance,.8, 0,alliance == 1? 180: 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
         //robot.drivetrain.driveToPosition(46.76, -57, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92,0, false, false);
         robot.drivetrain.driveToDistance(4.7, .8);
         robot.collectSpec();
         robot.drivetrain.driveToPosition(4* alliance, -41.1* alliance, .8, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
-        robot.drivetrain.driveToDistance(4.9, .6);
+        robot.drivetrain.driveToDistance(5.9, .6);
         robot.scoreSpecimen();
 
     }

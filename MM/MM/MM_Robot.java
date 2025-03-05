@@ -42,7 +42,7 @@ public class MM_Robot{
             }
 
         } else if (opMode.gamepad1.y){
-            drivetrain.driveToPosition(-4, -45, .8, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
+            drivetrain.driveToPosition(-4, -45, .4, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
         } else if (opMode.gamepad1.x || scoring){
             if(!scoring) {
                 drivetrain.driveToDistance(4.7, .6);
