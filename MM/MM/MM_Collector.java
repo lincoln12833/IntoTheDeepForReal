@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.MM.MM;
 
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.COLLECT_BASE_POWER;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.COLLECT_POWER_EFFECTOR;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.GRAB_POS;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.SCORE_POWER;
+import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.COLLECT_CONSTANTS.SPEC_OPEN_POS;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -96,7 +98,7 @@ public class MM_Collector {
     }
 
     public void teleScoreSpec(){
-        specClaw.setPosition(.75);
+        specClaw.setPosition(SPEC_OPEN_POS);
     }
 
     public void score(){
@@ -140,16 +142,16 @@ public class MM_Collector {
 
     public void runSpecClaw(){
         if((MM_OpMode.currentGamepad2.right_bumper && !MM_OpMode.previousGamepad2.right_bumper) && opMode.gamepad2.b){
-            specClaw.setPosition(specClaw.getPosition() == .75? 1: .75);
+            specClaw.setPosition(specClaw.getPosition() == SPEC_OPEN_POS? GRAB_POS: SPEC_OPEN_POS);
         }
     }
 
     public void scoreSpec(){
-        specClaw.setPosition(.75);
+        specClaw.setPosition(SPEC_OPEN_POS);
     }
 
     public void collectSpec(){
-        specClaw.setPosition(1);
+        specClaw.setPosition(GRAB_POS);
     }
 
     public void updateCollectPower(){
@@ -206,9 +208,10 @@ public class MM_Collector {
     public void init(){
         wheels = opMode.hardwareMap.get(DcMotor.class, "wheels");
         specClaw = opMode.hardwareMap.get(Servo.class, "specClaw");
-        if(opMode.getClass() == MM_Autos.class) {
-            specClaw.setPosition(1);
-        }
+        //if(opMode.getClass() == MM_Autos.class) {
+            specClaw.setPosition(GRAB_POS);
+        //}
+
 
         wheels.setDirection(DcMotor.Direction.REVERSE);
 

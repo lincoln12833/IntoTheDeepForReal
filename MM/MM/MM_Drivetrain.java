@@ -6,7 +6,6 @@ import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.CHAMBER;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.currentGamepad1;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.previousGamepad1;
 import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.TANGENT_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.HEADING_ERROR_THRESHOLD;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -36,11 +35,10 @@ public class MM_Drivetrain {
     public static double MIN_TURN_POWER = .15;
     public static double GYRO_TURN_P_COEFF = .016;
 
-    private final double DRIVE_P_COEFF = 0.015625; //prev 0.03125
 
 
 
-    private final double DISTANCE_THRESHOLD = .5;
+    private final double DISTANCE_THRESHOLD = .37;
 
 
     private double xError;
@@ -80,10 +78,12 @@ public class MM_Drivetrain {
         double strafePower = opMode.gamepad1.left_stick_x;//Math.pow(opMode.gamepad1.left_stick_x, 2)* (opMode.gamepad1.left_stick_x / Math.abs(opMode.gamepad1.left_stick_x)) ;
         double rotatePower = -opMode.gamepad1.right_stick_x;//Math.pow(-opMode.gamepad1.right_stick_x, 2) * (opMode.gamepad1.right_stick_x / Math.abs(opMode.gamepad1.right_stick_x)); //left is a positive rotation
 
-        flPower = drivePower + strafePower - rotatePower  ;
-        frPower = drivePower - strafePower + rotatePower;
-        blPower = drivePower - strafePower - rotatePower;
-        brPower = drivePower + strafePower + rotatePower;
+        if (!opMode.robot.travelling) {
+            flPower = drivePower + strafePower - rotatePower;
+            frPower = drivePower - strafePower + rotatePower;
+            blPower = drivePower - strafePower - rotatePower;
+            brPower = drivePower + strafePower + rotatePower;
+        }
 
         if (currentGamepad1.a && !previousGamepad1.a) {
             slow = !slow;
@@ -116,6 +116,10 @@ public class MM_Drivetrain {
 
             }
             if(Math.abs(opMode.gamepad1.left_stick_x) > 0.1 || Math.abs(opMode.gamepad1.left_stick_y) > 0.1 || Math.abs(opMode.gamepad1.right_stick_y) > 0.1  ){
+                opMode.robot.travelling = false;
+                opMode.robot.collecting = false;
+                opMode.robot.slideTargetSet = false;
+                opMode.robot.scoring = false;
                 break;
             }
             if (driveDone && strafeDone && rotateDone){
@@ -156,7 +160,7 @@ public class MM_Drivetrain {
             }
         }
         setDrivePowersToZero();
-
+        opMode.robot.travelling = false;
         return true;
     }
 
@@ -214,14 +218,19 @@ public class MM_Drivetrain {
                     break;
                 }
                 distanceError = targetDistance - backDistance.getDistance(DistanceUnit.INCH);
+                if(distanceError > 15){
+                    opMode.robot.scoring = false;
+                    break;
+                }
 
-                drivePower = distanceError * DRIVE_P_COEFF;
+                drivePower = distanceError * MM_CONSTANTS.DRIVE_CONSTANTS.DRIVE_P_COEFF;
 
                 flPower = drivePower;
                 frPower = drivePower;
                 blPower = drivePower;
                 brPower = drivePower;
 
+                normalize(.4);
                 normalizeForMin(.14);
                 setDrivePowers();
             }

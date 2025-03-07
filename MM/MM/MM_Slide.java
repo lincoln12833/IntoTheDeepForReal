@@ -16,14 +16,14 @@ public class MM_Slide {
     private final double PULLEY_CIRCUMFERENCE = Math.PI * PULLEY_DIAMETER;
     private final double TICKS_PER_REV = 537.7;
     private final double TICKS_PER_INCH = (TICKS_PER_REV / PULLEY_CIRCUMFERENCE);
-    private final double MAX_EXTENSION_AT_HORIZONTAL = 18;
+    private final double MAX_EXTENSION_AT_HORIZONTAL = 17;
     private final double MAX_INCHES_BELOW_HORIZONTAL = 4;
     private boolean maxExtending = false;
     private boolean  goingToChamber = false;
 
     private int maxSlideTicks = 0;
     private boolean BottomLimitIsHandled = false;
-    private int slideTargetTicks = 0;
+    public int slideTargetTicks = 0;
     private boolean homing = false;
     private boolean holdingHome = false;
 
@@ -35,7 +35,7 @@ public class MM_Slide {
     public void runSlide() {
         setMaxSlideTicks(MM_Transport.pivotAngle);
 
-        if ((bottomLimit.isPressed() || holdingHome) && opMode.gamepad2.right_trigger < 0.05 && !opMode.gamepad2.y){  // dead weight - is this ok, or does it need to be powered?
+        if ((bottomLimit.isPressed() || holdingHome) && opMode.gamepad2.right_trigger < 0.05 && !opMode.gamepad2.y && !opMode.robot.collecting){  // dead weight - is this ok, or does it need to be powered?
             if (!holdingHome) { // chunk 1
                 slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
                 slide.setTargetPosition(0);

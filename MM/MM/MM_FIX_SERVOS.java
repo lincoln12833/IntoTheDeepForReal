@@ -8,7 +8,8 @@ public class MM_FIX_SERVOS extends MM_OpMode{
     public void runProcedures() {
         robot.ascent.liftLeft.setPosition(.5);
         robot.ascent.liftRight.setPosition(.5);
+        robot.collector.specClaw.setPosition(.5);
 
-        while(opModeIsActive()){}
+        while(opModeIsActive()){robot.collector.specClaw.setPosition(MM_CONSTANTS.COLLECT_CONSTANTS.GRAB_POS);}
     }
 }

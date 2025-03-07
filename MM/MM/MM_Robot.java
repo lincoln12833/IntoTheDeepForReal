@@ -15,7 +15,10 @@ public class MM_Robot{
     public MM_Ascent ascent;
 
     public boolean scoring;
+    public boolean travelling;
     public boolean collecting;
+    public boolean slideTargetSet;
+    public boolean collectTimeisStarted;
     public ElapsedTime scoreTimer = new ElapsedTime();
     public ElapsedTime collectTimer = new ElapsedTime();
 
@@ -31,21 +34,18 @@ public class MM_Robot{
     }
 
     public void doSpec(){
-        if(opMode.gamepad1.a || collecting){
-            if(!collecting) {
-                drivetrain.driveToPosition(55, -56, .8, 0, alliance == 1 ? 180 : 0, BASE_ROTATE_FACTOR, -1, 92, 0, false, false);
-                //robot.drivetrain.driveToPosition(46.76, -57, .8, 0, alliance == 1? 90: 90 + 180, BASE_ROTATE_FACTOR, -1, 92,0, false, false);
-                drivetrain.driveToDistance(4.7, .8);
-                collecting = true;
-            } else {
-                teleCollectSpec();
-            }
-
-        } else if (opMode.gamepad1.y){
-            drivetrain.driveToPosition(-4, -45, .4, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
-        } else if (opMode.gamepad1.x || scoring){
+       if (opMode.gamepad1.y || collecting){
+           if(!collecting) {
+               drivetrain.driveToDistance(4.7, .8);
+               collecting = true;
+           } else {
+               teleCollectSpec();
+           }
+//            drivetrain.driveToPosition(-4, -45, .4, 0, alliance == 1? -90: -90 + 180, BASE_ROTATE_FACTOR, -1, 92, 16.1, false, false);
+        }
+            if (opMode.gamepad1.x || scoring){
             if(!scoring) {
-                drivetrain.driveToDistance(4.7, .6);
+                drivetrain.driveToDistance(5.9, .6);
                 scoring = true;
             } else {
                 teleScoreSpec();
@@ -55,11 +55,15 @@ public class MM_Robot{
     }
 
     public void teleScoreSpec(){
-        transport.slide.setTargetTicks(1350);
-        scoreTimer.reset();
-        if(scoreTimer.milliseconds() > 1000 && scoreTimer.milliseconds() < 2000){
+        if(!slideTargetSet) {
+            transport.slide.setTargetTicks(1350);
+            transport.slide.slideTargetTicks = 1350;
+            slideTargetSet = true;
+        }
+        if(transport.slide.slideMovementDone()){
             collector.teleScoreSpec();
             scoring = false;
+            slideTargetSet = false;
         }
     }
     public void collectSpec(){
@@ -70,8 +74,13 @@ public class MM_Robot{
 
     public void teleCollectSpec(){
         collector.collectSpec();
-        if(collectTimer.milliseconds() > 1000 && collectTimer.milliseconds() < 2500){
+        if (!collectTimeisStarted){
+            collectTimer.reset();
+            collectTimeisStarted = true;
+        }
+        if(collectTimer.milliseconds() > 1000 && collectTimeisStarted){
             transport.slide.setTargetTicks(1828);
+            transport.slide.slideTargetTicks = 1828;
             collecting = false;
         }
     }

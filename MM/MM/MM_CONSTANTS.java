@@ -14,6 +14,7 @@ public class MM_CONSTANTS {
 
     @Config
     public static class DRIVE_CONSTANTS{
+        public static double DRIVE_P_COEFF = 0.04; //prev 0.03125
         public static double BASE_ROTATE_FACTOR = 0.036;
         public static double TANGENT_THRESHOLD = 0.5;
         public static double HEADING_ERROR_THRESHOLD = 2;
@@ -25,5 +26,8 @@ public class MM_CONSTANTS {
         public static double COLLECT_BASE_POWER = 1; // 2-7-2025 (and 2-15) was .37
         public static int SCORE_POWER = 1;
         public static double COLLECT_POWER_EFFECTOR = .4;
+        public static double GRAB_POS = .78;
+        public static double SPEC_OPEN_POS = .5;
+
     }
 }
