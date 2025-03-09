@@ -43,7 +43,7 @@ public class MM_Collector {
             if(opMode.robot.transport.pivot.pivot.getCurrentPosition() >= (opMode.robot.transport.pivot.MAX_TICKS *.75) || opMode.gamepad2.a){
                 wheels.setPower(SCORE_POWER);
                 haveSample = false;
-            } else if ((innerSampleSensor.getDistance(DistanceUnit.MM) < 60 || outerSampleSensor.getDistance(DistanceUnit.MM) < 70) && !haveSample) {
+            } else if ((innerSampleSensor.getDistance(DistanceUnit.MM) < 60 || outerSampleSensor.getDistance(DistanceUnit.MM) < 67.5) && !haveSample) {
                 wheels.setPower(0);
                 haveSample = true;
             } else if (!haveSample) {
@@ -208,9 +208,11 @@ public class MM_Collector {
     public void init(){
         wheels = opMode.hardwareMap.get(DcMotor.class, "wheels");
         specClaw = opMode.hardwareMap.get(Servo.class, "specClaw");
-        //if(opMode.getClass() == MM_Autos.class) {
+        if(opMode.getClass() == MM_Autos.class) {
             specClaw.setPosition(GRAB_POS);
-        //}
+        } else {
+            specClaw.setPosition(SPEC_OPEN_POS);
+        }
 
 
         wheels.setDirection(DcMotor.Direction.REVERSE);

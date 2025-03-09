@@ -46,7 +46,6 @@ public class MM_Robot{
             if (opMode.gamepad1.x || scoring){
             if(!scoring) {
                 drivetrain.driveToDistance(5.9, .6);
-                scoring = true;
             } else {
                 teleScoreSpec();
             }

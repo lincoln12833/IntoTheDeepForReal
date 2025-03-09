@@ -58,7 +58,7 @@ public class MM_Navigation {
                         MM_OpMode.alliance = MM_VisionPortal.startingTag == 13 || MM_VisionPortal.startingTag == 11? -1: 1;
                         MM_OpMode.goal = MM_VisionPortal.startingTag == 13 || MM_VisionPortal.startingTag == 16? "Basket": "Chamber";
                         if(MM_OpMode.goal.equals("Basket")){
-                            opMode.robot.collector.specClaw.setPosition(.75);
+                            opMode.robot.collector.specClaw.setPosition(MM_CONSTANTS.COLLECT_CONSTANTS.SPEC_OPEN_POS);
                         }
                     }
                 }

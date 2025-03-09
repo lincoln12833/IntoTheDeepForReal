@@ -218,8 +218,9 @@ public class MM_Drivetrain {
                     break;
                 }
                 distanceError = targetDistance - backDistance.getDistance(DistanceUnit.INCH);
-                if(distanceError > 15){
+                if(Math.abs(distanceError) > 15){
                     opMode.robot.scoring = false;
+                    setDrivePowersToZero();
                     break;
                 }
 
@@ -234,7 +235,10 @@ public class MM_Drivetrain {
                 normalizeForMin(.14);
                 setDrivePowers();
             }
-            setDrivePowersToZero();
+            if(Math.abs(distanceError) < DISTANCE_THRESHOLD) {
+                opMode.robot.scoring = true;
+            }
+        setDrivePowersToZero();
         }
 
     public void calculateAndSetDrivePowers(double targetX, double targetY, double maxPower, double targetHeading, double rotateFactor){
