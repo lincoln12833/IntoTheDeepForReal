@@ -218,7 +218,7 @@ public class MM_Drivetrain {
                     break;
                 }
                 distanceError = targetDistance - backDistance.getDistance(DistanceUnit.INCH);
-                if(Math.abs(distanceError) > 15){
+                if(Math.abs(distanceError) > 15 && opMode.getClass() == MM_TeleOp.class){
                     opMode.robot.scoring = false;
                     setDrivePowersToZero();
                     break;
