@@ -108,7 +108,6 @@ public class MM_Drivetrain {
         collectDone = true;
         robotAtLocation = false;
 
-        //opMode.robot.collector.collectDone(collect);
         calculateAndSetDrivePowers(targetX, targetY, maxPower, targetHeading, rotateFactor);
         while (opMode.opModeIsActive() && !allMovementDone(fineThreshold < 0 && collect, fineThreshold >= 0 && collect?targetPivotAngle + 20: targetPivotAngle, DRIVE_ERROR_THRESHOLD)) {
             if (targetPivotAngle > 80 && !opMode.robot.collector.haveSample() && !MM_OpMode.goal.equals(CHAMBER)){
@@ -217,8 +216,9 @@ public class MM_Drivetrain {
                     opMode.robot.scoring = false;
                     break;
                 }
+                double pastDistance = distanceError;
                 distanceError = targetDistance - backDistance.getDistance(DistanceUnit.INCH);
-                if(Math.abs(distanceError) > 15 && opMode.getClass() == MM_TeleOp.class){
+                if(Math.abs(distanceError) > 15 && Math.abs(pastDistance) > 15  && opMode.getClass() == MM_TeleOp.class){
                     opMode.robot.scoring = false;
                     setDrivePowersToZero();
                     break;
