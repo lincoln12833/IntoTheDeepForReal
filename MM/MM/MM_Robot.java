@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.MM.MM;
 
-import static org.firstinspires.ftc.teamcode.MM.MM.MM_CONSTANTS.DRIVE_CONSTANTS.BASE_ROTATE_FACTOR;
-import static org.firstinspires.ftc.teamcode.MM.MM.MM_OpMode.alliance;
-
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class MM_Robot{
@@ -36,7 +33,7 @@ public class MM_Robot{
     public void doSpec(){
        if (opMode.gamepad1.y || collecting){
            if(!collecting) {
-               drivetrain.driveToDistance(4.7, .8);
+               drivetrain.driveToDistance(4.7);
                collecting = true;
            } else {
                teleCollectSpec();
@@ -45,7 +42,7 @@ public class MM_Robot{
         }
             if (opMode.gamepad1.x || scoring){
             if(!scoring) {
-                drivetrain.driveToDistance(5.9, .6);
+                drivetrain.driveToDistance(5.9);
             } else {
                 teleScoreSpec();
             }
@@ -60,7 +57,7 @@ public class MM_Robot{
             slideTargetSet = true;
         }
         if(transport.slide.slideMovementDone()){
-            collector.teleScoreSpec();
+            collector.openSpecClaw();
             scoring = false;
             slideTargetSet = false;
         }
@@ -69,6 +66,12 @@ public class MM_Robot{
         collector.collectSpec();
         opMode.sleep(1000);
         transport.slide.setTargetTicks(1828);
+    }
+
+    public void clearCollector() {
+        if(!collector.haveSample()){
+            collector.discardSample();
+        }
     }
 
     public void teleCollectSpec(){
@@ -83,6 +86,7 @@ public class MM_Robot{
             collecting = false;
         }
     }
+
 
     public void init() {
         drivetrain = new MM_Drivetrain(opMode);

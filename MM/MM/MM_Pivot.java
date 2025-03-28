@@ -23,6 +23,15 @@ public class MM_Pivot {
     public final int MAX_TICKS = (int)(TICKS_PER_PIVOT_DEGREE * (MAX_PIVOT_ANGLE - OFFSET_PIVOT_ANGLE)); //3819
 
     private boolean homing = false;
+
+    public int getTargetPos() {
+        return targetPos;
+    }
+
+    public void setTargetPos(int targetPos) {
+        this.targetPos = targetPos;
+    }
+
     public int targetPos = 0;
     private boolean modeInPosition = false;
 

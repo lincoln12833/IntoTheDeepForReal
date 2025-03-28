@@ -7,7 +7,7 @@ public class MM_TestSensor extends MM_OpMode {
     @Override
     public void runProcedures(){
         while(opModeIsActive()){
-            robot.collector.getSensorStuff();
+            robot.collector.sensorTelemetry();
         }
     }
 }
